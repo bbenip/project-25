@@ -17,3 +17,14 @@ header {
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
 }
+
+#board-container {
+  text-align: center;
+}
+
+#board {
+  display: inline-block;
+  background-color: black;
+  height: 60vh;
+  width: 60vh;
+}
