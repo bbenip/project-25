@@ -2,3 +2,18 @@ body {
   margin: 0;
   padding: 0;
 }
+
+header {
+  margin: 5vh;
+  text-align: center;
+}
+
+.starter-links {
+  padding-right: 2em;
+  padding-left: 2em;
+
+  color: black;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}
