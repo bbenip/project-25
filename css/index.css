@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+header {
+  padding-left: 2em;
+}
+
+header h1 {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-size: 6em;
+  font-weight: bold;
+}
+
+header p {
+  margin: 0.25em;
+  font-size: 1.5em;
+}
+
+#goal {
+  font-size: 2em;
+  font-weight: bold;
+}
