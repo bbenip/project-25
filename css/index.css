@@ -24,3 +24,13 @@ header p {
   font-size: 2em;
   font-weight: bold;
 }
+
+#project-list {
+  margin-top: 5em;
+}
+
+#project-list p {
+  margin: 0.25em;
+  padding-left: 2em;
+  font-size: 1.25em;
+}
