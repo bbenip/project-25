@@ -1,4 +1,6 @@
-const projects = [];
+const projects = [
+  "Tic-Tac-Toe",
+];
 
 window.onload = () => {
   projects.reverse().forEach((project, index) => {
