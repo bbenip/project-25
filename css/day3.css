@@ -26,11 +26,24 @@ header h1 {
 }
 
 #game {
-  display: block;
-  margin: auto;
-  background-color: black;
-  height: 60vh;
-  width: 60vh;
+  display: flex;
+  flex-direction: column;
+  margin: 5vh auto;
+  height: 60.5vh;
+  width: 48vh;
+}
+
+#palette {
+  display: flex;
+  flex-direction: row;
+}
+
+#palette span {
+  margin: 2.5vh 1.25vh;
+  background-color: gray;
+  height: 5.5vh;
+  width: 5.5vh;
+  border-radius: 50%;
 }
 
 #game table {
@@ -38,9 +51,9 @@ header h1 {
 }
 
 #game tr {
-  height: 5vh;
+  height: 4vh;
 }
 
 #game td {
-  width: 5vh;
+  width: 4vh;
 }

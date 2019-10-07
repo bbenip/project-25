@@ -35,7 +35,8 @@ function resetGrid() {
 
 window.onload = () => {
   resetGrid();
-  
+
+  // Set grid for game
   const table = document.createElement("table");
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
@@ -50,6 +51,18 @@ window.onload = () => {
     table.appendChild(row);
   }
 
+  // Set color palette
+  const palette = document.createElement("div");
+  palette.id = "palette";
+
+  for (let color of COLORS) {
+    const colorButton = document.createElement("span");
+    colorButton.style.backgroundColor = COLOR_VALUE_MAP[color];
+
+    palette.appendChild(colorButton);
+  }
+
   const game = document.getElementById("game");
   game.appendChild(table);
+  game.appendChild(palette);
 };
