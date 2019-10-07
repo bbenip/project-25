@@ -3,21 +3,21 @@ const player1 = {
   speed: 0,
   score: 0,
   collision: false
-}
+};
 
 const player2 = {
   position: 0,
   speed: 0,
   score: 0,
   collision: false
-}
+};
 
 const ball = {
   x: 0,
   y: 0,
   vx: 0,
   vy: 0
-}
+};
 
 let board;
 let context;
@@ -253,4 +253,4 @@ window.onload = () => {
   const refreshRate = 50;
   document.addEventListener("keydown", move);
   setInterval(game, refreshRate);
-}
+};
