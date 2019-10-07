@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  margin: 5vh;
+  text-align: center;
+}
+
+.starter-links {
+  padding-right: 2em;
+  padding-left: 2em;
+
+  color: black;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}
+
+header h1 {
+  padding-top: 5vh;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 5vh;
+}
+
+#board {
+  display: block;
+  background-color: black;
+  height: 60vh;
+  width: 100vh;
+  margin-left: auto;
+  margin-right: auto;
+}
