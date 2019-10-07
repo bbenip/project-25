@@ -28,7 +28,7 @@ const H_PADDING = 5;
 const V_PADDING = 3;
 
 const DIVIDER_WIDTH = 5;
-const DIVIDER_HEIGHT = 20;
+const DIVIDER_HEIGHT = 5;
 const DIVIDER_PADDING = 10;
 
 const PADDLE_WIDTH = 5;
