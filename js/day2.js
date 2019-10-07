@@ -216,10 +216,12 @@ function game() {
   context.fillStyle = "white";
   context.fillRect(ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT);
 
+  if (ballHitBounds()) {
+    ball.vy = -ball.vy;
+  }
+
   if (ballHitPaddle()) {
     simulateCollision();
-  } else if (ballHitBounds()) {
-    ball.vy = -ball.vy;
   } else if (ballPassedPaddles()) {
     updateScore();
     resetBall();
