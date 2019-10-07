@@ -226,7 +226,7 @@ function game() {
 
   // Draw score
   const SCORE_V_PADDING = 30;
-  context.font = "30px Roboto";
+  context.font = "2em Roboto";
   context.fillText(player1.score, board.width / 4, SCORE_V_PADDING);
   context.fillText(player2.score, 3 * (board.width / 4), SCORE_V_PADDING);
 
