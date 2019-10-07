@@ -25,7 +25,22 @@ header h1 {
   font-size: 5vh;
 }
 
-#board {
+#game {
   display: block;
+  margin: auto;
   background-color: black;
+  height: 60vh;
+  width: 60vh;
+}
+
+#game table {
+  border-collapse: collapse;
+}
+
+#game tr {
+  height: 5vh;
+}
+
+#game td {
+  width: 5vh;
 }
