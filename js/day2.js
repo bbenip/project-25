@@ -50,6 +50,7 @@ function resetBall() {
   ball.vy = Math.sqrt(BALL_INIT_SPEED ** 2 - ball.vx ** 2);
 
   ball.vx *= (Math.random() * 2 > 1) ? 1 : -1;
+  ball.vy *= (Math.random() * 2 > 1) ? 1 : -1;
 }
 
 function move(event) {
