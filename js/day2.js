@@ -27,9 +27,9 @@ const SCORE_LIMIT = 11;
 const H_PADDING = 5;
 const V_PADDING = 3;
 
-const DIVIDOR_WIDTH = 5;
-const DIVIDOR_HEIGHT = 20;
-const DIVIDOR_PADDING = 10;
+const DIVIDER_WIDTH = 5;
+const DIVIDER_HEIGHT = 20;
+const DIVIDER_PADDING = 10;
 
 const PADDLE_WIDTH = 5;
 const PADDLE_HEIGHT = 25;
@@ -154,17 +154,17 @@ function game() {
   context.fillRect(0, 0, board.width, board.width);
 
   // Draw dividing line
-  let currentHeight = DIVIDOR_PADDING / 2;
+  let currentHeight = DIVIDER_PADDING / 2;
   while (currentHeight < board.height) {
     context.fillStyle = "rgba(255, 255, 255, 0.5)";
     context.fillRect(
-      (board.width - DIVIDOR_WIDTH) / 2,
+      (board.width - DIVIDER_WIDTH) / 2,
       currentHeight,
-      DIVIDOR_WIDTH,
-      DIVIDOR_HEIGHT
+      DIVIDER_WIDTH,
+      DIVIDER_HEIGHT
     );
 
-    currentHeight += DIVIDOR_HEIGHT + DIVIDOR_PADDING;
+    currentHeight += DIVIDER_HEIGHT + DIVIDER_PADDING;
   }
 
   // Calculate player positions
