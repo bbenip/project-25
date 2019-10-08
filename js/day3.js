@@ -163,6 +163,7 @@ window.onload = () => {
 
     for (let j = 0; j < GRID_DIMENSION; ++j) {
       const cell = document.createElement("td");
+      cell.addEventListener("click", setColor);
       row.appendChild(cell);
     }
 
