@@ -36,13 +36,9 @@ header h1 {
   display: flex;
   margin-top: 1vh;
   margin-bottom: 1vh;
-  background-color: gray;
+  background-color: black;
   height: 7vh;
   width: 7vh;
-
-  border-width: 0.25vh;
-  border-style: solid;
-  border-color: black;
 
   align-items: center;
 }
@@ -51,9 +47,9 @@ header h1 {
   margin: auto;
   padding: auto;
 
+  color: white;
   font-family: 'Roboto', sans-serif;
   font-size: 5vh;
-  font-weight: bold;
 }
 
 #board {

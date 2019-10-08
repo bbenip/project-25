@@ -1,20 +1,20 @@
 const player1 = {
-  position: 0,
-  speed: 0,
-  score: 0,
-  collision: false
+  position:   0,
+  speed:      0,
+  score:      0,
+  collision:  false
 };
 
 const player2 = {
-  position: 0,
-  speed: 0,
-  score: 0,
-  collision: false
+  position:   0,
+  speed:      0,
+  score:      0,
+  collision:  false
 };
 
 const ball = {
-  x: 0,
-  y: 0,
+  x:  0,
+  y:  0,
   vx: 0,
   vy: 0
 };
@@ -22,23 +22,23 @@ const ball = {
 let board;
 let context;
 
-const SCORE_LIMIT = 11;
+const SCORE_LIMIT =       11;
 
-const H_PADDING = 5;
-const V_PADDING = 3;
+const H_PADDING =         35;
+const V_PADDING =         25;
 
-const DIVIDER_WIDTH = 5;
-const DIVIDER_HEIGHT = 5;
-const DIVIDER_PADDING = 10;
+const DIVIDER_WIDTH =     35;
+const DIVIDER_HEIGHT =    40;
+const DIVIDER_PADDING =   80;
 
-const PADDLE_WIDTH = 5;
-const PADDLE_HEIGHT = 25;
+const PADDLE_WIDTH =      35;
+const PADDLE_HEIGHT =     200;
 
-const BALL_WIDTH = 7;
-const BALL_HEIGHT = 7;
-const BALL_MIN_X_SPEED = 3;
-const BALL_MAX_X_SPEED = 7;
-const BALL_INIT_SPEED = 5;
+const BALL_WIDTH =        45;
+const BALL_HEIGHT =       55;
+const BALL_INIT_SPEED =   15;
+const BALL_MIN_X_SPEED =  10;
+const BALL_MAX_X_SPEED =  35;
 
 
 function resetBall() {
@@ -55,20 +55,29 @@ function resetBall() {
 
 function move(event) {
   const [P1_UP, P1_DOWN, P2_UP, P2_DOWN] = [87, 83, 38, 40];
-  const DEFAULT_SPEED = 5;
+  const DEFAULT_SPEED = 40;
+  const MAX_SPEED = 60;
 
   switch (event.keyCode) {
     case P1_UP:
-      player1.speed = -DEFAULT_SPEED;
+      player1.speed -= DEFAULT_SPEED;
+      player1.speed = Math.min(player1.speed, -DEFAULT_SPEED);
+      player1.speed = Math.max(player1.speed, -MAX_SPEED);
       break;
     case P1_DOWN:
-      player1.speed = DEFAULT_SPEED;
+      player1.speed += DEFAULT_SPEED;
+      player1.speed = Math.max(player1.speed, DEFAULT_SPEED);
+      player1.speed = Math.min(player1.speed, MAX_SPEED);
       break;
     case P2_UP:
-      player2.speed = -DEFAULT_SPEED;
+      player2.speed -= DEFAULT_SPEED;
+      player2.speed = Math.min(player2.speed, -DEFAULT_SPEED);
+      player2.speed = Math.max(player2.speed, -MAX_SPEED);
       break;
     case P2_DOWN:
-      player2.speed = DEFAULT_SPEED;
+      player2.speed += DEFAULT_SPEED;
+      player2.speed = Math.max(player2.speed, DEFAULT_SPEED);
+      player2.speed = Math.min(player2.speed, MAX_SPEED);
       break;
     default:
       break;
@@ -76,10 +85,10 @@ function move(event) {
 }
 
 function simulateCollision() {
-  const CORNER_LENGTH = 5;
-  const MIDDLE_LENGTH = 7;
+  const CORNER_LENGTH = 40;
+  const MIDDLE_LENGTH = 55;
   const [BOOST_X, SLOW_X]  = [1.5, 0.75];
-  const [BOOST_Y, SLOW_Y] = [Math.floor(Math.random() * 5), 0.25];
+  const [BOOST_Y, SLOW_Y] = [Math.floor(Math.random() * 5 + BALL_INIT_SPEED), 0.25];
 
   if (player1.collision) {
     if (ball.x <= player1.position + CORNER_LENGTH ||
@@ -179,6 +188,7 @@ function game() {
   player2.position = Math.min(board.height - V_PADDING - PADDLE_HEIGHT, player2.position);
 
   // Decelerate paddles
+  const DECELERATION = 5;
   let d1 = 0;
   if (player1.speed > 0) d1 = 1;
   if (player1.speed < 0) d1 = -1;
@@ -187,8 +197,8 @@ function game() {
   if (player2.speed > 0) d2 = 1;
   if (player2.speed < 0) d2 = -1;
 
-  player1.speed -= d1;
-  player2.speed -= d2;
+  player1.speed -= d1 * DECELERATION;
+  player2.speed -= d2 * DECELERATION;
 
   // Draw player 1
   context.fillStyle = "white";
@@ -228,8 +238,8 @@ function game() {
   }
 
   // Draw score
-  const SCORE_V_PADDING = 30;
-  context.font = "2em Roboto";
+  const SCORE_V_PADDING = 200;
+  context.font = "20vh Roboto";
   context.fillText(player1.score, board.width / 4, SCORE_V_PADDING);
   context.fillText(player2.score, 3 * (board.width / 4), SCORE_V_PADDING);
 
@@ -250,7 +260,7 @@ window.onload = () => {
 
   resetBall();
 
-  const refreshRate = 50;
+  const refreshRate = 25;
   document.addEventListener("keydown", move);
   setInterval(game, refreshRate);
 };
