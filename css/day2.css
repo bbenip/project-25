@@ -44,15 +44,16 @@ header h1 {
   border-style: solid;
   border-color: black;
 
-  font-family: 'Roboto', sans-serif;
-  font-size: 2em;
-  font-weight: bold;
   align-items: center;
 }
 
 .player-key span {
   margin: auto;
   padding: auto;
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 5vh;
+  font-weight: bold;
 }
 
 #board {
