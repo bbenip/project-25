@@ -25,10 +25,14 @@ const VALUE_COLOR_MAP = {
   "rgb(237, 112, 161)": "PINK"
 };
 
+const DEFAULT_COLOR = "rgb(0, 0, 0)";
+const TOTAL_MOVES = 22;
+
 const game = {
-  color: "rgb(0, 0, 0)",
+  color: DEFAULT_COLOR,
   grid: [],
-  captured: []
+  captured: [],
+  movesLeft: TOTAL_MOVES
 };
 
 const GRID_DIMENSION = 12;
@@ -91,7 +95,12 @@ function renderGrid() {
   }
 }
 
-function resetGrid() {
+function renderCounter() {
+  const moveCounter = document.getElementById("move-counter");
+  moveCounter.innerHTML = "Moves: " + game.movesLeft;
+}
+
+function resetGame() {
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
       game.grid[i][j] = game.grid[i][j] || {};
@@ -106,8 +115,11 @@ function resetGrid() {
   game.captured = [0];
   game.grid[0][0].captured = true;
   game.color = game.grid[0][0].color;
+  game.movesLeft = TOTAL_MOVES;
 
   capture();
+  renderCounter();
+  renderGrid();
 }
 
 function setColor(event) {
@@ -115,6 +127,15 @@ function setColor(event) {
   const color = VALUE_COLOR_MAP[rawColor];
 
   if (color === game.color) return;
+
+  --game.movesLeft;
+  renderCounter();
+
+  if (game.movesLeft === 0) {
+    alert("Game over!");
+    resetGame();
+    return;
+  }
 
   game.color = color;
 
@@ -125,11 +146,14 @@ function setColor(event) {
 
   capture();
   renderGrid();
+
+  if (game.captured.length === GRID_DIMENSION * GRID_DIMENSION) {
+    alert("You win with " + game.movesLeft + " moves left!");
+    resetGame();
+  }
 }
 
 window.onload = () => {
-  resetGrid();
-
   // Set grid for game
   const table = document.createElement("table");
   table.id = "grid";
@@ -161,5 +185,5 @@ window.onload = () => {
   gameContainer.appendChild(table);
   gameContainer.appendChild(palette);
 
-  renderGrid();
+  resetGame();
 };
