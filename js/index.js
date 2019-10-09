@@ -2,6 +2,7 @@ const projects = [
   "Tic-Tac-Toe",
   "Pong",
   "Flood-It!",
+  "Snake",
 ];
 
 window.onload = () => {
