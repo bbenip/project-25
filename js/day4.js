@@ -136,7 +136,8 @@ function moveSnake() {
 
   const newCoordinate = neighbours[snake.newDirection];
 
-  if (!isValidCoordinate(...newCoordinate)) {
+  if (!isValidCoordinate(...newCoordinate) ||
+      isOccupied(...newCoordinate)) {
     alert("Game over! The snake's length is: "
           + snake.length);
 
