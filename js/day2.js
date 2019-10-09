@@ -161,7 +161,7 @@ function updateScore() {
 function game() {
   // Draw board
   context.fillStyle = "black";
-  context.fillRect(0, 0, board.width, board.width);
+  context.fillRect(0, 0, board.width, board.height);
 
   // Draw dividing line
   let currentHeight = DIVIDER_PADDING / 2;
