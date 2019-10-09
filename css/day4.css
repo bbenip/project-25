@@ -31,7 +31,7 @@ header h1 {
   flex-direction: column;
 
   margin: auto;
-  height: 65vh;
+  height: 70vh;
   width: 75vh;
 }
 
@@ -44,6 +44,6 @@ header h1 {
 }
 
 #game {
-  height: 55vh;
+  height: 60vh;
   width: 75vh;
 }
