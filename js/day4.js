@@ -21,7 +21,8 @@ const snake = {
   direction:    DEFAULT_DIRECTION,
   trail:        DEFAULT_TRAIL,
   speed:        DEFAULT_SPEED,
-  color:        "rgb(53, 222, 0)"
+  color:        "rgb(53, 222, 0)",
+  moving:       false
 };
 
 const apple = {
@@ -110,11 +111,10 @@ function renderGame() {
 
 function resetGame() {
   snake.length = DEFAULT_LENGTH;
-  snake.direction = DIRECTIONS[
-    Math.floor(Math.random() * DIRECTIONS.length)
-  ];
+  snake.direction = DEFAULT_DIRECTION;
 
   snake.newDirection = snake.direction;
+  snake.moving = false;
 
   initSnake();
   setApple();
@@ -160,7 +160,7 @@ function resizeSnake() {
 }
 
 function play() {
-  moveSnake();
+  if (snake.moving) moveSnake();
 
   const { x, y } = getSnakeHead();
   if (x === apple.x && y === apple.y) {
@@ -192,6 +192,8 @@ function setDirection(event) {
 
   if (newDirection === OPPOSITE_DIRECTION[snake.direction]) return;
   snake.newDirection = newDirection;
+
+  snake.moving = true;
 }
 
 window.onload = () => {
