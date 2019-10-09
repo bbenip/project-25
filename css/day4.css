@@ -1,0 +1,49 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  margin: 5vh;
+  margin-bottom: 2.5vh;
+  text-align: center;
+}
+
+.starter-links {
+  padding-right: 2em;
+  padding-left: 2em;
+
+  color: black;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}
+
+header h1 {
+  padding-top: 5vh;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 5vh;
+}
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+
+  margin: auto;
+  height: 65vh;
+  width: 75vh;
+}
+
+#length-counter {
+  margin: auto;
+  height: 5vh;
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 4vh;
+}
+
+#game {
+  height: 55vh;
+  width: 75vh;
+}
