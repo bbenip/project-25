@@ -3,6 +3,7 @@ const projects = [
   "Pong",
   "Flood-It!",
   "Snake",
+  "Sliding Puzzle",
 ];
 
 window.onload = () => {
