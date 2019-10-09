@@ -16,11 +16,12 @@ const NUM_Y_CELLS = BOARD_HEIGHT / CELL_DIMENSION;
 const DIRECTIONS = ['LEFT', 'UP', 'DOWN', 'RIGHT'];
 
 const snake = {
-  length:     DEFAULT_LENGTH,
-  direction:  DEFAULT_DIRECTION,
-  trail:      DEFAULT_TRAIL,
-  speed:      DEFAULT_SPEED,
-  color:      "rgb(53, 222, 0)"
+  length:       DEFAULT_LENGTH,
+  newDirection: DEFAULT_DIRECTION,
+  direction:    DEFAULT_DIRECTION,
+  trail:        DEFAULT_TRAIL,
+  speed:        DEFAULT_SPEED,
+  color:        "rgb(53, 222, 0)"
 };
 
 const apple = {
@@ -113,6 +114,8 @@ function resetGame() {
     Math.floor(Math.random() * DIRECTIONS.length)
   ];
 
+  snake.newDirection = snake.direction;
+
   initSnake();
   setApple();
 }
@@ -123,7 +126,7 @@ function getSnakeHead() {
 
 function moveSnake() {
   const { x, y } = getSnakeHead();
-  
+
   const neighbours = {
     "LEFT":   [x - 1, y],
     "UP":     [x, y - 1],
@@ -131,7 +134,7 @@ function moveSnake() {
     "DOWN":   [x, y + 1]
   };
 
-  const newCoordinate = neighbours[snake.direction];
+  const newCoordinate = neighbours[snake.newDirection];
 
   if (!isValidCoordinate(...newCoordinate)) {
     alert("Game over! The snake's length is: "
@@ -140,6 +143,8 @@ function moveSnake() {
     resetGame();
     return;
   }
+
+  snake.direction = snake.newDirection;
 
   snake.trail.unshift({
     x: newCoordinate[0],
@@ -167,24 +172,25 @@ function play() {
 }
 
 function setDirection(event) {
-  const [LEFT, UP, RIGHT, DOWN] = [37, 38, 39, 40];
+  const CODE_TO_DIRECTION = {
+    37: "LEFT",
+    38: "UP",
+    39: "RIGHT",
+    40: "DOWN"
+  };
 
-  switch(event.keyCode) {
-    case LEFT:
-      snake.direction = 'LEFT';
-      break;
-    case UP:
-      snake.direction = 'UP';
-      break;
-    case DOWN:
-      snake.direction = 'DOWN';
-      break;
-    case RIGHT:
-      snake.direction = 'RIGHT';
-      break;
-    default:
-      break;
-  }
+  const OPPOSITE_DIRECTION = {
+    LEFT:   "RIGHT",
+    UP:     "DOWN",
+    RIGHT:  "LEFT",
+    DOWN:   "UP"
+  };
+
+  const newDirection = CODE_TO_DIRECTION[event.keyCode];
+  if (newDirection === undefined) return;
+
+  if (newDirection === OPPOSITE_DIRECTION[snake.direction]) return;
+  snake.newDirection = newDirection;
 }
 
 window.onload = () => {
@@ -196,6 +202,6 @@ window.onload = () => {
 
   document.addEventListener("keydown", setDirection);
 
-  const refreshRate = 100;
+  const refreshRate = 75;
   setInterval(play, refreshRate);
 };
