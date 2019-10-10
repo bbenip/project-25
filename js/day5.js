@@ -1,12 +1,14 @@
 let context;
 
-const CANVAS_DIMENSION =  2000;
-const GRID_DIMENSION =   4;
-const TOTAL_CELLS =   GRID_DIMENSION * GRID_DIMENSION;
-const CELL_DIMENSION =   CANVAS_DIMENSION / GRID_DIMENSION;
-const CELL_PADDING =  25;
+const CANVAS_LENGTH =   2000;
+const GRID_DIMENSION =  4;
 
-const NUM_TRANSITION_FRAMES = 30;
+const CELL_PADDING =  25;
+const CELL_LENGTH =   CANVAS_LENGTH / GRID_DIMENSION;
+const TOTAL_CELLS =   GRID_DIMENSION * GRID_DIMENSION;
+const EMPTY_CELL =    16;
+
+// Direction key codes
 const [LEFT, UP, RIGHT, DOWN] = [37, 38, 39, 40];
 
 const CODE_TO_DIRECTION = {
@@ -32,15 +34,19 @@ for (let i = 0; i < GRID_DIMENSION; ++i) {
 
 // Fisher-Yates shuffle
 function shuffle(array) {
-  for (let i = 0; i < array.length - 1; ++i) {
+  const result = array.slice();
+
+  for (let i = 0; i < result.length - 1; ++i) {
     const randomIndex = Math.floor(
-      Math.random() * (array.length - i - 1)
+      Math.random() * (result.length - i - 1)
     );
 
-    const temp = array[randomIndex];
-    array[randomIndex] = array[array.length - i - 1];
-    array[array.length - i - 1] = temp;
+    const temp = result[randomIndex];
+    result[randomIndex] = result[array.length - i - 1];
+    result[result.length - i - 1] = temp;
   }
+
+  return result;
 }
 
 function isEqual(array1, array2) {
@@ -56,16 +62,16 @@ function isEqual(array1, array2) {
 
 function resetGame() {
   const STANDARD_GRID = [...Array(TOTAL_CELLS).keys()];
-  const randomLayout = STANDARD_GRID.slice();
+  let randomLayout = STANDARD_GRID.slice();
 
   while (isEqual(randomLayout, STANDARD_GRID)) {
-    shuffle(randomLayout);
+    randomLayout = shuffle(STANDARD_GRID);
   }
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
       game.grid[i][j] = randomLayout[i + j * GRID_DIMENSION] + 1;
-      if (game.grid[i][j] === TOTAL_CELLS) {
+      if (game.grid[i][j] === EMPTY_CELL) {
         game.emptyCell = { x: i, y: j };
       }
     }
@@ -81,29 +87,36 @@ function renderCounter() {
 
 function renderGame() {
   // Draw background
-  context.fillStyle = "black";
-  context.fillRect(0, 0, CANVAS_DIMENSION, CANVAS_DIMENSION);
+  context.fillStyle = "rgb(161, 94, 34)";
+  context.fillRect(0, 0, CANVAS_LENGTH, CANVAS_LENGTH);
 
   // Draw cells
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
-      const number = game.grid[i][j];
-      if (number === TOTAL_CELLS) continue;
+      if (game.grid[i][j] === EMPTY_CELL) continue;
 
-      context.fillStyle = "white";
+      context.fillStyle = "rgb(75, 75, 75)";
       context.fillRect(
-        i * CELL_DIMENSION + CELL_PADDING,
-        j * CELL_DIMENSION + CELL_PADDING,
-        CELL_DIMENSION - 2 * CELL_PADDING,
-        CELL_DIMENSION - 2 * CELL_PADDING
+        i * CELL_LENGTH + CELL_PADDING / 2,
+        j * CELL_LENGTH + CELL_PADDING / 2,
+        CELL_LENGTH - CELL_PADDING,
+        CELL_LENGTH - CELL_PADDING
       );
 
-      context.fillStyle = "black";
-      context.font = "25vh Roboto";
+      context.fillStyle = "rgb(235, 235, 235)";
+      context.fillRect(
+        i * CELL_LENGTH + CELL_PADDING,
+        j * CELL_LENGTH + CELL_PADDING,
+        CELL_LENGTH - 2 * CELL_PADDING,
+        CELL_LENGTH - 2 * CELL_PADDING
+      );
+
+      context.fillStyle = "rgb(100, 100, 100)";
+      context.font = "bold 25vh Roboto";
       context.fillText(
         game.grid[i][j],
-        i * CELL_DIMENSION + 1 / 3 * CELL_DIMENSION,
-        j * CELL_DIMENSION + 9 / 14 * CELL_DIMENSION
+        i * CELL_LENGTH + 1 / 3 * CELL_LENGTH,
+        j * CELL_LENGTH + 2 / 3 * CELL_LENGTH
       );
     }
   }
@@ -111,7 +124,7 @@ function renderGame() {
   renderCounter();
 }
 
-function isWin() {
+function playerWins() {
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
       if (game.grid[i][j] !== i + j * GRID_DIMENSION + 1) {
@@ -125,10 +138,11 @@ function isWin() {
 
 function updateGrid() {
   renderGame();
-  
-  if (isWin()) {
+
+  if (playerWins()) {
     alert("You won in " + game.moves + " moves!");
     resetGame();
+    renderGame();
   }
 }
 
@@ -139,8 +153,8 @@ function isValidCoordinate(coordinate) {
          y >= 0 && y < GRID_DIMENSION;
 }
 
-function getMovingPiece(direction) {
-  const { x, y } = game.emptyCell;
+function getPiece(cell, direction) {
+  const { x, y } = cell;
 
   const neighbours = {
     "LEFT":   { mX: x - 1, mY: y },
@@ -156,17 +170,14 @@ function movePiece(event) {
   const direction = CODE_TO_DIRECTION[event.keyCode];
   if (direction === undefined) return;
 
-  const oppositeDirection = OPPOSITE_DIRECTION[direction];
+  const pieceDirection = OPPOSITE_DIRECTION[direction];
 
-  const { mX, mY } = getMovingPiece(oppositeDirection);
+  const { mX, mY } = getPiece(game.emptyCell, pieceDirection);
   if (!isValidCoordinate({ x: mX, y: mY })) return;
 
   const { x, y } = game.emptyCell;
-  if (x === mX && y === mY) return;
-
-  const temp = game.grid[x][y];
   game.grid[x][y] = game.grid[mX][mY];
-  game.grid[mX][mY] = temp;
+  game.grid[mX][mY] = EMPTY_CELL;
 
   game.emptyCell.x = mX;
   game.emptyCell.y = mY;
