@@ -114,7 +114,9 @@ function renderGame() {
 function isWin() {
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
-      if (game.grid[i][j] !== i + j * i + 1) return false;
+      if (game.grid[i][j] !== i + j * GRID_DIMENSION + 1) {
+        return false;
+      }
     }
   }
 
@@ -122,8 +124,7 @@ function isWin() {
 }
 
 function updateGrid() {
-  const refreshRate = 50;
-  setTimeout(renderGame, refreshRate);
+  renderGame();
   
   if (isWin()) {
     alert("You won in " + game.moves + " moves!");
