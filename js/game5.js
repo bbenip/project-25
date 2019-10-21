@@ -129,16 +129,17 @@ function isValidCoordinate(coordinate) {
          x >= 0 && x < GRID_DIMENSION;
 }
 
-function getPiece(cell, direction) {
-  const { y, x } = cell;
-
-  const neighbours = {
-    "LEFT":   { mY: y, mX: x - 1 },
-    "UP":     { mY: y - 1, mX: x },
-    "RIGHT":  { mY: y, mX: x + 1 },
-    "DOWN":   { mY: y + 1, mX: x }
+function getNeighbours({ y, x }) {
+  return {
+    "LEFT":   { nY: y, nX: x - 1 },
+    "UP":     { nY: y - 1, nX: x },
+    "RIGHT":  { nY: y, nX: x + 1 },
+    "DOWN":   { nY: y + 1, nX: x }
   };
-  
+}
+
+function getPiece(cell, direction) {
+  const neighbours = getNeighbours(cell);
   return neighbours[direction];
 }
 
@@ -148,19 +149,53 @@ function moveKey(event) {
 
   const pieceDirection = OPPOSITE_DIRECTION[direction];
 
-  const { mY, mX } = getPiece(game.emptyCell, pieceDirection);
-  if (!isValidCoordinate({ y: mY, x: mX })) return;
+  const { nY, nX } = getPiece(game.emptyCell, pieceDirection);
+  if (!isValidCoordinate({ y: nY, x: nX })) return;
 
   const { y, x } = game.emptyCell;
-  game.grid[y][x] = game.grid[mY][mX];
-  game.grid[mY][mX] = EMPTY_CELL;
+  game.grid[y][x] = game.grid[nY][nX];
+  game.grid[nY][nX] = EMPTY_CELL;
 
-  game.emptyCell.y = mY;
-  game.emptyCell.x = mX;
+  game.emptyCell.y = nY;
+  game.emptyCell.x = nX;
 
   ++game.moves;
 
   updateGrid();
+}
+
+function cellToCoordinate(cell) {
+  const y = ~~(cell / GRID_DIMENSION);
+  const x = cell % GRID_DIMENSION;
+
+  return { y, x };
+}
+
+function moveClick(event) {
+  const cell = event.target.id.match(/cell(.*)/);
+  if (cell === null) return;
+
+  const coordinate = cellToCoordinate(parseInt(cell[1]) - 1);
+  if (!isValidCoordinate(coordinate)) return;
+
+  const { y, x } = coordinate;
+  const neighbours = getNeighbours(coordinate);
+
+  for (const neighbour of Object.values(neighbours)) {
+    const { nY, nX } = neighbour;
+    if (!isValidCoordinate({ y: nY, x: nX })) continue;
+
+    if (game.grid[nY][nX] === EMPTY_CELL) {
+      game.grid[nY][nX] = game.grid[y][x];
+      game.grid[y][x] = EMPTY_CELL;
+
+      game.emptyCell = { y, x };
+      ++game.moves;
+      updateGrid();
+
+      break;
+    }
+  }
 }
 
 window.onload = () => {
@@ -174,6 +209,7 @@ window.onload = () => {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
       const cell = document.createElement("td");
       cell.id = "cell" + (j + i * GRID_DIMENSION + 1);
+      cell.addEventListener("click", moveClick);
       row.appendChild(cell);
     }
 
