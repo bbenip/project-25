@@ -26,12 +26,12 @@ header h1 {
   font-size: 5vh;
 }
 
-#game-container {
+#game {
   display: flex;
   flex-direction: column;
   margin: auto;
   height: 65vh;
-  width: 55vh;
+  width: 60vh;
 }
 
 #move-counter {
@@ -42,7 +42,25 @@ header h1 {
   font-size: 4vh;
 }
 
-#game {
-  height: 55vh;
-  width: 55vh;
+#game table {
+  border-collapse: collapse;
+  height: 60vh;
+  width: 60vh;
+}
+
+#game td {
+  height: 11vh;
+  width: 11vh;
+  text-align: center;
+
+  border-width: 2vh;
+  border-style: solid;
+  border-color: rgb(161, 94, 34);
+
+  background-color: rgb(235, 235, 235);
+  color: rgb(75, 75, 75);
+
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 5vh;
 }

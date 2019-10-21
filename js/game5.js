@@ -1,15 +1,8 @@
 let context;
 
-const CANVAS_LENGTH =   2000;
 const GRID_DIMENSION =  4;
-
-const CELL_PADDING =  25;
-const CELL_LENGTH =   CANVAS_LENGTH / GRID_DIMENSION;
-const TOTAL_CELLS =   GRID_DIMENSION * GRID_DIMENSION;
-const EMPTY_CELL =    16;
-
-// Direction key codes
-const [LEFT, UP, RIGHT, DOWN] = [37, 38, 39, 40];
+const TOTAL_CELLS =     GRID_DIMENSION * GRID_DIMENSION;
+const EMPTY_CELL =      GRID_DIMENSION * GRID_DIMENSION;
 
 const CODE_TO_DIRECTION = {
   37: "LEFT",
@@ -70,9 +63,9 @@ function resetGame() {
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
-      game.grid[i][j] = randomLayout[i + j * GRID_DIMENSION] + 1;
+      game.grid[i][j] = randomLayout[j + i * GRID_DIMENSION] + 1;
       if (game.grid[i][j] === EMPTY_CELL) {
-        game.emptyCell = { x: i, y: j };
+        game.emptyCell = { y: i, x: j };
       }
     }
   }
@@ -86,38 +79,21 @@ function renderCounter() {
 }
 
 function renderGame() {
-  // Draw background
-  context.fillStyle = "rgb(161, 94, 34)";
-  context.fillRect(0, 0, CANVAS_LENGTH, CANVAS_LENGTH);
+  const table = document.getElementById("grid");
 
-  // Draw cells
   for (let i = 0; i < GRID_DIMENSION; ++i) {
+    const row = table.childNodes[i];
+
     for (let j = 0; j < GRID_DIMENSION; ++j) {
-      if (game.grid[i][j] === EMPTY_CELL) continue;
+      const cell = row.childNodes[j];
 
-      context.fillStyle = "rgb(75, 75, 75)";
-      context.fillRect(
-        i * CELL_LENGTH + CELL_PADDING / 2,
-        j * CELL_LENGTH + CELL_PADDING / 2,
-        CELL_LENGTH - CELL_PADDING,
-        CELL_LENGTH - CELL_PADDING
-      );
-
-      context.fillStyle = "rgb(235, 235, 235)";
-      context.fillRect(
-        i * CELL_LENGTH + CELL_PADDING,
-        j * CELL_LENGTH + CELL_PADDING,
-        CELL_LENGTH - 2 * CELL_PADDING,
-        CELL_LENGTH - 2 * CELL_PADDING
-      );
-
-      context.fillStyle = "rgb(100, 100, 100)";
-      context.font = "bold 25vh Roboto";
-      context.fillText(
-        game.grid[i][j],
-        i * CELL_LENGTH + 1 / 3 * CELL_LENGTH,
-        j * CELL_LENGTH + 2 / 3 * CELL_LENGTH
-      );
+      if (game.grid[i][j] === EMPTY_CELL) {
+        cell.style.backgroundColor = "black";
+        cell.innerHTML = "";
+      } else {
+        cell.style.backgroundColor = "white";
+        cell.innerHTML = game.grid[i][j];
+      }
     }
   }
 
@@ -127,7 +103,7 @@ function renderGame() {
 function playerWins() {
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
-      if (game.grid[i][j] !== i + j * GRID_DIMENSION + 1) {
+      if (game.grid[i][j] !== j + i * GRID_DIMENSION + 1) {
         return false;
       }
     }
@@ -147,40 +123,40 @@ function updateGrid() {
 }
 
 function isValidCoordinate(coordinate) {
-  const { x, y } = coordinate;
+  const { y, x } = coordinate;
   
-  return x >= 0 && x < GRID_DIMENSION &&
-         y >= 0 && y < GRID_DIMENSION;
+  return y >= 0 && y < GRID_DIMENSION &&
+         x >= 0 && x < GRID_DIMENSION;
 }
 
 function getPiece(cell, direction) {
-  const { x, y } = cell;
+  const { y, x } = cell;
 
   const neighbours = {
-    "LEFT":   { mX: x - 1, mY: y },
-    "UP":     { mX: x,     mY: y - 1 },
-    "RIGHT":  { mX: x + 1, mY: y },
-    "DOWN":   { mX: x,     mY: y + 1 }
+    "LEFT":   { mY: y, mX: x - 1 },
+    "UP":     { mY: y - 1, mX: x },
+    "RIGHT":  { mY: y, mX: x + 1 },
+    "DOWN":   { mY: y + 1, mX: x }
   };
   
   return neighbours[direction];
 }
 
-function movePiece(event) {
+function moveKey(event) {
   const direction = CODE_TO_DIRECTION[event.keyCode];
   if (direction === undefined) return;
 
   const pieceDirection = OPPOSITE_DIRECTION[direction];
 
-  const { mX, mY } = getPiece(game.emptyCell, pieceDirection);
-  if (!isValidCoordinate({ x: mX, y: mY })) return;
+  const { mY, mX } = getPiece(game.emptyCell, pieceDirection);
+  if (!isValidCoordinate({ y: mY, x: mX })) return;
 
-  const { x, y } = game.emptyCell;
-  game.grid[x][y] = game.grid[mX][mY];
-  game.grid[mX][mY] = EMPTY_CELL;
+  const { y, x } = game.emptyCell;
+  game.grid[y][x] = game.grid[mY][mX];
+  game.grid[mY][mX] = EMPTY_CELL;
 
-  game.emptyCell.x = mX;
   game.emptyCell.y = mY;
+  game.emptyCell.x = mX;
 
   ++game.moves;
 
@@ -188,11 +164,27 @@ function movePiece(event) {
 }
 
 window.onload = () => {
-  const board = document.getElementById("game");
-  context = board.getContext("2d");
+  // Set grid for game
+  const table = document.createElement("table");
+  table.id = "grid";
+
+  for (let i = 0; i < GRID_DIMENSION; ++i) {
+    const row = document.createElement("tr");
+
+    for (let j = 0; j < GRID_DIMENSION; ++j) {
+      const cell = document.createElement("td");
+      cell.id = "cell" + (j + i * GRID_DIMENSION + 1);
+      row.appendChild(cell);
+    }
+
+    table.appendChild(row);
+  }
+
+  const gameContainer = document.getElementById("game");
+  gameContainer.appendChild(table);
 
   resetGame();
   renderGame();
 
-  document.addEventListener("keydown", movePiece);
+  document.addEventListener("keydown", moveKey);
 };
