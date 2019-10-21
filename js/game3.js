@@ -26,13 +26,13 @@ const VALUE_COLOR_MAP = {
 };
 
 const DEFAULT_COLOR = "rgb(0, 0, 0)";
-const TOTAL_MOVES = 22;
+const TOTAL_STEPS = 22;
 
 const game = {
   color: DEFAULT_COLOR,
   grid: [],
   captured: [],
-  movesLeft: TOTAL_MOVES
+  stepsLeft: TOTAL_STEPS
 };
 
 const GRID_DIMENSION = 12;
@@ -96,8 +96,8 @@ function renderGrid() {
 }
 
 function renderCounter() {
-  const moveCounter = document.getElementById("move-counter");
-  moveCounter.innerHTML = "Moves: " + game.movesLeft;
+  const stepCounter = document.getElementById("step-counter");
+  stepCounter.innerHTML = "Steps: " + game.steps;
 }
 
 function resetGame() {
@@ -115,7 +115,7 @@ function resetGame() {
   game.captured = [0];
   game.grid[0][0].captured = true;
   game.color = game.grid[0][0].color;
-  game.movesLeft = TOTAL_MOVES;
+  game.steps = TOTAL_STEPS;
 
   capture();
   renderCounter();
@@ -128,10 +128,10 @@ function setColor(event) {
 
   if (color === game.color) return;
 
-  --game.movesLeft;
+  --game.steps;
   renderCounter();
 
-  if (game.movesLeft === 0) {
+  if (game.steps === 0) {
     alert("Game over!");
     resetGame();
     return;
@@ -148,7 +148,7 @@ function setColor(event) {
   renderGrid();
 
   if (game.captured.length === GRID_DIMENSION * GRID_DIMENSION) {
-    alert("You win with " + game.movesLeft + " moves left!");
+    alert("You win with " + game.steps + " steps left!");
     resetGame();
   }
 }
