@@ -4,7 +4,7 @@ const COLORS = [
   'YELLOW',
   'RED',
   'GREEN',
-  'PINK'
+  'PINK',
 ];
 
 const COLOR_VALUE_MAP = {
@@ -66,7 +66,7 @@ function capture() {
       [x - 1, y],
       [x + 1, y],
       [x, y - 1],
-      [x, y + 1]
+      [x, y + 1],
     ];
 
     for (const [nX, nY] of neighbours) {

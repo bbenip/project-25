@@ -11,7 +11,7 @@ let boardState = {
 const arrangements = [
   'v0', 'v1', 'v2',
   'h0', 'h1', 'h2',
-  'd0', 'd1'
+  'd0', 'd1',
 ];
 
 function checkWin() {

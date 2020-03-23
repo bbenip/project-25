@@ -134,7 +134,7 @@ function getNeighbours({ y, x }) {
     'LEFT':   { nY: y, nX: x - 1 },
     'UP':     { nY: y - 1, nX: x },
     'RIGHT':  { nY: y, nX: x + 1 },
-    'DOWN':   { nY: y + 1, nX: x }
+    'DOWN':   { nY: y + 1, nX: x },
   };
 }
 

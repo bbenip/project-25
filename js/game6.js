@@ -22,7 +22,7 @@ const snake = {
   trail:        DEFAULT_TRAIL,
   speed:        DEFAULT_SPEED,
   color:        'rgb(53, 222, 0)',
-  moving:       false
+  moving:       false,
 };
 
 const apple = {
@@ -61,7 +61,7 @@ function initSnake() {
 
   snake.trail = [{
     x: SNAKE_DEFAULT_X,
-    y: SNAKE_DEFAULT_Y
+    y: SNAKE_DEFAULT_Y,
   }];
 }
 
@@ -131,7 +131,7 @@ function moveSnake() {
     'LEFT':   [x - 1, y],
     'UP':     [x, y - 1],
     'RIGHT':  [x + 1, y],
-    'DOWN':   [x, y + 1]
+    'DOWN':   [x, y + 1],
   };
 
   const newCoordinate = neighbours[snake.newDirection];
@@ -149,7 +149,7 @@ function moveSnake() {
 
   snake.trail.unshift({
     x: newCoordinate[0],
-    y: newCoordinate[1]
+    y: newCoordinate[1],
   });
 }
 
