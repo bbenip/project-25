@@ -1,17 +1,17 @@
 let context;
 
-const DEFAULT_COORDINATE =  { x: -1, y: -1 };
-const DEFAULT_DIRECTION =   'NONE';
-const DEFAULT_TRAIL =       [];
-const DEFAULT_LENGTH =      5;
-const DEFAULT_SPEED =       [];
+const DEFAULT_COORDINATE  = { x: -1, y: -1 };
+const DEFAULT_DIRECTION   = 'NONE';
+const DEFAULT_TRAIL       = [];
+const DEFAULT_LENGTH      = 5;
+const DEFAULT_SPEED       = [];
 
-const CELL_DIMENSION =  80;
-const CELL_PADDING =    5;
-const BOARD_WIDTH =     2000;
-const BOARD_HEIGHT =    1600;
-const NUM_X_CELLS = BOARD_WIDTH / CELL_DIMENSION;
-const NUM_Y_CELLS = BOARD_HEIGHT / CELL_DIMENSION;
+const CELL_DIMENSION  = 80;
+const CELL_PADDING    = 5;
+const BOARD_WIDTH     = 2000;
+const BOARD_HEIGHT    = 1600;
+const NUM_X_CELLS     = BOARD_WIDTH / CELL_DIMENSION;
+const NUM_Y_CELLS     = BOARD_HEIGHT / CELL_DIMENSION;
 
 const DIRECTIONS = ['LEFT', 'UP', 'DOWN', 'RIGHT'];
 
@@ -21,14 +21,14 @@ const snake = {
   direction:    DEFAULT_DIRECTION,
   trail:        DEFAULT_TRAIL,
   speed:        DEFAULT_SPEED,
-  color:        "rgb(53, 222, 0)",
+  color:        'rgb(53, 222, 0)',
   moving:       false
 };
 
 const apple = {
   x:      DEFAULT_COORDINATE.x,
   y:      DEFAULT_COORDINATE.y,
-  color:  "rgb(253, 0, 0)"
+  color:  'rgb(253, 0, 0)',
 };
 
 function isValidCoordinate(x, y) {
@@ -77,15 +77,15 @@ function setApple() {
 }
 
 function renderCounter() {
-  const counter = document.getElementById("length-counter");
-  counter.innerHTML = "Length: " + snake.length;
+  const counter = document.getElementById('length-counter');
+  counter.innerHTML = 'Length: ' + snake.length;
 }
 
 function renderGame() {
   renderCounter();
 
   // Draw board
-  context.fillStyle = "black";
+  context.fillStyle = 'black';
   context.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
   // Draw snake
@@ -128,17 +128,17 @@ function moveSnake() {
   const { x, y } = getSnakeHead();
 
   const neighbours = {
-    "LEFT":   [x - 1, y],
-    "UP":     [x, y - 1],
-    "RIGHT":  [x + 1, y],
-    "DOWN":   [x, y + 1]
+    'LEFT':   [x - 1, y],
+    'UP':     [x, y - 1],
+    'RIGHT':  [x + 1, y],
+    'DOWN':   [x, y + 1]
   };
 
   const newCoordinate = neighbours[snake.newDirection];
 
   if (!isValidCoordinate(...newCoordinate) ||
       isOccupied(...newCoordinate)) {
-    alert("Game over! The snake's length is: "
+    alert('Game over! The snake\'s length is: '
           + snake.length);
 
     resetGame();
@@ -174,17 +174,17 @@ function play() {
 
 function setDirection(event) {
   const CODE_TO_DIRECTION = {
-    37: "LEFT",
-    38: "UP",
-    39: "RIGHT",
-    40: "DOWN"
+    37: 'LEFT',
+    38: 'UP',
+    39: 'RIGHT',
+    40: 'DOWN',
   };
 
   const OPPOSITE_DIRECTION = {
-    LEFT:   "RIGHT",
-    UP:     "DOWN",
-    RIGHT:  "LEFT",
-    DOWN:   "UP"
+    LEFT:   'RIGHT',
+    UP:     'DOWN',
+    RIGHT:  'LEFT',
+    DOWN:   'UP',
   };
 
   const newDirection = CODE_TO_DIRECTION[event.keyCode];
@@ -197,13 +197,13 @@ function setDirection(event) {
 }
 
 window.onload = () => {
-  let board = document.getElementById("game");
-  context = board.getContext("2d");
+  let board = document.getElementById('game');
+  context = board.getContext('2d');
   
   resetGame();
   renderGame();
 
-  document.addEventListener("keydown", setDirection);
+  document.addEventListener('keydown', setDirection);
 
   const refreshRate = 75;
   setInterval(play, refreshRate);

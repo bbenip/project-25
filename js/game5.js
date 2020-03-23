@@ -1,21 +1,21 @@
 let context;
 
-const GRID_DIMENSION =  4;
-const TOTAL_CELLS =     GRID_DIMENSION * GRID_DIMENSION;
-const EMPTY_CELL =      GRID_DIMENSION * GRID_DIMENSION;
+const GRID_DIMENSION  = 4;
+const TOTAL_CELLS     = GRID_DIMENSION * GRID_DIMENSION;
+const EMPTY_CELL      = GRID_DIMENSION * GRID_DIMENSION;
 
 const CODE_TO_DIRECTION = {
-  37: "LEFT",
-  38: "UP",
-  39: "RIGHT",
-  40: "DOWN"
+  37: 'LEFT',
+  38: 'UP',
+  39: 'RIGHT',
+  40: 'DOWN',
 };
 
 const OPPOSITE_DIRECTION = {
-  "LEFT":   "RIGHT",
-  "UP":     "DOWN",
-  "RIGHT":  "LEFT",
-  "DOWN":   "UP"
+  'LEFT':   'RIGHT',
+  'UP':     'DOWN',
+  'RIGHT':  'LEFT',
+  'DOWN':   'UP',
 };
 
 const game = { grid: [], moves: 0, emptyCell: {} };
@@ -74,12 +74,12 @@ function resetGame() {
 }
 
 function renderCounter() {
-  const counter = document.getElementById("move-counter");
-  counter.innerHTML = "Moves: " + game.moves;
+  const counter = document.getElementById('move-counter');
+  counter.innerHTML = 'Moves: ' + game.moves;
 }
 
 function renderGame() {
-  const table = document.getElementById("grid");
+  const table = document.getElementById('grid');
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     const row = table.childNodes[i];
@@ -88,10 +88,10 @@ function renderGame() {
       const cell = row.childNodes[j];
 
       if (game.grid[i][j] === EMPTY_CELL) {
-        cell.style.backgroundColor = "black";
-        cell.innerHTML = "";
+        cell.style.backgroundColor = 'black';
+        cell.innerHTML = '';
       } else {
-        cell.style.backgroundColor = "white";
+        cell.style.backgroundColor = 'white';
         cell.innerHTML = game.grid[i][j];
       }
     }
@@ -116,7 +116,7 @@ function updateGrid() {
   renderGame();
 
   if (playerWins()) {
-    alert("You won in " + game.moves + " moves!");
+    alert('You won in ' + game.moves + ' moves!');
     resetGame();
     renderGame();
   }
@@ -131,10 +131,10 @@ function isValidCoordinate(coordinate) {
 
 function getNeighbours({ y, x }) {
   return {
-    "LEFT":   { nY: y, nX: x - 1 },
-    "UP":     { nY: y - 1, nX: x },
-    "RIGHT":  { nY: y, nX: x + 1 },
-    "DOWN":   { nY: y + 1, nX: x }
+    'LEFT':   { nY: y, nX: x - 1 },
+    'UP':     { nY: y - 1, nX: x },
+    'RIGHT':  { nY: y, nX: x + 1 },
+    'DOWN':   { nY: y + 1, nX: x }
   };
 }
 
@@ -200,27 +200,27 @@ function moveClick(event) {
 
 window.onload = () => {
   // Set grid for game
-  const table = document.createElement("table");
-  table.id = "grid";
+  const table = document.createElement('table');
+  table.id = 'grid';
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
-    const row = document.createElement("tr");
+    const row = document.createElement('tr');
 
     for (let j = 0; j < GRID_DIMENSION; ++j) {
-      const cell = document.createElement("td");
-      cell.id = "cell" + (j + i * GRID_DIMENSION + 1);
-      cell.addEventListener("click", moveClick);
+      const cell = document.createElement('td');
+      cell.id = 'cell' + (j + i * GRID_DIMENSION + 1);
+      cell.addEventListener('click', moveClick);
       row.appendChild(cell);
     }
 
     table.appendChild(row);
   }
 
-  const gameContainer = document.getElementById("game");
+  const gameContainer = document.getElementById('game');
   gameContainer.appendChild(table);
 
   resetGame();
   renderGame();
 
-  document.addEventListener("keydown", moveKey);
+  document.addEventListener('keydown', moveKey);
 };

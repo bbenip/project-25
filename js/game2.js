@@ -2,43 +2,43 @@ const player1 = {
   position:   0,
   speed:      0,
   score:      0,
-  collision:  false
+  collision:  false,
 };
 
 const player2 = {
   position:   0,
   speed:      0,
   score:      0,
-  collision:  false
+  collision:  false,
 };
 
 const ball = {
   x:  0,
   y:  0,
   vx: 0,
-  vy: 0
+  vy: 0,
 };
 
 let board;
 let context;
 
-const SCORE_LIMIT =       11;
+const SCORE_LIMIT       = 11;
 
-const H_PADDING =         35;
-const V_PADDING =         25;
+const H_PADDING         = 35;
+const V_PADDING         = 25;
 
-const DIVIDER_WIDTH =     35;
-const DIVIDER_HEIGHT =    40;
-const DIVIDER_PADDING =   80;
+const DIVIDER_WIDTH     = 35;
+const DIVIDER_HEIGHT    = 40;
+const DIVIDER_PADDING   = 80;
 
-const PADDLE_WIDTH =      35;
-const PADDLE_HEIGHT =     200;
+const PADDLE_WIDTH      = 35;
+const PADDLE_HEIGHT     = 200;
 
-const BALL_WIDTH =        45;
-const BALL_HEIGHT =       55;
-const BALL_INIT_SPEED =   15;
-const BALL_MIN_X_SPEED =  10;
-const BALL_MAX_X_SPEED =  35;
+const BALL_WIDTH        = 45;
+const BALL_HEIGHT       = 55;
+const BALL_INIT_SPEED   = 15;
+const BALL_MIN_X_SPEED  = 10;
+const BALL_MAX_X_SPEED  = 35;
 
 
 function resetBall() {
@@ -160,13 +160,13 @@ function updateScore() {
 
 function game() {
   // Draw board
-  context.fillStyle = "black";
+  context.fillStyle = 'black';
   context.fillRect(0, 0, board.width, board.height);
 
   // Draw dividing line
   let currentHeight = DIVIDER_PADDING / 2;
   while (currentHeight < board.height) {
-    context.fillStyle = "rgba(255, 255, 255, 0.5)";
+    context.fillStyle = 'rgba(255, 255, 255, 0.5)';
     context.fillRect(
       (board.width - DIVIDER_WIDTH) / 2,
       currentHeight,
@@ -201,7 +201,7 @@ function game() {
   player2.speed -= d2 * DECELERATION;
 
   // Draw player 1
-  context.fillStyle = "white";
+  context.fillStyle = 'white';
   context.fillRect(
     H_PADDING,
     player1.position,
@@ -210,7 +210,7 @@ function game() {
   );
 
   // Draw player 2
-  context.fillStyle = "white";
+  context.fillStyle = 'white';
   context.fillRect(
     board.width - H_PADDING - PADDLE_WIDTH,
     player2.position,
@@ -223,7 +223,7 @@ function game() {
   ball.y += ball.vy;
 
   // Draw ball
-  context.fillStyle = "white";
+  context.fillStyle = 'white';
   context.fillRect(ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT);
 
   if (ballHitBounds()) {
@@ -239,28 +239,28 @@ function game() {
 
   // Draw score
   const SCORE_V_PADDING = 200;
-  context.font = "20vh Roboto";
+  context.font = '20vh Roboto';
   context.fillText(player1.score, board.width / 4, SCORE_V_PADDING);
   context.fillText(player2.score, 3 * (board.width / 4), SCORE_V_PADDING);
 
   if (player1.score === SCORE_LIMIT) {
-    alert("Player 1 wins!");
+    alert('Player 1 wins!');
     player1.score = 0;
     player2.score = 0;
   } else if (player2.score === SCORE_LIMIT) {
-    alert("Player 2 wins!");
+    alert('Player 2 wins!');
     player1.score = 0;
     player2.score = 0;
   }
 }
 
 window.onload = () => {
-  board = document.getElementById("board");
-  context = board.getContext("2d");
+  board = document.getElementById('board');
+  context = board.getContext('2d');
 
   resetBall();
 
   const refreshRate = 25;
-  document.addEventListener("keydown", move);
+  document.addEventListener('keydown', move);
   setInterval(game, refreshRate);
 };
