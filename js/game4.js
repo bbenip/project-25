@@ -4,7 +4,6 @@ const DEFAULT_COORDINATE  = { x: -1, y: -1 };
 const DEFAULT_DIRECTION   = 'NONE';
 const DEFAULT_TRAIL       = [];
 const DEFAULT_LENGTH      = 5;
-const DEFAULT_SPEED       = [];
 
 const CELL_DIMENSION  = 80;
 const CELL_PADDING    = 5;
@@ -20,7 +19,6 @@ const snake = {
   newDirection: DEFAULT_DIRECTION,
   direction:    DEFAULT_DIRECTION,
   trail:        DEFAULT_TRAIL,
-  speed:        DEFAULT_SPEED,
   color:        'rgb(53, 222, 0)',
   moving:       false,
 };
