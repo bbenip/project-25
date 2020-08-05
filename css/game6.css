@@ -28,20 +28,22 @@ header h1 {
 
 #game-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   margin: auto;
-  padding-top: 2.5vh;
-  height: 60vh;
-  width: 120vh;
+  height: 65vh;
+  width: 60vh;
+}
+
+#score {
+  margin: auto;
+  height: 5vh;
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 4vh;
 }
 
 #game {
   height: 60vh;
-  width: 90vh;
-}
-
-#controls {
-  height: 60vh;
-  width: 30vh;
+  width: 60vh;
 }

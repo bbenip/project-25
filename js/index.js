@@ -1,4 +1,5 @@
 const projects = [
+  '2048',
   'Sliding Puzzle',
   'Snake',
   'Flood-It!',

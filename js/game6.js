@@ -1,210 +1,319 @@
 let context;
 
-const DEFAULT_COORDINATE  = { x: -1, y: -1 };
-const DEFAULT_DIRECTION   = 'NONE';
-const DEFAULT_TRAIL       = [];
-const DEFAULT_LENGTH      = 5;
-const DEFAULT_SPEED       = [];
-
-const CELL_DIMENSION  = 80;
-const CELL_PADDING    = 5;
-const BOARD_WIDTH     = 2000;
-const BOARD_HEIGHT    = 1600;
-const NUM_X_CELLS     = BOARD_WIDTH / CELL_DIMENSION;
-const NUM_Y_CELLS     = BOARD_HEIGHT / CELL_DIMENSION;
-
-const DIRECTIONS = ['LEFT', 'UP', 'DOWN', 'RIGHT'];
-
-const snake = {
-  length:       DEFAULT_LENGTH,
-  newDirection: DEFAULT_DIRECTION,
-  direction:    DEFAULT_DIRECTION,
-  trail:        DEFAULT_TRAIL,
-  speed:        DEFAULT_SPEED,
-  color:        'rgb(53, 222, 0)',
-  moving:       false,
+const CODE_TO_DIRECTION = {
+  37: 'LEFT',
+  38: 'UP',
+  39: 'RIGHT',
+  40: 'DOWN',
 };
 
-const apple = {
-  x:      DEFAULT_COORDINATE.x,
-  y:      DEFAULT_COORDINATE.y,
-  color:  'rgb(253, 0, 0)',
-};
-
-function isValidCoordinate(x, y) {
-  return x >= 0 && x < NUM_X_CELLS &&
-         y >= 0 && y < NUM_Y_CELLS;
+const VALUE_TO_COLOR = {
+  0: '#cdc0b4',
+  2: '#eee4da',
+  4: '#ede0c8',
+  8: '#f2b179',
+  16: '#f59663',
+  32: '#f67c5f',
+  64: '#f65e3b',
+  128: '#edce72',
+  256: '#edcc61',
+  512: '#edc850',
+  1024: '#edc53f',
+  2048: '#edc22e',
 }
 
-function isOccupied(x, y) {
-  if (!isValidCoordinate(x, y)) return true;
+const CELL_LENGTH  = 500;
+const CELL_PADDING    = 25;
+const NUM_AXIS_CELLS  = 4;
 
-  for (let coordinate of snake.trail) {
-    if (coordinate.x === x && coordinate.y === y) {
-      return true;
+const BOARD_DIMENSION = 2050;
+
+const board = [
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+];
+
+let score = 0;
+let achieved2048 = false;
+
+function clearBoard() {
+  for (let i = 0; i < NUM_AXIS_CELLS; ++i) {
+    board[i] = [0, 0, 0, 0];
+  }
+}
+
+function getEmptyCell() {
+  const emptyCells = [];
+
+  for (let i = 0; i < NUM_AXIS_CELLS; ++i) {
+    for (let j = 0; j < NUM_AXIS_CELLS; ++j) {
+      if (board[i][j] === 0) {
+        emptyCells.push({ i, j });
+      }
+    }
+  }
+
+  const index = Math.floor(Math.random() * emptyCells.length);
+  return emptyCells[index];
+}
+
+function addCell() {
+  const { i, j } = getEmptyCell();
+  
+  const value = Math.random() < 0.9 ? 2 : 4;
+  board[i][j] = value;
+}
+
+function resetGame() {
+  clearBoard();
+  addCell();
+  addCell();
+
+  achieved2048 = false;
+}
+
+function renderScore() {
+  const counter = document.getElementById('score');
+  counter.innerHTML = 'Score: ' + score;
+}
+
+function renderGame() {
+  renderScore();
+
+  const TILE_HIGH_VALUE = 2048;
+  const TEXT_LOW_VALUE = 4;
+
+  const BOARD_BG_COLOR = '#bbada0';
+  const TEXT_COLOR_LOW = '#776e65';
+  const TEXT_COLOR_HIGH = '#f9f6f2';
+  const TILE_COLOR_HIGH = '#37322c';
+
+  context.fillStyle = BOARD_BG_COLOR;
+  context.fillRect(0, 0, BOARD_DIMENSION, BOARD_DIMENSION);
+
+  for (let i = 0; i < NUM_AXIS_CELLS; ++i) {
+    for (let j = 0; j < NUM_AXIS_CELLS; ++j) {
+      const value = board[i][j];
+
+      context.fillStyle = value <= TILE_HIGH_VALUE
+        ? VALUE_TO_COLOR[value] : TILE_COLOR_HIGH;
+      context.fillRect(
+        j * CELL_LENGTH + 2 * CELL_PADDING,
+        i * CELL_LENGTH + 2 * CELL_PADDING,
+        CELL_LENGTH - 2 * CELL_PADDING,
+        CELL_LENGTH - 2 * CELL_PADDING,
+      );
+
+      if (value === 0) continue;
+
+      context.fillStyle = value <= TEXT_LOW_VALUE
+        ? TEXT_COLOR_LOW : TEXT_COLOR_HIGH;
+      context.font = '900 150px Roboto';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+
+      context.fillText(
+        value,
+        j * CELL_LENGTH + CELL_LENGTH / 2 + CELL_PADDING,
+        i * CELL_LENGTH + CELL_LENGTH / 2 + CELL_PADDING
+      );
+    }
+  }
+}
+
+function isGameStuck() {
+  for (let i = 0; i < NUM_AXIS_CELLS; ++i) {
+    for (let j = 0; j < NUM_AXIS_CELLS; ++j) {
+      const isEmptyCell = board[i][j] === 0;
+      const isMergePossible =
+        j < NUM_AXIS_CELLS - 1
+        && (
+          board[i][j] === board[i][j + 1]
+          || board[j][i] === board[j + 1][i]
+        );
+
+      if (isEmptyCell || isMergePossible) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+function isGameWon() {
+  if (achieved2048) return false;
+
+  for (let i = 0; i < NUM_AXIS_CELLS; ++i) {
+    for (let j = 0; j < NUM_AXIS_CELLS; ++j) {
+      if (board[i][j] === 2048) {
+        achieved2048 = true;
+        return true;
+      }
     }
   }
 
   return false;
 }
 
-function getRandomCoordinate(){
-  const x = Math.floor(Math.random() * NUM_X_CELLS);
-  const y = Math.floor(Math.random() * NUM_Y_CELLS);
+function move(event) {
+  const direction = CODE_TO_DIRECTION[event.keyCode];
+  if (direction === undefined) return;
 
-  return [x, y];
-}
+  let isValidMove = false;
 
-function initSnake() {
-  const SNAKE_DEFAULT_X = 10;
-  const SNAKE_DEFAULT_Y = 10;
+  if (direction === 'LEFT') {
+    for (let i = 0; i < NUM_AXIS_CELLS; ++i) {
+      let p1 = 0;
+      let p2 = 1;
+      while (p2 < NUM_AXIS_CELLS) {
+        if (board[i][p2] === 0) {
+          ++p2;
+        } else if (board[i][p1] === 0) {
+          isValidMove = true;
 
-  snake.trail = [{
-    x: SNAKE_DEFAULT_X,
-    y: SNAKE_DEFAULT_Y,
-  }];
-}
+          board[i][p1] = board[i][p2];
+          board[i][p2] = 0;
+          ++p2;
+        } else if (board[i][p1] !== 0) {
+          if (board[i][p1] === board[i][p2]) {
+            isValidMove = true;
+            score += board[i][p1] + board[i][p2];
 
-function setApple() {
-  let [x, y] = [DEFAULT_COORDINATE.x, DEFAULT_COORDINATE.y];
+            board[i][p1] *= 2;
+            board[i][p2] = 0;
+            ++p1;
+            ++p2;
+          } else {
+            ++p1;
+            if (p1 === p2) {
+              ++p2;
+            }
+          }
+        }
+      }
+    }
+  } else if (direction === 'RIGHT') {
+    for (let i = 0; i < NUM_AXIS_CELLS; ++i) {
+      let p1 = NUM_AXIS_CELLS - 1;
+      let p2 = NUM_AXIS_CELLS - 2;
+      while (p2 >= 0) {
+        if (board[i][p2] === 0) {
+          --p2;
+        } else if (board[i][p1] === 0) {
+          isValidMove = true;
 
-  while (isOccupied(x, y)) {
-    [x, y] = getRandomCoordinate();
+          board[i][p1] = board[i][p2];
+          board[i][p2] = 0;
+          --p2;
+        } else if (board[i][p1] !== 0) {
+          if (board[i][p1] === board[i][p2]) {
+            isValidMove = true;
+            score += board[i][p1] + board[i][p2];
+
+            board[i][p1] *= 2;
+            board[i][p2] = 0;
+            --p1;
+            --p2;
+          } else {
+            --p1;
+            if (p1 === p2) {
+              --p2;
+            }
+          }
+        }
+      }
+    }
+  } else if (direction === 'UP') {
+    for (let i = 0; i < NUM_AXIS_CELLS; ++i) {
+      let p1 = 0;
+      let p2 = 1;
+      while (p2 < NUM_AXIS_CELLS) {
+        if (board[p2][i] === 0) {
+          ++p2;
+        } else if (board[p1][i] === 0) {
+          isValidMove = true;
+
+          board[p1][i] = board[p2][i];
+          board[p2][i] = 0;
+          ++p2;
+        } else if (board[p1][i] !== 0) {
+          if (board[p1][i] === board[p2][i]) {
+            isValidMove = true;
+            score += board[p1][i] + board[p2][i];
+
+            board[p1][i] *= 2;
+            board[p2][i] = 0;
+            ++p1;
+            ++p2;
+          } else {
+            ++p1;
+            if (p1 === p2) {
+              ++p2;
+            }
+          }
+        }
+      }
+    }
+  } else if (direction === 'DOWN') {
+    for (let i = 0; i < NUM_AXIS_CELLS; ++i) {
+      let p1 = NUM_AXIS_CELLS - 1;
+      let p2 = NUM_AXIS_CELLS - 2;
+      while (p2 >= 0) {
+        if (board[p2][i] === 0) {
+          --p2;
+        } else if (board[p1][i] === 0) {
+          isValidMove = true;
+
+          board[p1][i] = board[p2][i];
+          board[p2][i] = 0;
+          --p2;
+        } else if (board[p1][i] !== 0) {
+          if (board[p1][i] === board[p2][i]) {
+            isValidMove = true;
+            score += board[p1][i] + board[p2][i];
+
+            board[p1][i] *= 2;
+            board[p2][i] = 0;
+            --p1;
+            --p2;
+          } else {
+            --p1;
+            if (p1 === p2) {
+              --p2;
+            }
+          }
+        }
+      }
+    }
   }
 
-  apple.x = x;
-  apple.y = y;
-}
+  if (!isValidMove) return;
 
-function renderCounter() {
-  const counter = document.getElementById('length-counter');
-  counter.innerHTML = 'Length: ' + snake.length;
-}
-
-function renderGame() {
-  renderCounter();
-
-  // Draw board
-  context.fillStyle = 'black';
-  context.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-
-  // Draw snake
-  context.fillStyle = snake.color;
-  for (let { x, y } of snake.trail) {
-    context.fillRect(
-      x * CELL_DIMENSION,
-      y * CELL_DIMENSION,
-      CELL_DIMENSION - CELL_PADDING,
-      CELL_DIMENSION - CELL_PADDING
-    );
-  }
-
-  // Draw apple
-  context.fillStyle = apple.color;
-  context.fillRect(
-    apple.x * CELL_DIMENSION,
-    apple.y * CELL_DIMENSION,
-    CELL_DIMENSION - CELL_PADDING,
-    CELL_DIMENSION - CELL_PADDING,
-  );
-}
-
-function resetGame() {
-  snake.length = DEFAULT_LENGTH;
-  snake.direction = DEFAULT_DIRECTION;
-
-  snake.newDirection = snake.direction;
-  snake.moving = false;
-
-  initSnake();
-  setApple();
-}
-
-function getSnakeHead() {
-  return snake.trail[0];
-}
-
-function moveSnake() {
-  const { x, y } = getSnakeHead();
-
-  const neighbours = {
-    'LEFT':   [x - 1, y],
-    'UP':     [x, y - 1],
-    'RIGHT':  [x + 1, y],
-    'DOWN':   [x, y + 1],
-  };
-
-  const newCoordinate = neighbours[snake.newDirection];
-
-  if (!isValidCoordinate(...newCoordinate) ||
-      isOccupied(...newCoordinate)) {
-    alert('Game over! The snake\'s length is: '
-          + snake.length);
-
-    resetGame();
-    return;
-  }
-
-  snake.direction = snake.newDirection;
-
-  snake.trail.unshift({
-    x: newCoordinate[0],
-    y: newCoordinate[1],
-  });
-}
-
-function resizeSnake() {
-  while (snake.trail.length > snake.length) {
-    snake.trail.pop();
-  }
-}
-
-function play() {
-  if (snake.moving) moveSnake();
-
-  const { x, y } = getSnakeHead();
-  if (x === apple.x && y === apple.y) {
-    ++snake.length;
-    setApple();
-  }
-
-  resizeSnake();
+  addCell();
   renderGame();
-}
 
-function setDirection(event) {
-  const CODE_TO_DIRECTION = {
-    37: 'LEFT',
-    38: 'UP',
-    39: 'RIGHT',
-    40: 'DOWN',
-  };
+  if (isGameWon()) {
+    alert('You win!');
+  }
+  
+  if (isGameStuck()) {
+    alert('Game Over! Your score is: ' + score);
+    score = 0;
+    resetGame();
+    renderGame();
+  }
 
-  const OPPOSITE_DIRECTION = {
-    LEFT:   'RIGHT',
-    UP:     'DOWN',
-    RIGHT:  'LEFT',
-    DOWN:   'UP',
-  };
-
-  const newDirection = CODE_TO_DIRECTION[event.keyCode];
-  if (newDirection === undefined) return;
-
-  if (newDirection === OPPOSITE_DIRECTION[snake.direction]) return;
-  snake.newDirection = newDirection;
-
-  snake.moving = true;
 }
 
 window.onload = () => {
-  let board = document.getElementById('game');
-  context = board.getContext('2d');
+  let gameElement = document.getElementById('game');
+  context = gameElement.getContext('2d');
   
   resetGame();
   renderGame();
 
-  document.addEventListener('keydown', setDirection);
-
-  const refreshRate = 75;
-  setInterval(play, refreshRate);
+  document.addEventListener('keydown', move);
 };
