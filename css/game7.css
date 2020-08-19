@@ -45,3 +45,22 @@ header h1 {
 
   background-color: rgb(0, 144, 103);
 }
+
+.piece {
+  margin: auto;
+  height: 6vh;
+  width: 6vh;
+
+  border-radius: 50%;
+  border-width: 0.1vh;
+  border-style: solid;
+  border-color: black;
+}
+
+.white {
+  background-color: white;
+}
+
+.black {
+  background-color: black;
+}

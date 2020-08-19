@@ -1,15 +1,40 @@
 const GRID_DIMENSION = 8;
 
+const WHITE_PIECE = 1;
+const BLACK_PIECE = 2;
+
 const board = [
-  [0, 0, 0, 0],
-  [0, 0, 0, 0],
-  [0, 0, 0, 0],
-  [0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 1, 2, 0, 0, 0],
+  [0, 0, 0, 2, 1, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
 function addPiece() {}
 function resetGame() {}
-function renderGame() {}
+
+function renderGame() {
+  for (let i = 0; i < GRID_DIMENSION; ++i) {
+    for (let j = 0; j < GRID_DIMENSION; ++j) {
+      if (board[i][j] === 0) {
+        continue;
+      }
+
+      const coordinate = j + i * GRID_DIMENSION
+      const cell = document.getElementById('cell' + coordinate);
+
+      if (board[i][j] === WHITE_PIECE) {
+        cell.innerHTML = '<div class="piece white">&nbsp;</div>';
+      } else if (board[i][j] === BLACK_PIECE) {
+        cell.innerHTML = '<div class="piece black">&nbsp;</div>';
+      }
+    }
+  }
+}
 
 window.onload = () => {
   const board = document.createElement('table');
