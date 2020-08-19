@@ -26,3 +26,22 @@ header h1 {
   font-weight: bold;
   font-size: 5vh;
 }
+
+#game table {
+  margin: auto;
+
+  border-collapse: collapse;
+  height: 64vh;
+  width: 64vh;
+}
+
+#game td {
+  height: 7vh;
+  width: 7vh;
+
+  border-width: 0.5vh;
+  border-style: solid;
+  border-color: black;
+
+  background-color: rgb(0, 144, 103);
+}
