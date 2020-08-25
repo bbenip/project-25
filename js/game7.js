@@ -1,7 +1,9 @@
 const GRID_DIMENSION = 8;
 
-const WHITE_PIECE = 1;
-const BLACK_PIECE = 2;
+const PIECE_BLANK = 0;
+const PIECE_INITIAL = 1;
+const PIECE_BLACK = 1;
+const PIECE_WHITE = 2;
 
 const board = [
   [0, 0, 0, 0, 0, 0, 0, 0],
@@ -14,8 +16,33 @@ const board = [
   [0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
-function addPiece() {}
-function resetGame() {}
+let pieceCurrent;
+
+function cellToCoordinate(cell) {
+  const i = ~~(cell / GRID_DIMENSION);
+  const j = cell % GRID_DIMENSION;
+
+  return { i, j };
+}
+
+function addPiece(event) {
+  const cell = event.target.id.match(/cell(.*)/)[1];
+  if (cell === null) return;
+
+  const { i, j } = cellToCoordinate(cell);
+
+  if (board[i][j] !== PIECE_BLANK) {
+    return;
+  }
+
+  board[i][j] = pieceCurrent;
+  pieceCurrent = pieceCurrent % 2 + 1;
+
+  renderGame();
+}
+function resetGame() {
+  pieceCurrent = PIECE_INITIAL;
+}
 
 function renderGame() {
   for (let i = 0; i < GRID_DIMENSION; ++i) {
@@ -27,11 +54,21 @@ function renderGame() {
       const coordinate = j + i * GRID_DIMENSION
       const cell = document.getElementById('cell' + coordinate);
 
-      if (board[i][j] === WHITE_PIECE) {
-        cell.innerHTML = '<div class="piece white">&nbsp;</div>';
-      } else if (board[i][j] === BLACK_PIECE) {
-        cell.innerHTML = '<div class="piece black">&nbsp;</div>';
+      if (cell.hasChildNodes()) {
+        continue;
       }
+
+      const piece = document.createElement('div');
+      piece.id = 'cell' + coordinate;
+      piece.className = 'piece';
+
+      if (board[i][j] === PIECE_BLACK) {
+        piece.className += ' black';
+      } else if (board[i][j] === PIECE_WHITE) {
+        piece.className += ' white';
+      }
+
+      cell.appendChild(piece);
     }
   }
 }
