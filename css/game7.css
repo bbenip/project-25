@@ -27,15 +27,28 @@ header h1 {
   font-size: 5vh;
 }
 
-#game table {
+#score-counter {
   margin: auto;
-
-  border-collapse: collapse;
-  height: 64vh;
+  height: 6vh;
   width: 64vh;
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 4vh;
 }
 
-#game td {
+#score-counter td {
+  text-align: center;
+}
+
+#gameTable {
+  margin: auto;
+  height: 64vh;
+  width: 64vh;
+
+  border-collapse: collapse;
+}
+
+#gameTable td {
   height: 7vh;
   width: 7vh;
 

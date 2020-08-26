@@ -27,6 +27,11 @@ const BOARD = [
   [0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
+const SCORE = {
+  [PIECE_BLACK]: 2,
+  [PIECE_WHITE]: 2,
+};
+
 let pieceCurrent = PIECE_INITIAL;
 let validMoves = [];
 
@@ -99,6 +104,9 @@ function swapPieces(i, j, i2, j2) {
 
     BOARD[i][j] = getOppositePiece(BOARD[i][j]);
   }
+
+  SCORE[pieceCurrent] += length - 1;
+  SCORE[getOppositePiece(pieceCurrent)] -= length - 1;
 }
 
 function captureCells(i, j) {
@@ -120,6 +128,14 @@ function captureCells(i, j) {
   }
 }
 
+function renderCounter() {
+  const blackCounter = document.getElementById('black-counter');
+  blackCounter.innerHTML = 'Black: ' + SCORE[PIECE_BLACK];
+
+  const whiteCounter = document.getElementById('white-counter');
+  whiteCounter.innerHTML = 'White: ' + SCORE[PIECE_WHITE];
+}
+
 function addPiece(event) {
   const cell = event.target.id.match(/cell(.*)/)[1];
   const { i, j } = cellToCoordinate(cell);
@@ -130,6 +146,8 @@ function addPiece(event) {
 
   BOARD[i][j] = pieceCurrent;
   captureCells(i, j);
+
+  ++SCORE[pieceCurrent];
 
   pieceCurrent = getOppositePiece(pieceCurrent);
   validMoves = getValidMoves();
@@ -156,10 +174,13 @@ function renderGame() {
       }
     }
   }
+
+  renderCounter();
 }
 
 window.onload = () => {
   const table = document.createElement('table');
+  table.id = 'gameTable';
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     const row = document.createElement('tr');
