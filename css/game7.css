@@ -51,16 +51,22 @@ header h1 {
   height: 6vh;
   width: 6vh;
 
+  pointer-events: none;
+
   border-radius: 50%;
   border-width: 0.1vh;
   border-style: solid;
   border-color: black;
 }
 
-.white {
-  background-color: white;
+.blank {
+  display: none;
 }
 
 .black {
   background-color: black;
+}
+
+.white {
+  background-color: white;
 }
