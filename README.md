@@ -9,13 +9,13 @@ I like playing games and I hate black bloxes! So, I made some classic games that
 <table align="center">
     <tr>
         <td>
-            <img src="/img/preview/game2.jpg" width="300px">
+            <img src="/img/preview/pong.jpg" width="300px">
         </td>
         <td>
-            <img src="/img/preview/game4.jpg" width="300px">
+            <img src="/img/preview/snake.jpg" width="300px">
         </td>
         <td>
-            <img src="/img/preview/game6.jpg" width="300px">
+            <img src="/img/preview/game2048.jpg" width="300px">
         </td>
     </tr>
 </table>
