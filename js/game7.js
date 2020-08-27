@@ -198,6 +198,13 @@ function renderGame() {
     }
   }
 
+  for (const [i, j] of validMoves) {
+    const cellNumber = j + i * GRID_DIMENSION;
+    const piece = document.getElementById('piece' + cellNumber);
+
+    piece.className = 'piece preview';
+  }
+
   renderCounter();
 }
 

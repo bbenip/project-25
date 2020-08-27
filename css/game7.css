@@ -52,7 +52,7 @@ header h1 {
   height: 7vh;
   width: 7vh;
 
-  border-width: 0.5vh;
+  border-width: 0.25vh;
   border-style: solid;
   border-color: black;
 
@@ -67,7 +67,7 @@ header h1 {
   pointer-events: none;
 
   border-radius: 50%;
-  border-width: 0.1vh;
+  border-width: 0.2vh;
   border-style: solid;
   border-color: black;
 }
@@ -82,4 +82,8 @@ header h1 {
 
 .white {
   background-color: white;
+}
+
+.preview {
+  background-color: rgb(0, 144, 103);
 }
