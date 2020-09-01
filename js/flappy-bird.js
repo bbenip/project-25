@@ -3,7 +3,7 @@ let context;
 const GAME_HEIGHT = 2000;
 const GAME_WIDTH = 1000;
 
-const GRAVITY = 2;
+const GRAVITY = 1.5;
 
 const PLAYER_WIDTH = 50;
 const PLAYER_HEIGHT = 50;
@@ -58,22 +58,44 @@ function playerHitGround() {
 
 function play() {
   player.yVelocity += GRAVITY;
-  player.y = Math.min(
-    player.y + player.yVelocity, ground.y - player.height / 2
+  player.y = Math.max(
+    Math.min(player.y + player.yVelocity, ground.y - player.height / 2),
+    0
   );
+
+  if (player.y === 0) {
+    player.yVelocity = 0;
+  }
 
   renderGame();
 
   if (playerHitGround()) {
     alert('Game over!');
     resetGame();
+    renderGame();
   }
 
+}
+
+function jump(e) {
+  const jumpVelocity = -30;
+
+  const jumpCodes = {
+    arrow_up: 38,
+    space: 32,
+    w: 87,
+  };
+
+  if (Object.values(jumpCodes).includes(e.keyCode)) {
+    player.yVelocity = jumpVelocity;
+  }
 }
 
 window.onload = () => {
   let game = document.getElementById('game');
   context = game.getContext('2d');
+
+  document.addEventListener('keydown', jump);
 
   resetGame();
   renderGame();
