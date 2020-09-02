@@ -11,7 +11,9 @@ const PLAYER_HEIGHT = 50;
 const PLAYER_INIT_X = 250;
 const PLAYER_INIT_Y = 500;
 const PLAYER_INIT_Y_VELOCITY = 0;
+const PLAYER_INIT_OBSTACLE_ID = 0;
 
+const OBSTACLE_WIDTH = 200;
 const GROUND_HEIGHT = 100;
 
 const player = {
@@ -22,6 +24,8 @@ const player = {
   height: PLAYER_HEIGHT,
 
   yVelocity: PLAYER_INIT_Y_VELOCITY,
+
+  obstacleID: 0,
 };
 
 const ground = {
@@ -32,7 +36,9 @@ const ground = {
   height: GROUND_HEIGHT,
 };
 
+let obstacleID = 0;
 let obstacles = [];
+let score = 0;
 
 function jump(e) {
   const jumpVelocity = -30;
@@ -51,11 +57,21 @@ function jump(e) {
 function resetGame() {
   player.y = PLAYER_INIT_Y;
   player.yVelocity = PLAYER_INIT_Y_VELOCITY;
+  player.obstacleID = PLAYER_INIT_OBSTACLE_ID;
 
+  obstacleID = 0;
   obstacles = [];
+  score = 0;
+}
+
+function renderScore() {
+  const counter = document.getElementById('score-counter');
+  counter.innerHTML = 'Score: ' + score;
 }
 
 function renderGame() {
+  renderScore();
+
   // Draw board
   context.fillStyle = 'black';
   context.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
@@ -78,44 +94,64 @@ function renderGame() {
 }
 
 function generateObstacles() {
-  const obstacleWidth = 200;
   const newObstacleThreshold = GAME_WIDTH / 3;
 
   // Remove unnecessary obstacles
-  if (obstacles.length > 0 && obstacles[0].x + obstacleWidth <= 0) {
+  if (obstacles.length > 0 && obstacles[0].x + OBSTACLE_WIDTH <= 0) {
     obstacles.shift();
   }
 
   if (
     obstacles.length === 0
-    || obstacles.slice(-1)[0].x + obstacleWidth <= newObstacleThreshold
+    || obstacles.slice(-1)[0].x + OBSTACLE_WIDTH <= newObstacleThreshold
   ) {
 
     const gapHeight = GAME_HEIGHT * 0.2;
     const gapY = Math.random() * GAME_HEIGHT * 0.55 + GAME_HEIGHT * 0.1;
 
     const topObstacle = {
+      id: obstacleID,
+
       x: GAME_WIDTH,
       y: 0,
 
-      width: obstacleWidth,
+      width: OBSTACLE_WIDTH,
       height: gapY,
 
       xVelocity: -10,
     };
 
     const bottomObstacle = {
+      id: obstacleID,
+
       x: GAME_WIDTH,
       y: gapY + gapHeight,
 
-      width: obstacleWidth,
+      width: OBSTACLE_WIDTH,
       height: GAME_HEIGHT - gapY - gapHeight - GROUND_HEIGHT,
 
       xVelocity: -10,
     };
 
+    ++obstacleID;
+
     obstacles.push(topObstacle);
     obstacles.push(bottomObstacle);
+  }
+}
+
+function updateScore() {
+  for (const obstacle of obstacles) {
+    if (obstacle.id !== player.obstacleID) {
+      continue;
+    }
+
+    if (obstacle.x + OBSTACLE_WIDTH <= player.x) {
+      ++player.obstacleID;
+      ++score;
+
+      break;
+    }
   }
 }
 
@@ -165,10 +201,11 @@ function play() {
     obstacles[i].x += obstacles[i].xVelocity;
   }
 
+  updateScore();
   renderGame();
 
   if (isCollision()) {
-    alert('Game over!');
+    alert('Game over! Your score is: ' + score);
     resetGame();
     renderGame();
   }
