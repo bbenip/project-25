@@ -32,7 +32,7 @@ header h1 {
 
   margin: auto;
   height: 70vh;
-  width: 45vh;
+  width: 58.5vh;
 }
 
 #score-counter {
@@ -45,5 +45,5 @@ header h1 {
 
 #game {
   height: 65vh;
-  width: 45vh;
+  width: 58.5vh;
 }

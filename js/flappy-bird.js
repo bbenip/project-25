@@ -1,19 +1,19 @@
 let context;
 
 const GAME_HEIGHT = 2000;
-const GAME_WIDTH = 1000;
+const GAME_WIDTH = 1800;
 
 const GRAVITY = 1.5;
 
-const PLAYER_WIDTH = 50;
-const PLAYER_HEIGHT = 50;
+const PLAYER_WIDTH = 60;
+const PLAYER_HEIGHT = 60;
 
-const PLAYER_INIT_X = 250;
+const PLAYER_INIT_X = 600;
 const PLAYER_INIT_Y = 500;
 const PLAYER_INIT_Y_VELOCITY = 0;
 const PLAYER_INIT_OBSTACLE_ID = 0;
 
-const OBSTACLE_WIDTH = 200;
+const OBSTACLE_WIDTH = 360;
 const GROUND_HEIGHT = 100;
 
 const player = {
@@ -118,7 +118,7 @@ function generateObstacles() {
       width: OBSTACLE_WIDTH,
       height: gapY,
 
-      xVelocity: -10,
+      xVelocity: -20,
     };
 
     const bottomObstacle = {
@@ -130,7 +130,7 @@ function generateObstacles() {
       width: OBSTACLE_WIDTH,
       height: GAME_HEIGHT - gapY - gapHeight - GROUND_HEIGHT,
 
-      xVelocity: -10,
+      xVelocity: -20,
     };
 
     ++obstacleID;
