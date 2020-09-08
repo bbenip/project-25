@@ -49,7 +49,7 @@ function jump(e) {
     w: 87,
   };
 
-  if (Object.values(jumpCodes).includes(e.keyCode)) {
+  if (e.type === 'click' || Object.values(jumpCodes).includes(e.keyCode)) {
     player.yVelocity = jumpVelocity;
   }
 }
@@ -214,6 +214,7 @@ window.onload = () => {
   let game = document.getElementById('game');
   context = game.getContext('2d');
 
+  game.addEventListener('click', jump);
   document.addEventListener('keydown', jump);
 
   resetGame();
