@@ -87,8 +87,7 @@ function renderGame() {
   // Draw obstacles
   context.fillStyle = 'green';
 
-  for (let i = 0; i < obstacles.length; ++i) {
-    const obstacle = obstacles[i];
+  for (const obstacle of obstacles) {
     context.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
   }
 }
