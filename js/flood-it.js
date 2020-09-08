@@ -72,8 +72,8 @@ function capture() {
     for (const [nX, nY] of neighbours) {
       if (isValidCoordinate(nX, nY) &&
           game.grid[nX][nY].color === game.color &&
-          !game.grid[nX][nY].captured) {
-        game.grid[nX][nY].captured = true;
+          !game.grid[nX][nY].isCaptured) {
+        game.grid[nX][nY].isCaptured = true;
         game.captured.push(coordinateToCapture(nX, nY));
       }
     }
@@ -107,13 +107,13 @@ function resetGame() {
 
       game.grid[i][j].color =
         COLORS[Math.floor(Math.random() * COLORS.length)];
-      game.grid[i][j].captured = false;
+      game.grid[i][j].isCaptured = false;
     }
   }
 
   // Initialize game with top-left corner
   game.captured = [0];
-  game.grid[0][0].captured = true;
+  game.grid[0][0].isCaptured = true;
   game.color = game.grid[0][0].color;
   game.steps = TOTAL_STEPS;
 
