@@ -72,12 +72,12 @@ function renderScore() {
 function renderGame() {
   renderScore();
 
-  // Draw board
-  context.fillStyle = 'black';
+  // Draw background
+  context.fillStyle = '#70c4ce';
   context.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
   // Draw player
-  context.fillStyle = 'red';
+  context.fillStyle = 'yellow';
   context.fillRect(player.x, player.y, player.width, player.height);
 
   // Draw ground
