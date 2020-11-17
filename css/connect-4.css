@@ -25,3 +25,47 @@ header h1 {
   font-weight: bold;
   font-size: 5vh;
 }
+
+#game {
+  margin: auto;
+  height: 60vh;
+  width: 70vh;
+}
+
+#game table {
+  border-collapse: collapse;
+  background-color: darkblue;
+}
+
+#game tr {
+  height: 10vh;
+}
+
+#game td {
+  width: 10vh;
+}
+
+.blank {
+  background-color: white;
+}
+
+.piece {
+  margin: auto;
+  height: 8vh;
+  width: 8vh;
+
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.red {
+  background-color: red;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.winner {
+  background-color: green;
+}
