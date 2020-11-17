@@ -47,21 +47,8 @@ function isValidCoordinate(x, y) {
          (y >= 0 && y < GRID_DIMENSION);
 }
 
-function captureToCoordinate(pieceNumber) {
-  const x = pieceNumber % GRID_DIMENSION;
-  const y = Math.floor(pieceNumber / GRID_DIMENSION);
-
-  return [x, y];
-}
-
-function coordinateToCapture(x, y) {
-  return x + y * GRID_DIMENSION;
-}
-
 function capture() {
-  for (const cell of game.captured) {
-    const [x, y] = captureToCoordinate(cell);
-
+  for (const [x, y] of game.captured) {
     const neighbours = [
       [x - 1, y],
       [x + 1, y],
@@ -74,7 +61,7 @@ function capture() {
           game.grid[nX][nY].color === game.color &&
           !game.grid[nX][nY].isCaptured) {
         game.grid[nX][nY].isCaptured = true;
-        game.captured.push(coordinateToCapture(nX, nY));
+        game.captured.push([nX, nY]);
       }
     }
   }
@@ -112,7 +99,7 @@ function resetGame() {
   }
 
   // Initialize game with top-left corner
-  game.captured = [0];
+  game.captured = [[0, 0]];
   game.grid[0][0].isCaptured = true;
   game.color = game.grid[0][0].color;
   game.steps = TOTAL_STEPS;
@@ -139,8 +126,7 @@ function setColor(event) {
 
   game.color = color;
 
-  for (const cell of game.captured) {
-    const [x, y] = captureToCoordinate(cell);
+  for (const [x, y] of game.captured) {
     game.grid[x][y].color = color;
   }
 
