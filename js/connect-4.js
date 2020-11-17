@@ -136,7 +136,7 @@ window.onload = () => {
   for (let i = BOARD_HEIGHT - 1; i >= 0; --i) {
     const row = document.createElement('tr');
 
-    for (let j = BOARD_WIDTH - 1; j >= 0; --j) {
+    for (let j = 0; j < BOARD_WIDTH; ++j) {
       const cell = document.createElement('td');
       const piece = document.createElement('div');
 
