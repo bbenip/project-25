@@ -43,8 +43,10 @@ for (let i = 0; i < GRID_DIMENSION; ++i) {
 }
 
 function isValidCoordinate(x, y) {
-  return (x >= 0 && x < GRID_DIMENSION) &&
-         (y >= 0 && y < GRID_DIMENSION);
+  return (
+    (x >= 0 && x < GRID_DIMENSION)
+    && (y >= 0 && y < GRID_DIMENSION)
+  );
 }
 
 function capture() {
@@ -57,9 +59,11 @@ function capture() {
     ];
 
     for (const [nX, nY] of neighbours) {
-      if (isValidCoordinate(nX, nY) &&
-          game.grid[nX][nY].color === game.color &&
-          !game.grid[nX][nY].isCaptured) {
+      if (
+        isValidCoordinate(nX, nY)
+        && game.grid[nX][nY].color === game.color
+        && !game.grid[nX][nY].isCaptured
+      ) {
         game.grid[nX][nY].isCaptured = true;
         game.captured.push([nX, nY]);
       }
