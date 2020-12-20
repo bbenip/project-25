@@ -1,4 +1,5 @@
 const projects = [
+  'Tron',
   'Connect 4',
   'Flappy Bird',
   'Reversi',
