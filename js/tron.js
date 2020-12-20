@@ -1,16 +1,24 @@
 let context;
 
+const BOARD_WIDTH = 2500;
+const BOARD_HEIGHT = 1750;
+
+const NUM_X_CELLS = 1000;
+const NUM_Y_CELLS = 700;
+
+const CELL_DIMENSION = BOARD_HEIGHT / NUM_Y_CELLS;
+
 const DEFAULT_TRAIL = [];
 
 const DEFAULT_DIRECTION_P1 = 'RIGHT';
 const DEFAULT_COLOR_P1 = 'rgb(255, 100, 255)';
-const DEFAULT_X_P1 = 125;
-const DEFAULT_Y_P1 = 200;
+const DEFAULT_X_P1 = NUM_X_CELLS / 4;
+const DEFAULT_Y_P1 = NUM_Y_CELLS / 2;
 
 const DEFAULT_DIRECTION_P2 = 'LEFT';
 const DEFAULT_COLOR_P2 = 'rgb(50, 200, 150)';
-const DEFAULT_X_P2 = 375;
-const DEFAULT_Y_P2 = 200;
+const DEFAULT_X_P2 = (NUM_X_CELLS / 4) * 3;
+const DEFAULT_Y_P2 = NUM_Y_CELLS / 2;
 
 const player1 = {
   color: DEFAULT_COLOR_P1,
@@ -26,6 +34,8 @@ const player2 = {
   y: DEFAULT_Y_P2,
 }
 
+let board = [];
+
 function resetGame() {
   player1.x = DEFAULT_X_P1;
   player1.y = DEFAULT_Y_P1;
@@ -33,8 +43,14 @@ function resetGame() {
   player2.x = DEFAULT_X_P2;
   player2.y = DEFAULT_Y_P2;
 
-  // TODO: Reset board
-  // TODO: Render background
+  board = Array(NUM_X_CELLS).fill().map(() => Array(NUM_Y_CELLS).fill(0));
+
+  // Draw board
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+  
+
+  // TODO: Draw players
 }
 
 function renderGame() {

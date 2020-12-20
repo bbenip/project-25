@@ -27,7 +27,8 @@ header h1 {
 }
 
 #game {
+  display: block;
   margin: auto;
-  height: 60vh;
-  width: 75vh;
+  height: 63vh;
+  width: 90vh;
 }
