@@ -121,9 +121,46 @@ function play() {
 }
 
 function getUserInput(event) {
+  const KEYS_P1 = [65, 68, 87, 83];
+  const CODE_TO_DIRECTION_P1 = {
+    65: 'LEFT',
+    68: 'RIGHT',
+    87: 'UP',
+    83: 'DOWN',
+  };
 
-  // TODO: Check for movement keys
-  // TODO: Consider implementing boost keys for p1 and p2
+  const KEYS_P2 = [37, 39, 38, 40];
+  const CODE_TO_DIRECTION_P2 = {
+    37: 'LEFT',
+    39: 'RIGHT',
+    38: 'UP',
+    40: 'DOWN',
+  };
+
+  const OPPOSITE_DIRECTION = {
+    LEFT:   'RIGHT',
+    UP:     'DOWN',
+    RIGHT:  'LEFT',
+    DOWN:   'UP',
+  };
+
+  if (KEYS_P1.includes(event.keyCode)) {
+    const direction = CODE_TO_DIRECTION_P1[event.keyCode];
+    if (direction === OPPOSITE_DIRECTION[player1.direction]) {
+      return;
+    }
+
+    player1.direction = direction;
+  }
+
+  if (KEYS_P2.includes(event.keyCode)) {
+    const direction = CODE_TO_DIRECTION_P2[event.keyCode];
+    if (direction === OPPOSITE_DIRECTION[player2.direction]) {
+      return;
+    }
+
+    player2.direction = direction;
+  }
 }
 
 window.onload = () => {
