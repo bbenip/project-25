@@ -51,8 +51,9 @@ function resetGame() {
   // Draw board
   context.fillStyle = 'black';
   context.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-  
-  // Draw players
+}
+
+function renderGame() {
   context.fillStyle = player1.color;
   context.fillRect(
     player1.x * CELL_DIMENSION,
@@ -68,14 +69,6 @@ function resetGame() {
     CELL_DIMENSION,
     CELL_DIMENSION
   );
-}
-
-function renderGame() {
-  // TODO: Render player 1
-
-  // TODO: Render player 2
-
-  // NOTE: Only update based on new head position
 }
 
 function play() {
