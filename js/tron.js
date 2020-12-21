@@ -18,6 +18,9 @@ const DEFAULT_COLOR_P2 = 'rgb(50, 200, 150)';
 const DEFAULT_X_P2 = (NUM_X_CELLS / 4) * 3;
 const DEFAULT_Y_P2 = NUM_Y_CELLS / 2;
 
+const PIECE_P1 = 1;
+const PIECE_P2 = 2;
+
 const player1 = {
   color: DEFAULT_COLOR_P1,
   direction: DEFAULT_DIRECTION_P1,
@@ -41,7 +44,9 @@ function resetGame() {
   player2.x = DEFAULT_X_P2;
   player2.y = DEFAULT_Y_P2;
 
-  board = Array(NUM_X_CELLS).fill().map(() => Array(NUM_Y_CELLS).fill(0));
+  board = Array(NUM_Y_CELLS).fill().map(() => Array(NUM_X_CELLS).fill(0));
+  board[player1.y][player1.x] = PIECE_P1;
+  board[player2.y][player2.x] = PIECE_P2;
 
   // Draw board
   context.fillStyle = 'black';
