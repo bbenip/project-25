@@ -47,8 +47,22 @@ function resetGame() {
   context.fillStyle = 'black';
   context.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
   
+  // Draw players
+  context.fillStyle = player1.color;
+  context.fillRect(
+    player1.x * CELL_DIMENSION,
+    player1.y * CELL_DIMENSION,
+    CELL_DIMENSION,
+    CELL_DIMENSION
+  );
 
-  // TODO: Draw players
+  context.fillStyle = player2.color;
+  context.fillRect(
+    player2.x * CELL_DIMENSION,
+    player2.y * CELL_DIMENSION,
+    CELL_DIMENSION,
+    CELL_DIMENSION
+  );
 }
 
 function renderGame() {
