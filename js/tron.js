@@ -25,8 +25,8 @@ const PIECE_P2 = 2;
 const DIRECTION = {
   'LEFT':   { x: -1,  y: 0 },
   'RIGHT':  { x: 1,   y: 0 },
-  'UP':     { x: 0,   y: 1 },
-  'DOWN':   { x: 0,   y: -1 },
+  'UP':     { x: 0,   y: -1 },
+  'DOWN':   { x: 0,   y: 1 },
 };
 
 const player1 = {
