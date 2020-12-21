@@ -102,20 +102,26 @@ function play() {
   const isCollisionP1 = isCollision(player1.x, player1.y);
   const isCollisionP2 = isCollision(player2.x, player2.y);
 
+  if (!isCollisionP1 && !isCollisionP2) {
+    board[player1.y][player1.x] = PIECE_P1;
+    board[player2.y][player2.x] = PIECE_P2;
+    renderGame();
+    return;
+  }
+
   if (isCollisionP1 && isCollisionP2) {
     alert('Both players have tied.');
   } else if (isCollisionP1) {
     alert('Player 2 wins!');
   } else if (isCollisionP2) {
     alert('Player 1 wins!');
-  } else {
-    board[player1.y][player1.x] = PIECE_P1;
-    board[player2.y][player2.x] = PIECE_P2;
-    renderGame();
   }
+
+  resetGame();
 }
 
 function getUserInput(event) {
+
   // TODO: Check for movement keys
   // TODO: Consider implementing boost keys for p1 and p2
 }
