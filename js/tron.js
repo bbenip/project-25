@@ -22,6 +22,13 @@ const PIECE_EMPTY = 0;
 const PIECE_P1 = 1;
 const PIECE_P2 = 2;
 
+const DIRECTION = {
+  'LEFT':   { x: -1,  y: 0 },
+  'RIGHT':  { x: 1,   y: 0 },
+  'UP':     { x: 0,   y: 1 },
+  'DOWN':   { x: 0,   y: -1 },
+};
+
 const player1 = {
   color: DEFAULT_COLOR_P1,
   direction: DEFAULT_DIRECTION_P1,
@@ -72,13 +79,40 @@ function renderGame() {
   );
 }
 
+function isCollision(x, y) {
+  const isPieceCollision = board[y][x] !== PIECE_EMPTY;
+
+  const isInvalidCoordinate = (
+    (x < 0 || x >= NUM_X_CELLS)
+    || (y < 0 || y >= NUM_Y_CELLS)
+  );
+
+  return isPieceCollision || isInvalidCoordinate;
+}
+
 function play() {
-  // TODO: Move player 1 and update board
+  const directionP1 = DIRECTION[player1.direction];
+  player1.x += directionP1.x;
+  player1.y += directionP1.y;
 
-  // TODO: Move player 2 and update board
+  const directionP2 = DIRECTION[player2.direction];
+  player2.x += directionP2.x;
+  player2.y += directionP2.y;
 
-  // TODO: Check if one or both players crashed
-  // TODO: Implement board variable for quick collision check
+  const isCollisionP1 = isCollision(player1.x, player1.y);
+  const isCollisionP2 = isCollision(player2.x, player2.y);
+
+  if (isCollisionP1 && isCollisionP2) {
+    alert('Both players have tied.');
+  } else if (isCollisionP1) {
+    alert('Player 2 wins!');
+  } else if (isCollisionP2) {
+    alert('Player 1 wins!');
+  } else {
+    board[player1.y][player1.x] = PIECE_P1;
+    board[player2.y][player2.x] = PIECE_P2;
+    renderGame();
+  }
 }
 
 function getUserInput(event) {
