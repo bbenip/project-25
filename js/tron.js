@@ -30,7 +30,7 @@ const player1 = {
 
 const player2 = {
   color: DEFAULT_COLOR_P2,
-  direction: DEFAULT_DIRECTION_P1,
+  direction: DEFAULT_DIRECTION_P2,
   x: DEFAULT_X_P2,
   y: DEFAULT_Y_P2,
 }
