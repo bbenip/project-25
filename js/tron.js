@@ -3,8 +3,8 @@ let context;
 const BOARD_WIDTH = 2500;
 const BOARD_HEIGHT = 1750;
 
-const NUM_X_CELLS = 1000;
-const NUM_Y_CELLS = 700;
+const NUM_X_CELLS = 100;
+const NUM_Y_CELLS = 70;
 
 const CELL_DIMENSION = BOARD_HEIGHT / NUM_Y_CELLS;
 
