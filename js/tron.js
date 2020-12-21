@@ -48,9 +48,11 @@ let board = [];
 function resetGame() {
   player1.x = DEFAULT_X_P1;
   player1.y = DEFAULT_Y_P1;
+  player1.direction = DEFAULT_DIRECTION_P1;
 
   player2.x = DEFAULT_X_P2;
   player2.y = DEFAULT_Y_P2;
+  player2.direction = DEFAULT_DIRECTION_P2;
 
   board = Array(NUM_Y_CELLS).fill().map(() => Array(NUM_X_CELLS).fill(PIECE_EMPTY));
   board[player1.y][player1.x] = PIECE_P1;
