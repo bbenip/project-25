@@ -82,14 +82,12 @@ function renderGame() {
 }
 
 function isCollision(x, y) {
-  const isPieceCollision = board[y][x] !== PIECE_EMPTY;
-
   const isInvalidCoordinate = (
     (x < 0 || x >= NUM_X_CELLS)
     || (y < 0 || y >= NUM_Y_CELLS)
   );
 
-  return isPieceCollision || isInvalidCoordinate;
+  return isInvalidCoordinate || board[y][x] !== PIECE_EMPTY;
 }
 
 function play() {
