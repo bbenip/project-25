@@ -63,11 +63,13 @@ const player2 = {
 let board = [];
 
 function resetGame() {
+  player1.boostCount = DEFAULT_BOOST_COUNT;
   player1.direction = DEFAULT_DIRECTION_P1;
   player1.isBoost = DEFAULT_BOOST_STATE;
   player1.x = DEFAULT_X_P1;
   player1.y = DEFAULT_Y_P1;
 
+  player2.boostCount = DEFAULT_BOOST_COUNT;
   player2.direction = DEFAULT_DIRECTION_P2;
   player2.isBoost = DEFAULT_BOOST_STATE;
   player2.x = DEFAULT_X_P2;
