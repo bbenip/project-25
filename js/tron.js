@@ -39,25 +39,27 @@ const DIRECTION = {
 };
 
 const player1 = {
-  boostCount: DEFAULT_BOOST_COUNT,
-  color:      DEFAULT_COLOR_P1,
-  colorBoost: DEFAULT_COLOR_BOOST_P1,
-  direction:  DEFAULT_DIRECTION_P1,
-  isBoost:    DEFAULT_BOOST_STATE,
-  id:         DEFAULT_ID_P1,
-  x:          DEFAULT_X_P1,
-  y:          DEFAULT_Y_P1,
+  boostCount:   DEFAULT_BOOST_COUNT,
+  color:        DEFAULT_COLOR_P1,
+  colorBoost:   DEFAULT_COLOR_BOOST_P1,
+  direction:    DEFAULT_DIRECTION_P1,
+  directionNew: DEFAULT_DIRECTION_P1,
+  isBoost:      DEFAULT_BOOST_STATE,
+  id:           DEFAULT_ID_P1,
+  x:            DEFAULT_X_P1,
+  y:            DEFAULT_Y_P1,
 }
 
 const player2 = {
-  boostCount: DEFAULT_BOOST_COUNT,
-  color:      DEFAULT_COLOR_P2,
-  colorBoost: DEFAULT_COLOR_BOOST_P2,
-  direction:  DEFAULT_DIRECTION_P2,
-  isBoost:    DEFAULT_BOOST_STATE,
-  id:         DEFAULT_ID_P2,
-  x:          DEFAULT_X_P2,
-  y:          DEFAULT_Y_P2,
+  boostCount:   DEFAULT_BOOST_COUNT,
+  color:        DEFAULT_COLOR_P2,
+  colorBoost:   DEFAULT_COLOR_BOOST_P2,
+  direction:    DEFAULT_DIRECTION_P2,
+  directionNew: DEFAULT_DIRECTION_P2,
+  isBoost:      DEFAULT_BOOST_STATE,
+  id:           DEFAULT_ID_P2,
+  x:            DEFAULT_X_P2,
+  y:            DEFAULT_Y_P2,
 }
 
 let board = [];
@@ -65,12 +67,14 @@ let board = [];
 function resetGame() {
   player1.boostCount = DEFAULT_BOOST_COUNT;
   player1.direction = DEFAULT_DIRECTION_P1;
+  player1.directionNew = DEFAULT_DIRECTION_P1;
   player1.isBoost = DEFAULT_BOOST_STATE;
   player1.x = DEFAULT_X_P1;
   player1.y = DEFAULT_Y_P1;
 
   player2.boostCount = DEFAULT_BOOST_COUNT;
   player2.direction = DEFAULT_DIRECTION_P2;
+  player2.directionNew = DEFAULT_DIRECTION_P2;
   player2.isBoost = DEFAULT_BOOST_STATE;
   player2.x = DEFAULT_X_P2;
   player2.y = DEFAULT_Y_P2;
@@ -129,9 +133,11 @@ function getOpposingPlayerId(id) {
 }
 
 function movePlayer(player) {
-  const direction = DIRECTION[player.direction];
+  const direction = DIRECTION[player.directionNew];
   player.x += direction.x;
   player.y += direction.y;
+
+  player.direction = player.directionNew;
 
   if (isTie()) {
     alert('Both players have tied!');
@@ -183,8 +189,11 @@ function updateDirection(player, direction) {
   };
 
   const directionOppositePlayer = DIRECTION_OPPOSITE[player.direction];
-  if (direction !== directionOppositePlayer) {
-    player.direction = direction;
+  if (
+    direction !== directionOppositePlayer
+    && player.direction === player.directionNew
+  ) {
+    player.directionNew = direction;
   }
 }
 
