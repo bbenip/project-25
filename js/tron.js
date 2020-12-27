@@ -8,6 +8,8 @@ const NUM_Y_CELLS = 70;
 
 const CELL_DIMENSION = BOARD_HEIGHT / NUM_Y_CELLS;
 
+const DEFAULT_COLOR_EMPTY = 'rgb(255, 255, 255)';
+
 const DEFAULT_COLOR_P1 =        'rgb(50, 200, 150)';
 const DEFAULT_COLOR_BOOST_P1 =  'rgb(45, 155, 120)';
 const DEFAULT_DIRECTION_P1 =    'RIGHT';
@@ -78,6 +80,9 @@ function resetGame() {
   // Draw board
   context.fillStyle = 'black';
   context.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+
+  updateBoostCountDisplay(player1);
+  updateBoostCountDisplay(player2);
 }
 
 function drawPlayer(player) {
@@ -138,6 +143,22 @@ function movePlayer(player) {
   }
 }
 
+function updateBoostCountDisplay(player) {
+  const boostClassName = `boost-player-${player.id}`;
+  const boostTds = [...document.getElementsByClassName(boostClassName)];
+
+  const boostCount = player.boostCount;
+  const boostColor = player.id === 1 ? DEFAULT_COLOR_P1 : DEFAULT_COLOR_P2;
+
+  for (let i = 0; i < DEFAULT_BOOST_COUNT; ++i) {
+    if (boostCount > i) {
+      boostTds[i].style.backgroundColor = boostColor;
+    } else {
+      boostTds[i].style.backgroundColor = DEFAULT_COLOR_EMPTY;
+    }
+  }
+}
+
 function setBoost(player) {
   player.isBoost = true;
 
@@ -146,6 +167,9 @@ function setBoost(player) {
   }
 
   setTimeout(() => { player.isBoost = false; }, BOOST_FACTOR * BOOST_RATE);
+  player.boostCount -= 1;
+
+  updateBoostCountDisplay(player);
 }
 
 function updateDirection(player, direction) {
@@ -185,7 +209,6 @@ function getUserInput({ keyCode: code }) {
     if (code === BOOST_CODE_P1) {
       if (player1.boostCount > 0) {
         setBoost(player1);
-        player1.boostCount -= 1;
       }
     } else {
       const direction = CODE_TO_DIRECTION_P1[code];
@@ -197,7 +220,6 @@ function getUserInput({ keyCode: code }) {
     if (code === BOOST_CODE_P2) {
       if (player2.boostCount > 0) {
         setBoost(player2);
-        player2.boostCount -= 1;
       }
     } else {
       const direction = CODE_TO_DIRECTION_P2[code];

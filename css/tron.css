@@ -26,9 +26,51 @@ header h1 {
   font-size: 5vh;
 }
 
+#game-container {
+  margin: auto;
+  border-collapse: collapse;
+  font-family: 'Roboto', sans-serif;
+  font-size: 3vh;
+  height: 63vh;
+  width: 150vh;
+}
+
+.instruction-set {
+  width: 25vh;
+}
+
+.key-movement {
+  background-color: grey;
+  font-weight: bold;
+  text-align: center;
+  width: 10vh;
+}
+
+.key-boost {
+  background-color: grey;
+  text-align: center;
+  font-weight: bold;
+}
+
+.row-spacer {
+  height: 5vh;
+}
+
+.boost-player-1 {
+  background-color: rgb(50, 200, 150);
+  border: 1vh;
+  height: 5vh;
+}
+
+.boost-player-2 {
+  background-color: rgb(255, 100, 255);
+  border: 1vh;
+  height: 5vh;
+}
+
 #game {
   display: block;
-  margin: auto;
+  margin: auto 5vh;
   height: 63vh;
   width: 90vh;
 }
