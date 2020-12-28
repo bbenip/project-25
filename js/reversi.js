@@ -212,7 +212,7 @@ function renderGame() {
 
 window.onload = () => {
   const table = document.createElement('table');
-  table.id = 'gameTable';
+  table.id = 'game-table';
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     const row = document.createElement('tr');
