@@ -175,6 +175,8 @@ function addPiece(event) {
     pieceCurrent = getOppositePiece(pieceCurrent);
     validMoves = getValidMoves();
 
+    renderGame();
+
     if (validMoves.length === 0) {
       endGame();
     }
