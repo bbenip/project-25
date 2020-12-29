@@ -64,6 +64,12 @@ const player2 = {
 
 let board = [];
 
+function restartGame() {
+  resetGame();
+  drawPlayer(player1);
+  drawPlayer(player2);
+}
+
 function resetGame() {
   player1.boostCount = DEFAULT_BOOST_COUNT;
   player1.direction = DEFAULT_DIRECTION_P1;
@@ -141,10 +147,10 @@ function movePlayer(player) {
 
   if (isTie()) {
     alert('Both players have tied!');
-    resetGame();
+    restartGame();
   } else if (isCollision(player.x, player.y)) {
     alert(`Player ${getOpposingPlayerId(player.id)} has won!`);
-    resetGame();
+    restartGame();
   } else {
     board[player.y][player.x] = player.id;
     drawPlayer(player);
@@ -243,9 +249,7 @@ window.onload = () => {
   let board = document.getElementById('game');
   context = board.getContext('2d');
 
-  resetGame();
-  drawPlayer(player1);
-  drawPlayer(player2);
+  restartGame();
 
   document.addEventListener('keydown', getUserInput);
   const refreshRate = 75;
