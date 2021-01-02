@@ -34,6 +34,72 @@ const MINO_COLORS = {
   [MINO.o]: 'rgb(225, 160, 0)',
 };
 
+const TETRIMINO = {
+  t: {
+    minos: [
+      { x: 4, y: 0 },
+      { x: 3, y: 1 },
+      { x: 4, y: 1 },
+      { x: 5, y: 1 },
+    ],
+    value: MINO.t,
+  },
+  z: {
+    minos: [
+      { x: 3, y: 0 },
+      { x: 4, y: 0 },
+      { x: 4, y: 1 },
+      { x: 5, y: 1 },
+    ],
+    value: MINO.z,
+  },
+  s: {
+    minos: [
+      { x: 4, y: 0 },
+      { x: 5, y: 0 },
+      { x: 3, y: 1 },
+      { x: 4, y: 1 },
+    ],
+    value: MINO.s,
+  },
+  j: {
+    minos: [
+      { x: 3, y: 0 },
+      { x: 3, y: 1 },
+      { x: 4, y: 1 },
+      { x: 5, y: 1 },
+    ],
+    value: MINO.j,
+  },
+  l: {
+    minos: [
+      { x: 5, y: 0 },
+      { x: 3, y: 1 },
+      { x: 4, y: 1 },
+      { x: 5, y: 1 },
+    ],
+    value: MINO.l,
+  },
+  i: {
+    minos: [
+      { x: 3, y: 0 },
+      { x: 4, y: 0 },
+      { x: 5, y: 0 },
+      { x: 6, y: 0 },
+    ],
+    value: MINO.i,
+  },
+  o: {
+    minos: [
+      { x: 4, y: 0 },
+      { x: 5, y: 0 },
+      { x: 4, y: 1 },
+      { x: 5, y: 1 },
+    ],
+    value: MINO.o,
+  },
+};
+
 let tetriminoActive = null;
 let matrix = [];
 
