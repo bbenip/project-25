@@ -5,7 +5,8 @@ const MATRIX_HEIGHT = 2000;
 const MATRIX_BUFFER_TOP = 200;
 const MATRIX_NUM_CELLS_X = 10;
 const MATRIX_NUM_CELLS_Y = 22;
-const MATRIX_BACKGROUND_COLOR = 'rgb(192, 192, 192)';
+const MATRIX_BACKGROUND_COLOR = 'white';
+const MATRIX_GRID_COLOR = 'rgb(192, 192, 192)'
 
 const MINO_PADDING = 5;
 const MINO_DIMENSION = 100;
@@ -43,7 +44,12 @@ function resetGame() {
 }
 
 function renderGame() {
+  // Clear drawing above skyline
   context.fillStyle = MATRIX_BACKGROUND_COLOR;
+  context.fillRect(0, 0, MATRIX_WIDTH, MATRIX_BUFFER_TOP);
+
+  // Draw grid color behind matrix
+  context.fillStyle = MATRIX_GRID_COLOR;
   context.fillRect(0, MATRIX_BUFFER_TOP, MATRIX_WIDTH, MATRIX_HEIGHT);
 
   for (let i = 0; i < MATRIX_NUM_CELLS_Y; ++i) {
