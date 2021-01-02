@@ -35,70 +35,49 @@ const MINO_COLORS = {
 };
 
 const TETRIMINO_KEYS = ['t', 'z', 's', 'j', 'l', 'i', 'o'];
-const TETRIMINO = {
-  t: {
-    minos: [
-      { x: 4, y: 0 },
-      { x: 3, y: 1 },
-      { x: 4, y: 1 },
-      { x: 5, y: 1 },
-    ],
-    value: MINO.t,
-  },
-  z: {
-    minos: [
-      { x: 3, y: 0 },
-      { x: 4, y: 0 },
-      { x: 4, y: 1 },
-      { x: 5, y: 1 },
-    ],
-    value: MINO.z,
-  },
-  s: {
-    minos: [
-      { x: 4, y: 0 },
-      { x: 5, y: 0 },
-      { x: 3, y: 1 },
-      { x: 4, y: 1 },
-    ],
-    value: MINO.s,
-  },
-  j: {
-    minos: [
-      { x: 3, y: 0 },
-      { x: 3, y: 1 },
-      { x: 4, y: 1 },
-      { x: 5, y: 1 },
-    ],
-    value: MINO.j,
-  },
-  l: {
-    minos: [
-      { x: 5, y: 0 },
-      { x: 3, y: 1 },
-      { x: 4, y: 1 },
-      { x: 5, y: 1 },
-    ],
-    value: MINO.l,
-  },
-  i: {
-    minos: [
-      { x: 3, y: 0 },
-      { x: 4, y: 0 },
-      { x: 5, y: 0 },
-      { x: 6, y: 0 },
-    ],
-    value: MINO.i,
-  },
-  o: {
-    minos: [
-      { x: 4, y: 0 },
-      { x: 5, y: 0 },
-      { x: 4, y: 1 },
-      { x: 5, y: 1 },
-    ],
-    value: MINO.o,
-  },
+const TETRIMINO_MINOS = {
+  t: [
+    { x: 4, y: 0 },
+    { x: 3, y: 1 },
+    { x: 4, y: 1 },
+    { x: 5, y: 1 },
+  ],
+  z: [
+    { x: 3, y: 0 },
+    { x: 4, y: 0 },
+    { x: 4, y: 1 },
+    { x: 5, y: 1 },
+  ],
+  s: [
+    { x: 4, y: 0 },
+    { x: 5, y: 0 },
+    { x: 3, y: 1 },
+    { x: 4, y: 1 },
+  ],
+  j: [
+    { x: 3, y: 0 },
+    { x: 3, y: 1 },
+    { x: 4, y: 1 },
+    { x: 5, y: 1 },
+  ],
+  l: [
+    { x: 5, y: 0 },
+    { x: 3, y: 1 },
+    { x: 4, y: 1 },
+    { x: 5, y: 1 },
+  ],
+  i: [
+    { x: 3, y: 0 },
+    { x: 4, y: 0 },
+    { x: 5, y: 0 },
+    { x: 6, y: 0 },
+  ],
+  o: [
+    { x: 4, y: 0 },
+    { x: 5, y: 0 },
+    { x: 4, y: 1 },
+    { x: 5, y: 1 },
+  ],
 };
 
 let tetriminoQueue = [];
@@ -167,7 +146,13 @@ function getTetrimino() {
     tetriminoQueue.push(...shuffle(TETRIMINO_KEYS));
   }
 
-  return TETRIMINO[tetriminoQueue.shift()];
+  const tetriminoKey = tetriminoQueue.shift();
+  const tetrimino = {
+    minos: TETRIMINO_MINOS[tetriminoKey].map(mino => ({ ...mino })),
+    value: MINO[tetriminoKey],
+  };
+
+  return tetrimino;
 }
 
 function isOutOfBounds(x, y) {
