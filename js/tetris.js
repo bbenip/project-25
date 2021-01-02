@@ -57,8 +57,8 @@ function renderGame() {
   context.fillStyle = MATRIX_BACKGROUND_COLOR;
   context.fillRect(0, 0, MATRIX_WIDTH, MATRIX_HEIGHT);
 
-  for (let i = MATRIX_BUFFER_TOP; i < MATRIX_HEIGHT; ++i) {
-    for (let j = 0; j < MATRIX_WIDTH; ++j) {
+  for (let i = MATRIX_BUFFER_TOP; i < MATRIX_NUM_CELLS_Y; ++i) {
+    for (let j = 0; j < MATRIX_NUM_CELLS_X; ++j) {
       const mino = MINO[matrix[i][j]];
 
       context.fillStyle = mino.color;
