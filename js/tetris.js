@@ -173,15 +173,15 @@ function isOutOfBounds(x, y) {
   );
 }
 
-function isIntersectMino(x, y, tetrimino) {
-  if (matrix[y][x] !== MINO.empty) {
-    const isIntersectWithSelf = tetrimino.minos.some(
-      ({ x1, y1 }) => x === x1 && y === y1
-    );
+function isIntersectTetrimino(x, y, tetrimino) {
+  return tetrimino.minos.some(
+    ({ x: x1, y: y1 }) => x === x1 && y === y1
+  );
+}
 
-    if (isIntersectWithSelf) {
-      return false;
-    }
+function isIntersectLockedMino(x, y, tetrimino) {
+  if (matrix[y][x] !== MINO.empty) {
+    return !isIntersectTetrimino(x, y, tetrimino);
   }
 
   return false;
@@ -195,7 +195,7 @@ function isLocked(tetrimino) {
   for (const mino of tetrimino.minos) {
     const { x, y } = { x: mino.x, y: mino.y + 1 };
 
-    if (isOutOfBounds(x, y) || isIntersectMino(x, y, tetrimino)) {
+    if (isOutOfBounds(x, y) || isIntersectLockedMino(x, y, tetrimino)) {
       return true;
     }
   }
@@ -212,9 +212,13 @@ function addTetriminoToMatrix(tetrimino) {
 function drop(tetrimino) {
   for (const mino of tetrimino.minos) {
     mino.y += 1;
-
-    matrix[mino.y - 1][mino.x] = MINO.empty;
     matrix[mino.y][mino.x] = tetrimino.value;
+  }
+
+  for (const mino of tetrimino.minos) {
+    if (!isIntersectTetrimino(mino.x, mino.y - 1, tetrimino)) {
+      matrix[mino.y - 1][mino.x] = MINO.empty;
+    }
   }
 }
 
