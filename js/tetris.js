@@ -34,6 +34,7 @@ const MINO_COLORS = {
   [MINO.o]: 'rgb(225, 160, 0)',
 };
 
+const TETRIMINO_KEYS = ['t', 'z', 's', 'j', 'l', 'i', 'o'];
 const TETRIMINO = {
   t: {
     minos: [
@@ -100,6 +101,7 @@ const TETRIMINO = {
   },
 };
 
+let tetriminoQueue = [];
 let tetriminoActive = null;
 let matrix = [];
 
@@ -144,16 +146,24 @@ function renderGame() {
   }
 }
 
+function shuffle(array) {
+  const arrayShuffled = [];
+  for (let i = array.length; i > 0; --i) {
+    const randomIndex = Math.floor(Math.random() * i);
+    arrayShuffled.push(array[randomIndex]);
+
+    array[randomIndex] = array[i - 1];
+  }
+
+  return arrayShuffled;
+}
+
 function getTetrimino() {
-  return {
-    value: MINO.i,
-    minos: [
-      { x: 0, y: 0 },
-      { x: 1, y: 0 },
-      { x: 2, y: 0 },
-      { x: 3, y: 0 },
-    ],
-  };
+  if (tetriminoQueue.length < TETRIMINO_KEYS.length) {
+    tetriminoQueue.push(...shuffle(TETRIMINO_KEYS));
+  }
+
+  return TETRIMINO[tetriminoQueue.shift()];
 }
 
 function isOutOfBounds(x, y) {
