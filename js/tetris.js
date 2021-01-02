@@ -24,7 +24,7 @@ const MINO = {
 };
 
 const MINO_COLORS = {
-  [MINO.empty]: 'rgb(255, 255, 255)',
+  [MINO.empty]: 'white',
   [MINO.t]: 'rgb(175, 40, 140)',
   [MINO.z]: 'rgb(215, 15, 55)',
   [MINO.s]: 'rgb(90, 175, 0)',
