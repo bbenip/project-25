@@ -45,6 +45,7 @@ const MINO = {
   },
 };
 
+let tetriminoActive = null;
 let matrix = [];
 
 function resetGame() {
@@ -72,10 +73,41 @@ function renderGame() {
   }
 }
 
+function getTetrimino() {
+  return {
+    type: 'i',
+    minos: [
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
+      { x: 2, y: 0 },
+      { x: 3, y: 0 },
+    ],
+  };
+}
+
+function drop(tetrimino) {
+  for (const mino of tetrimino.minos) {
+    mino.y += 1;
+
+    matrix[mino.y - 1][mino.x] = MINO.empty.value;
+    matrix[mino.y][mino.x] = MINO[tetrimino.type].value;
+  }
+}
+
+function play() {
+  tetriminoActive = tetriminoActive || getTetrimino();
+  drop(tetriminoActive);
+
+  renderGame();
+}
+
 window.onload = () => {
   const playfield = document.querySelector('#playfield');
   context = playfield.getContext('2d');
 
   resetGame();
   renderGame();
+
+  const refreshRate = 500;
+  setInterval(play, refreshRate);
 };
