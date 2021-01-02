@@ -2,9 +2,9 @@ let context = null;
 
 const MATRIX_WIDTH = 1000;
 const MATRIX_HEIGHT = 2000;
+const MATRIX_BUFFER_TOP = 200;
 const MATRIX_NUM_CELLS_X = 10;
 const MATRIX_NUM_CELLS_Y = 22;
-const MATRIX_BUFFER_TOP = 2;
 const MATRIX_BACKGROUND_COLOR = 'rgb(192, 192, 192)';
 
 const MINO_PADDING = 5;
@@ -43,14 +43,14 @@ function resetGame() {
 
 function renderGame() {
   context.fillStyle = MATRIX_BACKGROUND_COLOR;
-  context.fillRect(0, 0, MATRIX_WIDTH, MATRIX_HEIGHT);
+  context.fillRect(0, MATRIX_BUFFER_TOP, MATRIX_WIDTH, MATRIX_HEIGHT);
 
-  for (let i = MATRIX_BUFFER_TOP; i < MATRIX_NUM_CELLS_Y; ++i) {
+  for (let i = 0; i < MATRIX_NUM_CELLS_Y; ++i) {
     for (let j = 0; j < MATRIX_NUM_CELLS_X; ++j) {
       context.fillStyle = MINO_COLORS[matrix[i][j]];
       context.fillRect(
         j * MINO_DIMENSION + MINO_PADDING,
-        (i - MATRIX_BUFFER_TOP) * MINO_DIMENSION + MINO_PADDING,
+        i * MINO_DIMENSION + MINO_PADDING,
         MINO_DIMENSION - 2 * MINO_PADDING,
         MINO_DIMENSION - 2 * MINO_PADDING,
       );
