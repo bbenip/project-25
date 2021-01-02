@@ -18,7 +18,7 @@ function getFilename(project) {
   filename = filename.replace(/!/g, '');
 
   if (!isNaN(filename)) {
-    filename = `game${filename}`;
+    filename = `game-${filename}`;
   }
 
   return `${filename}.html`;
