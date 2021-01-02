@@ -90,6 +90,33 @@ function getTetrimino() {
   };
 }
 
+function isOutOfBounds(x, y) {
+  return (
+    (x < 0 || x >= MATRIX_NUM_CELLS_X)
+    || (y < 0 || y >= MATRIX_NUM_CELLS_Y)
+  );
+}
+
+function isIntersectMino(x, y) {
+  return matrix[y][x] !== MINO.empty;
+}
+
+function isLocked(tetrimino) {
+  if (tetrimino === null) {
+    return true;
+  }
+
+  for (const mino of tetrimino.minos) {
+    const { x, y } = { x: mino.x, y: mino.y + 1 };
+
+    if (isOutOfBounds(x, y) || isIntersectMino(x, y)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function drop(tetrimino) {
   for (const mino of tetrimino.minos) {
     mino.y += 1;
@@ -100,8 +127,11 @@ function drop(tetrimino) {
 }
 
 function play() {
-  tetriminoActive = tetriminoActive || getTetrimino();
-  drop(tetriminoActive);
+  if (isLocked(tetriminoActive)) {
+    tetriminoActive = getTetrimino();
+  } else {
+    drop(tetriminoActive);
+  }
 
   renderGame();
 }
