@@ -25,3 +25,25 @@ header h1 {
   font-weight: bold;
   font-size: 5vh;
 }
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+
+  margin: auto;
+  height: 65vh;
+  width: 30vh;
+}
+
+#length-counter {
+  margin: auto;
+  height: 5vh;
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 4vh;
+}
+
+#game {
+  height: 60vh;
+  width: 30vh;
+}
