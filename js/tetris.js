@@ -9,6 +9,7 @@ const MATRIX_BACKGROUND_COLOR = 'rgb(192, 192, 192)';
 
 const MINO_PADDING = 5;
 const MINO_DIMENSION = 100;
+const MINO_STROKE_COLOR = 'black';
 
 const MINO = {
   empty: 0,
@@ -47,7 +48,20 @@ function renderGame() {
 
   for (let i = 0; i < MATRIX_NUM_CELLS_Y; ++i) {
     for (let j = 0; j < MATRIX_NUM_CELLS_X; ++j) {
-      context.fillStyle = MINO_COLORS[matrix[i][j]];
+      const mino = matrix[i][j];
+
+      if (mino !== MINO.empty) {
+        context.fillStyle = MINO_STROKE_COLOR;
+        context.lineWidth = 2 * MINO_PADDING;
+        context.strokeRect(
+          j * MINO_DIMENSION,
+          i * MINO_DIMENSION,
+          MINO_DIMENSION,
+          MINO_DIMENSION,
+        );
+      }
+
+      context.fillStyle = MINO_COLORS[mino];
       context.fillRect(
         j * MINO_DIMENSION + MINO_PADDING,
         i * MINO_DIMENSION + MINO_PADDING,
