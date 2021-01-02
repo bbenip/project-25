@@ -1,4 +1,5 @@
-let context = null;
+let contextPlayfield = null;
+let contextNextQueue = null;
 
 const MATRIX_WIDTH = 1000;
 const MATRIX_HEIGHT = 2000;
@@ -7,6 +8,10 @@ const MATRIX_NUM_CELLS_X = 10;
 const MATRIX_NUM_CELLS_Y = 22;
 const MATRIX_BACKGROUND_COLOR = 'white';
 const MATRIX_GRID_COLOR = 'rgb(192, 192, 192)'
+
+const NEXT_QUEUE_WIDTH = 500;
+const NEXT_QUEUE_HEIGHT = 2200;
+const NEXT_QUEUE_LENGTH = 5;
 
 const MINO_PADDING = 5;
 const MINO_DIMENSION = 100;
@@ -90,39 +95,78 @@ function resetGame() {
     .map(() => Array(MATRIX_WIDTH).fill(MINO.empty));
 }
 
-function renderGame() {
+function drawMinoStroke(x, y, context) {
+  context.fillStyle = MINO_STROKE_COLOR;
+  context.lineWidth = 2 * MINO_PADDING;
+  context.strokeRect(
+    x * MINO_DIMENSION,
+    y * MINO_DIMENSION,
+    MINO_DIMENSION,
+    MINO_DIMENSION,
+  );
+}
+
+function drawMino(mino, x, y, context) {
+  if (mino !== MINO.empty) {
+    drawMinoStroke(x, y, context);
+  }
+
+  context.fillStyle = MINO_COLORS[mino];
+  context.fillRect(
+    x * MINO_DIMENSION + MINO_PADDING,
+    y * MINO_DIMENSION + MINO_PADDING,
+    MINO_DIMENSION - 2 * MINO_PADDING,
+    MINO_DIMENSION - 2 * MINO_PADDING,
+  );
+}
+
+function renderPlayfield() {
   // Clear drawing above skyline
-  context.fillStyle = MATRIX_BACKGROUND_COLOR;
-  context.fillRect(0, 0, MATRIX_WIDTH, MATRIX_BUFFER_TOP);
+  contextPlayfield.fillStyle = MATRIX_BACKGROUND_COLOR;
+  contextPlayfield.fillRect(0, 0, MATRIX_WIDTH, MATRIX_BUFFER_TOP);
 
   // Draw grid color behind matrix
-  context.fillStyle = MATRIX_GRID_COLOR;
-  context.fillRect(0, MATRIX_BUFFER_TOP, MATRIX_WIDTH, MATRIX_HEIGHT);
+  contextPlayfield.fillStyle = MATRIX_GRID_COLOR;
+  contextPlayfield.fillRect(0, MATRIX_BUFFER_TOP, MATRIX_WIDTH, MATRIX_HEIGHT);
 
   for (let i = 0; i < MATRIX_NUM_CELLS_Y; ++i) {
     for (let j = 0; j < MATRIX_NUM_CELLS_X; ++j) {
-      const mino = matrix[i][j];
+      drawMino(matrix[i][j], j, i, contextPlayfield);
+    }
+  }
+}
 
-      if (mino !== MINO.empty) {
-        context.fillStyle = MINO_STROKE_COLOR;
-        context.lineWidth = 2 * MINO_PADDING;
-        context.strokeRect(
-          j * MINO_DIMENSION,
-          i * MINO_DIMENSION,
-          MINO_DIMENSION,
-          MINO_DIMENSION,
-        );
-      }
+function renderNextQueue() {
+  contextNextQueue.fillStyle = MATRIX_BACKGROUND_COLOR;
+  contextNextQueue.fillRect(0, 0, NEXT_QUEUE_WIDTH, NEXT_QUEUE_HEIGHT);
 
-      context.fillStyle = MINO_COLORS[mino];
-      context.fillRect(
-        j * MINO_DIMENSION + MINO_PADDING,
-        i * MINO_DIMENSION + MINO_PADDING,
-        MINO_DIMENSION - 2 * MINO_PADDING,
-        MINO_DIMENSION - 2 * MINO_PADDING,
+  if (tetriminoQueue.length === 0) {
+    return;
+  }
+
+  for (let i = 0; i < NEXT_QUEUE_LENGTH; ++i) {
+    const tetriminoKey = tetriminoQueue[i];
+    const mino = MINO[tetriminoKey];
+    const minoPositions = TETRIMINO_MINOS[tetriminoKey];
+
+    const xOffset = -2;
+    const yOffset = 3;
+    const queueBlockHeight = 4;
+
+    for (const { x, y } of minoPositions) {
+      drawMino(
+        mino,
+        x + xOffset,
+        y + yOffset + (queueBlockHeight * i),
+        contextNextQueue
       );
     }
   }
+}
+
+function renderGame() {
+  renderPlayfield();
+  renderNextQueue();
 }
 
 function shuffle(array) {
@@ -223,8 +267,8 @@ function play() {
 }
 
 window.onload = () => {
-  const playfield = document.querySelector('#playfield');
-  context = playfield.getContext('2d');
+  contextPlayfield = document.querySelector('#playfield').getContext('2d');
+  contextNextQueue = document.querySelector('#next-queue').getContext('2d');
 
   resetGame();
   renderGame();

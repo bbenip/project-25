@@ -44,6 +44,8 @@ header h1 {
 }
 
 #game {
+  display: flex;
+
   height: 66vh;
   width: 45vh;
 }
