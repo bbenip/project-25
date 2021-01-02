@@ -31,8 +31,8 @@ header h1 {
   flex-direction: column;
 
   margin: auto;
-  height: 65vh;
-  width: 30vh;
+  height: 75vh;
+  width: 45vh;
 }
 
 #length-counter {
@@ -44,6 +44,26 @@ header h1 {
 }
 
 #game {
-  height: 60vh;
+  height: 66vh;
+  width: 45vh;
+}
+
+#playfield {
+  height: 66vh;
   width: 30vh;
+}
+
+#next-queue {
+  height: 66vh;
+  width: 15vh;
+}
+
+#disclaimer {
+  height: 4vh;
+  width: 45vh;
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 2vh;
+  font-weight: bold;
+  text-align: center;
 }
