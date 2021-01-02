@@ -15,6 +15,34 @@ const MINO = {
     color: 'rgb(255, 255, 255)',
     value: 'empty',
   },
+  t: {
+    color: 'rgb(175, 40, 140)',
+    value: 't',
+  },
+  z: {
+    color: 'rgb(215, 15, 55)',
+    value: 'z',
+  },
+  s: {
+    color: 'rgb(90, 175, 0)',
+    value: 's',
+  },
+  j: {
+    color: 'rgb(35, 65, 200)',
+    value: 'j',
+  },
+  l: {
+    color: 'rgb(225, 90, 0)',
+    value: 'l',
+  },
+  i: {
+    color: 'rgb(15, 155, 215)',
+    value: 'i',
+  },
+  o: {
+    color: 'rgb(225, 160, 0)',
+    value: 'o',
+  },
 };
 
 let matrix = [];
