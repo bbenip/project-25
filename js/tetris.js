@@ -183,6 +183,12 @@ function isLocked(tetrimino) {
   return false;
 }
 
+function addTetriminoToMatrix(tetrimino) {
+  for (const { x, y } of tetrimino.minos) {
+    matrix[y][x] = tetrimino.value;
+  }
+}
+
 function drop(tetrimino) {
   for (const mino of tetrimino.minos) {
     mino.y += 1;
@@ -195,6 +201,7 @@ function drop(tetrimino) {
 function play() {
   if (isLocked(tetriminoActive)) {
     tetriminoActive = getTetrimino();
+    addTetriminoToMatrix(tetriminoActive);
   } else {
     drop(tetriminoActive);
   }
