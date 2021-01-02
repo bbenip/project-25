@@ -11,38 +11,25 @@ const MINO_PADDING = 5;
 const MINO_DIMENSION = 100;
 
 const MINO = {
-  empty: {
-    color: 'rgb(255, 255, 255)',
-    value: 'empty',
-  },
-  t: {
-    color: 'rgb(175, 40, 140)',
-    value: 't',
-  },
-  z: {
-    color: 'rgb(215, 15, 55)',
-    value: 'z',
-  },
-  s: {
-    color: 'rgb(90, 175, 0)',
-    value: 's',
-  },
-  j: {
-    color: 'rgb(35, 65, 200)',
-    value: 'j',
-  },
-  l: {
-    color: 'rgb(225, 90, 0)',
-    value: 'l',
-  },
-  i: {
-    color: 'rgb(15, 155, 215)',
-    value: 'i',
-  },
-  o: {
-    color: 'rgb(225, 160, 0)',
-    value: 'o',
-  },
+  empty: 0,
+  t: 1,
+  z: 2,
+  s: 3,
+  j: 4,
+  l: 5,
+  i: 6,
+  o: 7,
+};
+
+const MINO_COLORS = {
+  [MINO.empty]: 'rgb(255, 255, 255)',
+  [MINO.t]: 'rgb(175, 40, 140)',
+  [MINO.z]: 'rgb(215, 15, 55)',
+  [MINO.s]: 'rgb(90, 175, 0)',
+  [MINO.j]: 'rgb(35, 65, 200)',
+  [MINO.l]: 'rgb(225, 90, 0)',
+  [MINO.i]: 'rgb(15, 155, 215)',
+  [MINO.o]: 'rgb(225, 160, 0)',
 };
 
 let tetriminoActive = null;
@@ -50,8 +37,8 @@ let matrix = [];
 
 function resetGame() {
   matrix = Array(MATRIX_HEIGHT)
-    .fill(MINO.empty.value)
-    .map(() => Array(MATRIX_WIDTH).fill(MINO.empty.value));
+    .fill(MINO.empty)
+    .map(() => Array(MATRIX_WIDTH).fill(MINO.empty));
 }
 
 function renderGame() {
@@ -60,9 +47,7 @@ function renderGame() {
 
   for (let i = MATRIX_BUFFER_TOP; i < MATRIX_NUM_CELLS_Y; ++i) {
     for (let j = 0; j < MATRIX_NUM_CELLS_X; ++j) {
-      const mino = MINO[matrix[i][j]];
-
-      context.fillStyle = mino.color;
+      context.fillStyle = MINO_COLORS[matrix[i][j]];
       context.fillRect(
         j * MINO_DIMENSION + MINO_PADDING,
         (i - MATRIX_BUFFER_TOP) * MINO_DIMENSION + MINO_PADDING,
@@ -75,7 +60,7 @@ function renderGame() {
 
 function getTetrimino() {
   return {
-    type: 'i',
+    value: MINO.i,
     minos: [
       { x: 0, y: 0 },
       { x: 1, y: 0 },
@@ -89,8 +74,8 @@ function drop(tetrimino) {
   for (const mino of tetrimino.minos) {
     mino.y += 1;
 
-    matrix[mino.y - 1][mino.x] = MINO.empty.value;
-    matrix[mino.y][mino.x] = MINO[tetrimino.type].value;
+    matrix[mino.y - 1][mino.x] = MINO.empty;
+    matrix[mino.y][mino.x] = tetrimino.value;
   }
 }
 
