@@ -147,12 +147,16 @@ function renderGame() {
 }
 
 function shuffle(array) {
-  const arrayShuffled = [];
-  for (let i = array.length; i > 0; --i) {
-    const randomIndex = Math.floor(Math.random() * i);
-    arrayShuffled.push(array[randomIndex]);
+  const arrayShuffled = array.slice();
 
-    array[randomIndex] = array[i - 1];
+  for (let i = 0; i < arrayShuffled.length - 1; ++i) {
+    const randomIndex = i + Math.floor(
+      Math.random() * (arrayShuffled.length - i)
+    );
+
+    const tmp = arrayShuffled[i];
+    arrayShuffled[i] = arrayShuffled[randomIndex];
+    arrayShuffled[randomIndex] = tmp;
   }
 
   return arrayShuffled;
