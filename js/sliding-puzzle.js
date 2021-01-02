@@ -31,7 +31,7 @@ function shuffle(array) {
 
   for (let i = 0; i < result.length - 1; ++i) {
     const randomIndex = Math.floor(
-      Math.random() * (result.length - i - 1)
+      Math.random() * (result.length - i)
     );
 
     const temp = result[randomIndex];
