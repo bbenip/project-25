@@ -173,8 +173,18 @@ function isOutOfBounds(x, y) {
   );
 }
 
-function isIntersectMino(x, y) {
-  return matrix[y][x] !== MINO.empty;
+function isIntersectMino(x, y, tetrimino) {
+  if (matrix[y][x] !== MINO.empty) {
+    const isIntersectWithSelf = tetrimino.minos.some(
+      ({ x1, y1 }) => x === x1 && y === y1
+    );
+
+    if (isIntersectWithSelf) {
+      return false;
+    }
+  }
+
+  return false;
 }
 
 function isLocked(tetrimino) {
@@ -185,7 +195,7 @@ function isLocked(tetrimino) {
   for (const mino of tetrimino.minos) {
     const { x, y } = { x: mino.x, y: mino.y + 1 };
 
-    if (isOutOfBounds(x, y) || isIntersectMino(x, y)) {
+    if (isOutOfBounds(x, y) || isIntersectMino(x, y, tetrimino)) {
       return true;
     }
   }
