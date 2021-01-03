@@ -9,6 +9,7 @@ const MATRIX_NUM_CELLS_X = 10;
 const MATRIX_NUM_CELLS_Y = 22;
 const MATRIX_BACKGROUND_COLOR = 'white';
 const MATRIX_GRID_COLOR = 'rgb(192, 192, 192)'
+const OFFSET_SKYLINE = 2;
 
 const QUEUE_WIDTH = 500;
 const QUEUE_HEIGHT = 2200;
@@ -212,7 +213,7 @@ function renderHoldQueue() {
   const mino = TETRIMINO_TYPES.indexOf(type);
   const minoPositions = TETRIMINO_MINO_POSITIONS[type][orientation];
 
-  const yOffset = 2;
+  const yOffset = OFFSET_SKYLINE;
 
   for (const { x, y } of minoPositions) {
     drawMino(
@@ -240,7 +241,7 @@ function renderNextQueue() {
     const mino = MINO[type];
 
     const xOffset = 1;
-    const yOffset = 2;
+    const yOffset = OFFSET_SKYLINE;
     const queueBlockHeight = 4;
 
     for (const { x, y } of minoPositions) {
@@ -377,6 +378,32 @@ function clearLines(tetrimino) {
   }
 }
 
+function isLockOut(tetrimino) {
+  if (tetrimino === null) {
+    return false;
+  }
+
+  const { anchor, type, orientation } = { ...tetrimino };
+  const minoPositions = TETRIMINO_MINO_POSITIONS[type][orientation];
+
+  return minoPositions.every((minoPosition) => {
+    const y = anchor.y + minoPosition.y;
+    return y < OFFSET_SKYLINE;
+  });
+}
+
+function isBlockOut(tetrimino) {
+  const { anchor, type, orientation } = { ...tetrimino };
+  const minoPositions = TETRIMINO_MINO_POSITIONS[type][orientation];
+
+  return minoPositions.some((minoPosition) => {
+    const x = anchor.x + minoPosition.x;
+    const y = anchor.y + minoPosition.y;
+
+    return matrix[y][x] !== MINO.empty;
+  });
+}
+
 function addTetriminoToMatrix(tetrimino) {
   const { anchor, type, orientation } = { ...tetrimino };
   const minoPositions = TETRIMINO_MINO_POSITIONS[type][orientation];
@@ -415,10 +442,16 @@ function play() {
   if (isLocked(tetriminoActive, 'down')) {
     clearLines(tetriminoActive);
 
+    const tetriminoOld = tetriminoActive;
     tetriminoActive = getTetrimino();
-    addTetriminoToMatrix(tetriminoActive);
 
-    isTetriminoHeldRecent = false;
+    if (isLockOut(tetriminoOld) || isBlockOut(tetriminoActive)) {
+      alert(`Game over! You cleared ${linesCleared} lines.`);
+      resetGame();
+    } else {
+      addTetriminoToMatrix(tetriminoActive);
+      isTetriminoHeldRecent = false;
+    }
   } else {
     moveTetrimino(tetriminoActive, 'down');
   }
