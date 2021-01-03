@@ -24,8 +24,8 @@ function resetGame() {
 
   for (let row = 0; row < BOARD_HEIGHT; ++row) {
     for (let column = 0; column < BOARD_WIDTH; ++column) {
-      const piece = document.getElementById(`piece${row * BOARD_WIDTH + column}`);
-      const cell = document.getElementById(`cell${row * BOARD_WIDTH + column}`)
+      const piece = document.querySelector(`#piece${row * BOARD_WIDTH + column}`);
+      const cell = document.querySelector(`#cell${row * BOARD_WIDTH + column}`)
 
       piece.className = 'piece blank';
       cell.className = '';
@@ -43,7 +43,7 @@ function isColumnFull(column) {
 
 function highlightWinningPieces(winningPieces) {
   for (const [row, column] of winningPieces) {
-    const cell = document.getElementById(`cell${row * BOARD_WIDTH + column}`);
+    const cell = document.querySelector(`#cell${row * BOARD_WIDTH + column}`);
     cell.className = 'winner';
   }
 }
@@ -110,7 +110,7 @@ function addPiece(event) {
 
   board[row][column] = playerID;
 
-  const piece = document.getElementById(`piece${row * BOARD_WIDTH + column}`);
+  const piece = document.querySelector(`#piece${row * BOARD_WIDTH + column}`);
   piece.className = `piece ${COLORS[playerID]}`;
 
   const winningCandidate = getLongestSequence(row, column).slice(0, 4);
@@ -153,7 +153,7 @@ window.onload = () => {
     table.appendChild(row);
   }
 
-  const game = document.getElementById('game');
+  const game = document.querySelector('#game');
   game.appendChild(table);
 
   resetGame();

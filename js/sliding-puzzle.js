@@ -74,12 +74,12 @@ function resetGame() {
 }
 
 function renderCounter() {
-  const counter = document.getElementById('move-counter');
+  const counter = document.querySelector('#move-counter');
   counter.innerHTML = 'Moves: ' + game.moves;
 }
 
 function renderGame() {
-  const table = document.getElementById('grid');
+  const table = document.querySelector('#grid');
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     const row = table.childNodes[i];
@@ -216,7 +216,7 @@ window.onload = () => {
     table.appendChild(row);
   }
 
-  const gameContainer = document.getElementById('game');
+  const gameContainer = document.querySelector('#game');
   gameContainer.appendChild(table);
 
   resetGame();

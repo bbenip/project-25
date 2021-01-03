@@ -31,7 +31,7 @@ function checkWin() {
 
   for (let i = 0; i < NUM_CELLS; ++i) {
     turn = 0;
-    document.getElementById('cell' + i).innerHTML = '';
+    document.querySelector(`#cell${i}`).innerHTML = '';
     boardState = { x: '', o: '' };
   }
 }
@@ -58,6 +58,6 @@ function addPiece() {
 
 window.onload = () => {
   for (let i = 0; i < NUM_CELLS; ++i) {
-    document.getElementById('cell' + i).addEventListener('click', addPiece);
+    document.querySelector(`#cell${i}`).addEventListener('click', addPiece);
   }
 };

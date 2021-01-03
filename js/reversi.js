@@ -133,10 +133,10 @@ function captureCells(i, j) {
 }
 
 function renderCounter() {
-  const blackCounter = document.getElementById('black-counter');
+  const blackCounter = document.querySelector('#black-counter');
   blackCounter.innerHTML = 'Black: ' + score[PIECE_BLACK];
 
-  const whiteCounter = document.getElementById('white-counter');
+  const whiteCounter = document.querySelector('#white-counter');
   whiteCounter.innerHTML = 'White: ' + score[PIECE_WHITE];
 }
 
@@ -188,7 +188,7 @@ function renderGame() {
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
       const cellNumber = j + i * GRID_DIMENSION;
-      const piece = document.getElementById('piece' + cellNumber);
+      const piece = document.querySelector(`#piece${cellNumber}`);
 
       if (board[i][j] === PIECE_BLANK) {
         piece.className = 'piece blank';
@@ -202,7 +202,7 @@ function renderGame() {
 
   for (const [i, j] of validMoves) {
     const cellNumber = j + i * GRID_DIMENSION;
-    const piece = document.getElementById('piece' + cellNumber);
+    const piece = document.querySelector(`#piece${cellNumber}`);
 
     piece.className = 'piece preview';
   }
@@ -234,7 +234,7 @@ window.onload = () => {
     table.appendChild(row);
   }
 
-  const gameContainer = document.getElementById('game');
+  const gameContainer = document.querySelector('#game');
   gameContainer.appendChild(table);
 
   resetGame();

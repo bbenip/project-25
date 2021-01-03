@@ -65,7 +65,7 @@ function resetGame() {
 }
 
 function renderScore() {
-  const counter = document.getElementById('score-counter');
+  const counter = document.querySelector('#score-counter');
   counter.innerHTML = 'Score: ' + score;
 }
 
@@ -211,7 +211,7 @@ function play() {
 }
 
 window.onload = () => {
-  let game = document.getElementById('game');
+  let game = document.querySelector('#game');
   context = game.getContext('2d');
 
   game.addEventListener('click', jump);

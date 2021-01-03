@@ -75,7 +75,7 @@ function resetGame() {
 }
 
 function renderScore() {
-  const counter = document.getElementById('score');
+  const counter = document.querySelector('#score');
   counter.innerHTML = 'Score: ' + score;
 }
 
@@ -309,7 +309,7 @@ function move(event) {
 }
 
 window.onload = () => {
-  let gameElement = document.getElementById('game');
+  let gameElement = document.querySelector('#game');
   context = gameElement.getContext('2d');
   
   resetGame();

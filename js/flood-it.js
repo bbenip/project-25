@@ -72,7 +72,7 @@ function capture() {
 }
 
 function renderGrid() {
-  const table = document.getElementById('grid');
+  const table = document.querySelector('#grid');
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     const row = table.childNodes[i];
@@ -87,7 +87,7 @@ function renderGrid() {
 }
 
 function renderCounter() {
-  const stepCounter = document.getElementById('step-counter');
+  const stepCounter = document.querySelector('#step-counter');
   stepCounter.innerHTML = 'Steps: ' + game.steps;
 }
 
@@ -172,7 +172,7 @@ window.onload = () => {
     palette.appendChild(colorButton);
   }
 
-  const gameContainer = document.getElementById('game');
+  const gameContainer = document.querySelector('#game');
   gameContainer.appendChild(table);
   gameContainer.appendChild(palette);
 

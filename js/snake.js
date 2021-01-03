@@ -77,7 +77,7 @@ function setApple() {
 }
 
 function renderCounter() {
-  const counter = document.getElementById('length-counter');
+  const counter = document.querySelector('#length-counter');
   counter.innerHTML = 'Length: ' + snake.length;
 }
 
@@ -197,7 +197,7 @@ function setDirection(event) {
 }
 
 window.onload = () => {
-  let board = document.getElementById('game');
+  let board = document.querySelector('#game');
   context = board.getContext('2d');
   
   resetGame();

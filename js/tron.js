@@ -158,19 +158,16 @@ function movePlayer(player) {
 }
 
 function updateBoostCountDisplay(player) {
-  const boostClassName = `boost-player-${player.id}`;
-  const boostTds = [...document.getElementsByClassName(boostClassName)];
+  const boostClassName = `.boost-player-${player.id}`;
+  const boostTds = document.querySelectorAll(boostClassName);
 
   const boostCount = player.boostCount;
   const boostColor = player.id === 1 ? DEFAULT_COLOR_P1 : DEFAULT_COLOR_P2;
 
-  for (let i = 0; i < DEFAULT_BOOST_COUNT; ++i) {
-    if (boostCount > i) {
-      boostTds[i].style.backgroundColor = boostColor;
-    } else {
-      boostTds[i].style.backgroundColor = DEFAULT_COLOR_EMPTY;
-    }
-  }
+  boostTds.forEach((boostTd, index) => {
+    const color = (boostCount > index) ? boostColor : DEFAULT_COLOR_EMPTY;
+    boostTd.style.backgroundColor = color;
+  });
 }
 
 function setBoost(player) {
@@ -246,7 +243,7 @@ function getUserInput({ keyCode: code }) {
 }
 
 window.onload = () => {
-  let board = document.getElementById('game');
+  let board = document.querySelector('#game');
   context = board.getContext('2d');
 
   restartGame();

@@ -262,7 +262,7 @@ function game() {
 }
 
 window.onload = () => {
-  board = document.getElementById('board');
+  board = document.querySelector('#board');
   context = board.getContext('2d');
 
   resetBall();
