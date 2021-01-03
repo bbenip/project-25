@@ -138,19 +138,26 @@ function ballHitBounds() {
 }
 
 function ballHitPaddle() {
-  player1.collision = ball.x <= H_PADDING + PADDLE_WIDTH &&
-       ball.y >= player1.position - BALL_HEIGHT &&
-       ball.y <= player1.position + PADDLE_HEIGHT;
-  player2.collision = ball.x >= board.width - H_PADDING - PADDLE_WIDTH &&
-       ball.y >= player2.position - BALL_HEIGHT &&
-       ball.y <= player2.position + PADDLE_HEIGHT;
+  player1.collision = (
+    ball.x <= H_PADDING + PADDLE_WIDTH
+    && ball.y >= player1.position - BALL_HEIGHT
+    && ball.y <= player1.position + PADDLE_HEIGHT
+  );
+
+  player2.collision = (
+    ball.x >= board.width - H_PADDING - PADDLE_WIDTH
+    && ball.y >= player2.position - BALL_HEIGHT
+    && ball.y <= player2.position + PADDLE_HEIGHT
+  );
 
   return player1.collision || player2.collision;
 }
 
 function ballPassedPaddles() {
-  return ball.x <= H_PADDING + PADDLE_WIDTH ||
-         ball.x >= board.width - H_PADDING - PADDLE_WIDTH;
+  return (
+    ball.x <= H_PADDING + PADDLE_WIDTH
+    || ball.x >= board.width - H_PADDING - PADDLE_WIDTH
+  );
 }
 
 function updateScore() {
