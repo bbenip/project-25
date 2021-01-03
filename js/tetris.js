@@ -41,6 +41,7 @@ const MINO_COLORS = {
   [MINO.o]: 'rgb(225, 160, 0)',
 };
 
+const TETRIMINO_GHOST_OPACITY = 0.5;
 const TETRIMINO_KEYS = ['t', 'z', 's', 'j', 'l', 'i', 'o'];
 const TETRIMINO_MINO_POSITIONS = {
   t: [
@@ -131,6 +132,35 @@ function drawMino(mino, x, y, context) {
   );
 }
 
+function renderTetriminoGhost() {
+  if (tetriminoActive === null) {
+    return;
+  }
+
+  const mino = tetriminoActive.value;
+  const minoPositionsGhost = tetriminoActive.minoPositions
+    .map((minoPositions) => ({ ...minoPositions }));
+
+  const tetriminoGhost = {
+    ...tetriminoActive,
+    minoPositions: minoPositionsGhost,
+  };
+
+  while (!isLocked(tetriminoGhost, 'down')) {
+    minoPositionsGhost.forEach((minoPosition) => {
+      minoPosition.y += 1;
+    });
+  }
+
+  contextPlayfield.globalAlpha = TETRIMINO_GHOST_OPACITY;
+
+  for (const { x, y } of minoPositionsGhost) {
+    drawMino(mino, x, y, contextPlayfield);
+  }
+
+  contextPlayfield.globalAlpha = 1;
+}
+
 function renderPlayfield() {
   // Clear drawing above skyline
   contextPlayfield.fillStyle = MATRIX_BACKGROUND_COLOR;
@@ -145,6 +175,8 @@ function renderPlayfield() {
       drawMino(matrix[i][j], j, i, contextPlayfield);
     }
   }
+
+  renderTetriminoGhost();
 }
 
 function renderHoldQueue() {
