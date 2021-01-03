@@ -114,7 +114,7 @@ let matrix = [];
 
 function resetGame() {
   linesCleared = DEFAULT_LINES_CLEARED;
-  tetriminoQueue = DEFAULT_TETRIMINO_QUEUE
+  tetriminoQueue = DEFAULT_TETRIMINO_QUEUE.slice();
   tetriminoActive = DEFAULT_TETRIMINO;
   tetriminoHeld = DEFAULT_TETRIMINO;
   isTetriminoHeldRecent = DEFAULT_HOLD_STATE;
