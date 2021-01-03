@@ -30,8 +30,10 @@ const apple = {
 };
 
 function isValidCoordinate(x, y) {
-  return x >= 0 && x < NUM_X_CELLS &&
-         y >= 0 && y < NUM_Y_CELLS;
+  return (
+    (x >= 0 && x < NUM_X_CELLS)
+    && (y >= 0 && y < NUM_Y_CELLS)
+  );
 }
 
 function isOccupied(x, y) {
