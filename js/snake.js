@@ -78,7 +78,7 @@ function setApple() {
 
 function renderCounter() {
   const counter = document.querySelector('#length-counter');
-  counter.innerHTML = 'Length: ' + snake.length;
+  counter.textContent = `Length: ${snake.length}`;
 }
 
 function renderGame() {

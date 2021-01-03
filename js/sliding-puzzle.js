@@ -75,7 +75,7 @@ function resetGame() {
 
 function renderCounter() {
   const counter = document.querySelector('#move-counter');
-  counter.innerHTML = 'Moves: ' + game.moves;
+  counter.textContent = `Moves: ${game.moves}`;
 }
 
 function renderGame() {
@@ -89,10 +89,10 @@ function renderGame() {
 
       if (game.grid[i][j] === EMPTY_CELL) {
         cell.style.backgroundColor = 'black';
-        cell.innerHTML = '';
+        cell.textContent = '';
       } else {
         cell.style.backgroundColor = 'white';
-        cell.innerHTML = game.grid[i][j];
+        cell.textContent = game.grid[i][j];
       }
     }
   }

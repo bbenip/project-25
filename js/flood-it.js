@@ -88,7 +88,7 @@ function renderGrid() {
 
 function renderCounter() {
   const stepCounter = document.querySelector('#step-counter');
-  stepCounter.innerHTML = 'Steps: ' + game.steps;
+  stepCounter.textContent = `Steps: ${game.steps}`;
 }
 
 function resetGame() {

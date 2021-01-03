@@ -66,7 +66,7 @@ function resetGame() {
 
 function renderScore() {
   const counter = document.querySelector('#score-counter');
-  counter.innerHTML = 'Score: ' + score;
+  counter.textContent = `Score: ${score}`;
 }
 
 function renderGame() {

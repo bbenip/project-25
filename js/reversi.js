@@ -134,10 +134,10 @@ function captureCells(i, j) {
 
 function renderCounter() {
   const blackCounter = document.querySelector('#black-counter');
-  blackCounter.innerHTML = 'Black: ' + score[PIECE_BLACK];
+  blackCounter.textContent = `Black: ${score[PIECE_BLACK]}`;
 
   const whiteCounter = document.querySelector('#white-counter');
-  whiteCounter.innerHTML = 'White: ' + score[PIECE_WHITE];
+  whiteCounter.textContent = `White: ${score[PIECE_WHITE]}`;
 }
 
 function endGame() {
