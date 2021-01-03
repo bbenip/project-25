@@ -312,10 +312,11 @@ function play() {
 }
 
 function getUserInput({ keyCode: code }) {
-  const movementCodes = [37, 39];
+  const movementCodes = [37, 39, 40];
   const codeToDirection = {
     37: 'left',
     39: 'right',
+    40: 'down',
   };
 
   const codeForHold = 67;
