@@ -116,7 +116,7 @@ function resetGame() {
   linesCleared = DEFAULT_LINES_CLEARED;
   tetriminoQueue = DEFAULT_TETRIMINO_QUEUE
   tetriminoActive = DEFAULT_TETRIMINO;
-  tetriminoHeld = DEFAULT_TETRIMINO
+  tetriminoHeld = DEFAULT_TETRIMINO;
   isTetriminoHeldRecent = DEFAULT_HOLD_STATE;
 
   matrix = Array(MATRIX_NUM_CELLS_Y)
@@ -200,12 +200,12 @@ function renderPlayfield() {
 }
 
 function renderHoldQueue() {
+  contextHoldQueue.fillStyle = MATRIX_BACKGROUND_COLOR;
+  contextHoldQueue.fillRect(0, 0, QUEUE_WIDTH, QUEUE_HEIGHT);
+
   if (tetriminoHeld === null) {
     return;
   }
-
-  contextHoldQueue.fillStyle = MATRIX_BACKGROUND_COLOR;
-  contextHoldQueue.fillRect(0, 0, QUEUE_WIDTH, QUEUE_HEIGHT);
 
   const type = tetriminoHeld.type;
   const orientation = DEFAULT_ORIENTATION;
