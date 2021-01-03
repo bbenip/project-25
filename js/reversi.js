@@ -222,8 +222,8 @@ window.onload = () => {
       const piece = document.createElement('div');
 
       const cellNumber = j + i * GRID_DIMENSION;
-      cell.id = 'cell' + cellNumber;
-      piece.id = 'piece' + cellNumber;
+      cell.id = `cell${cellNumber}`;
+      piece.id = `piece${cellNumber}`;
 
       cell.addEventListener('click', addPiece);
 

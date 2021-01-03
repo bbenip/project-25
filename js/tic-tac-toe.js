@@ -55,8 +55,8 @@ function addPiece(event) {
   const v = cellNumber % DIMENSION;
   const h = ~~(cellNumber / DIMENSION);
 
-  boardState[piece] += 'v' + v;
-  boardState[piece] += 'h' + h;
+  boardState[piece] += `v${v}`;
+  boardState[piece] += `h${h}`;
 
   if (v === h) {
     boardState[piece] += 'd0';

@@ -204,7 +204,7 @@ function play() {
   renderGame();
 
   if (isCollision()) {
-    alert('Game over! Your score is: ' + score);
+    alert(`Game over! Your score is: ${score}`);
     resetGame();
     renderGame();
   }

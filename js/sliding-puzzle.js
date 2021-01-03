@@ -116,7 +116,7 @@ function updateGrid() {
   renderGame();
 
   if (playerWins()) {
-    alert('You won in ' + game.moves + ' moves!');
+    alert(`You won in ${game.moves} moves!`);
     resetGame();
     renderGame();
   }
@@ -208,7 +208,7 @@ window.onload = () => {
 
     for (let j = 0; j < GRID_DIMENSION; ++j) {
       const cell = document.createElement('td');
-      cell.id = 'cell' + (j + i * GRID_DIMENSION + 1);
+      cell.id = `cell${i * GRID_DIMENSION + j + 1}`;
       cell.addEventListener('click', moveClick);
       row.appendChild(cell);
     }

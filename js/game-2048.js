@@ -300,7 +300,7 @@ function move(event) {
   }
   
   if (isGameStuck()) {
-    alert('Game Over! Your score is: ' + score);
+    alert(`Game Over! Your score is: ${score}`);
     score = 0;
     resetGame();
     renderGame();
