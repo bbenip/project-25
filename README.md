@@ -15,7 +15,7 @@ I like playing games and I hate black bloxes! So, I made some classic games that
             <img src="/img/preview/snake.jpg" width="300px">
         </td>
         <td>
-            <img src="/img/preview/game2048.jpg" width="300px">
+            <img src="/img/preview/game-2048.jpg" width="300px">
         </td>
     </tr>
 </table>
