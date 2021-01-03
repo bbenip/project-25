@@ -40,7 +40,7 @@ const MINO_COLORS = {
 };
 
 const TETRIMINO_KEYS = ['t', 'z', 's', 'j', 'l', 'i', 'o'];
-const TETRIMINO_MINOS = {
+const TETRIMINO_MINO_POSITIONS = {
   t: [
     { x: 4, y: 0 },
     { x: 3, y: 1 },
@@ -154,7 +154,7 @@ function renderNextQueue() {
   for (let i = 0; i < NEXT_QUEUE_LENGTH; ++i) {
     const tetriminoKey = tetriminoQueue[i];
     const mino = MINO[tetriminoKey];
-    const minoPositions = TETRIMINO_MINOS[tetriminoKey];
+    const minoPositions = TETRIMINO_MINO_POSITIONS[tetriminoKey];
 
     const xOffset = -2;
     const yOffset = 3;
@@ -199,7 +199,8 @@ function getTetrimino() {
 
   const tetriminoKey = tetriminoQueue.shift();
   const tetrimino = {
-    minos: TETRIMINO_MINOS[tetriminoKey].map(mino => ({ ...mino })),
+    minoPositions: TETRIMINO_MINO_POSITIONS[tetriminoKey]
+      .map(minoPosition => ({ ...minoPosition })),
     value: MINO[tetriminoKey],
   };
 
@@ -214,7 +215,7 @@ function isOutOfBounds(x, y) {
 }
 
 function isIntersectTetrimino(x, y, tetrimino) {
-  return tetrimino.minos.some(
+  return tetrimino.minoPositions.some(
     ({ x: x1, y: y1 }) => x === x1 && y === y1
   );
 }
@@ -234,8 +235,9 @@ function isLocked(tetrimino, direction) {
 
   const offset = DIRECTION_TO_OFFSET[direction];
 
-  for (const mino of tetrimino.minos) {
-    const { x, y } = { x: mino.x + offset.x, y: mino.y + offset.y };
+  for (const minoPosition of tetrimino.minoPositions) {
+    const x = minoPosition.x + offset.x;
+    const y = minoPosition.y + offset.y;
 
     if (isOutOfBounds(x, y) || isIntersectLockedMino(x, y, tetrimino)) {
       return true;
@@ -245,8 +247,30 @@ function isLocked(tetrimino, direction) {
   return false;
 }
 
+function clearLines(tetrimino) {
+  if (tetrimino === null) {
+    return;
+  }
+
+  let yMin = MATRIX_NUM_CELLS_Y;
+  let yMax = -1;
+  for (const { y } of tetrimino.minoPositions) {
+    yMin = Math.min(yMin, y);
+    yMax = Math.max(yMax, y);
+  }
+
+  for (let i = yMin; i <= yMax; ++i) {
+    const isLineFull = matrix[i].every(mino => mino !== MINO.empty);
+
+    if (isLineFull) {
+      matrix.splice(i, 1);
+      matrix.unshift(Array(MATRIX_WIDTH).fill(MINO.empty));
+    }
+  }
+}
+
 function addTetriminoToMatrix(tetrimino) {
-  for (const { x, y } of tetrimino.minos) {
+  for (const { x, y } of tetrimino.minoPositions) {
     matrix[y][x] = tetrimino.value;
   }
 }
@@ -254,15 +278,15 @@ function addTetriminoToMatrix(tetrimino) {
 function moveTetrimino(tetrimino, direction) {
   const offset = DIRECTION_TO_OFFSET[direction];
 
-  for (const mino of tetrimino.minos) {
-    mino.x += offset.x;
-    mino.y += offset.y;
-    matrix[mino.y][mino.x] = tetrimino.value;
+  for (const minoPosition of tetrimino.minoPositions) {
+    minoPosition.x += offset.x;
+    minoPosition.y += offset.y;
+    matrix[minoPosition.y][minoPosition.x] = tetrimino.value;
   }
 
-  for (const mino of tetrimino.minos) {
-    const x = mino.x - offset.x;
-    const y = mino.y - offset.y;
+  for (const minoPosition of tetrimino.minoPositions) {
+    const x = minoPosition.x - offset.x;
+    const y = minoPosition.y - offset.y;
 
     if (!isIntersectTetrimino(x, y, tetrimino)) {
       matrix[y][x] = MINO.empty;
@@ -272,6 +296,7 @@ function moveTetrimino(tetrimino, direction) {
 
 function play() {
   if (isLocked(tetriminoActive, 'down')) {
+    clearLines(tetriminoActive);
     tetriminoActive = getTetrimino();
     addTetriminoToMatrix(tetriminoActive);
   } else {
