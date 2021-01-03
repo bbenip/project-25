@@ -23,8 +23,8 @@ I like playing games and I hate black bloxes! So, I made some classic games that
 ## Installation
 
 ```sh
-git clone https://github.com/benipalbaljinder/project100.git
-cd project100
+git clone https://github.com/benipalbaljinder/project-100.git
+cd project-100
 
 # Windows
 start index.html
