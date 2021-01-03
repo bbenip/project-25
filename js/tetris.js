@@ -97,9 +97,9 @@ let tetriminoActive = null;
 let matrix = [];
 
 function resetGame() {
-  matrix = Array(MATRIX_HEIGHT)
+  matrix = Array(MATRIX_NUM_CELLS_Y)
     .fill(MINO.empty)
-    .map(() => Array(MATRIX_WIDTH).fill(MINO.empty));
+    .map(() => Array(MATRIX_NUM_CELLS_X).fill(MINO.empty));
 }
 
 function drawMinoStroke(x, y, context) {
