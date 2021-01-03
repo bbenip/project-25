@@ -32,7 +32,7 @@ header h1 {
 
   margin: auto;
   height: 75vh;
-  width: 45vh;
+  width: 60vh;
 }
 
 #length-counter {
@@ -47,7 +47,12 @@ header h1 {
   display: flex;
 
   height: 66vh;
-  width: 45vh;
+  width: 60vh;
+}
+
+#hold-queue {
+  height: 66vh;
+  width: 15vh;
 }
 
 #playfield {

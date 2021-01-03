@@ -1,4 +1,5 @@
 let contextPlayfield = null;
+let contextHoldQueue = null;
 let contextNextQueue = null;
 
 const MATRIX_WIDTH = 1000;
@@ -9,8 +10,9 @@ const MATRIX_NUM_CELLS_Y = 22;
 const MATRIX_BACKGROUND_COLOR = 'white';
 const MATRIX_GRID_COLOR = 'rgb(192, 192, 192)'
 
-const NEXT_QUEUE_WIDTH = 500;
-const NEXT_QUEUE_HEIGHT = 2200;
+const QUEUE_WIDTH = 500;
+const QUEUE_HEIGHT = 2200;
+
 const NEXT_QUEUE_LENGTH = 5;
 
 const MINO_PADDING = 5;
@@ -145,13 +147,36 @@ function renderPlayfield() {
   }
 }
 
-function renderNextQueue() {
-  contextNextQueue.fillStyle = MATRIX_BACKGROUND_COLOR;
-  contextNextQueue.fillRect(0, 0, NEXT_QUEUE_WIDTH, NEXT_QUEUE_HEIGHT);
+function renderHoldQueue() {
+  if (tetriminoHeld === null) {
+    return;
+  }
 
+  contextHoldQueue.fillStyle = MATRIX_BACKGROUND_COLOR;
+  contextHoldQueue.fillRect(0, 0, QUEUE_WIDTH, QUEUE_HEIGHT);
+
+  const minoPositions = TETRIMINO_MINO_POSITIONS[tetriminoHeld.type];
+
+  const xOffset = -3;
+  const yOffset = 3;
+
+  for (const { x, y } of minoPositions) {
+    drawMino(
+      tetriminoHeld.value,
+      x + xOffset,
+      y + yOffset,
+      contextHoldQueue
+    );
+  }
+}
+
+function renderNextQueue() {
   if (tetriminoQueue.length === 0) {
     return;
   }
+
+  contextNextQueue.fillStyle = MATRIX_BACKGROUND_COLOR;
+  contextNextQueue.fillRect(0, 0, QUEUE_WIDTH, QUEUE_HEIGHT);
 
   for (let i = 0; i < NEXT_QUEUE_LENGTH; ++i) {
     const tetriminoKey = tetriminoQueue[i];
@@ -175,6 +200,7 @@ function renderNextQueue() {
 
 function renderGame() {
   renderPlayfield();
+  renderHoldQueue();
   renderNextQueue();
 }
 
@@ -353,6 +379,7 @@ function getUserInput({ keyCode: code }) {
 
 window.onload = () => {
   contextPlayfield = document.querySelector('#playfield').getContext('2d');
+  contextHoldQueue = document.querySelector('#hold-queue').getContext('2d');
   contextNextQueue = document.querySelector('#next-queue').getContext('2d');
 
   resetGame();
