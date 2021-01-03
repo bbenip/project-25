@@ -85,6 +85,13 @@ const TETRIMINO_MINOS = {
   ],
 };
 
+const DIRECTION_TO_OFFSET = {
+  left:   { x: -1,  y: 0 },
+  right:  { x: 1,   y: 0 },
+  down:   { x: 0,   y: 1 },
+};
+
+
 let tetriminoQueue = [];
 let tetriminoActive = null;
 let matrix = [];
@@ -220,13 +227,15 @@ function isIntersectLockedMino(x, y, tetrimino) {
   return false;
 }
 
-function isLocked(tetrimino) {
+function isLocked(tetrimino, direction) {
   if (tetrimino === null) {
     return true;
   }
 
+  const offset = DIRECTION_TO_OFFSET[direction];
+
   for (const mino of tetrimino.minos) {
-    const { x, y } = { x: mino.x, y: mino.y + 1 };
+    const { x, y } = { x: mino.x + offset.x, y: mino.y + offset.y };
 
     if (isOutOfBounds(x, y) || isIntersectLockedMino(x, y, tetrimino)) {
       return true;
@@ -242,28 +251,50 @@ function addTetriminoToMatrix(tetrimino) {
   }
 }
 
-function drop(tetrimino) {
+function moveTetrimino(tetrimino, direction) {
+  const offset = DIRECTION_TO_OFFSET[direction];
+
   for (const mino of tetrimino.minos) {
-    mino.y += 1;
+    mino.x += offset.x;
+    mino.y += offset.y;
     matrix[mino.y][mino.x] = tetrimino.value;
   }
 
   for (const mino of tetrimino.minos) {
-    if (!isIntersectTetrimino(mino.x, mino.y - 1, tetrimino)) {
-      matrix[mino.y - 1][mino.x] = MINO.empty;
+    const x = mino.x - offset.x;
+    const y = mino.y - offset.y;
+
+    if (!isIntersectTetrimino(x, y, tetrimino)) {
+      matrix[y][x] = MINO.empty;
     }
   }
 }
 
 function play() {
-  if (isLocked(tetriminoActive)) {
+  if (isLocked(tetriminoActive, 'down')) {
     tetriminoActive = getTetrimino();
     addTetriminoToMatrix(tetriminoActive);
   } else {
-    drop(tetriminoActive);
+    moveTetrimino(tetriminoActive, 'down');
   }
 
   renderGame();
+}
+
+function getUserInput({ keyCode: code }) {
+  const movementCodes = [37, 39];
+  const codeToDirection = {
+    37: 'left',
+    39: 'right',
+  };
+
+  if (movementCodes.includes(code)) {
+    const direction = codeToDirection[code];
+
+    if (!isLocked(tetriminoActive, direction)) {
+      moveTetrimino(tetriminoActive, direction);
+    }
+  }
 }
 
 window.onload = () => {
@@ -272,6 +303,8 @@ window.onload = () => {
 
   resetGame();
   renderGame();
+
+  document.addEventListener('keydown', getUserInput);
 
   const refreshRate = 500;
   setInterval(play, refreshRate);
