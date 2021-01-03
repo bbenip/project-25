@@ -318,6 +318,7 @@ function getUserInput({ keyCode: code }) {
 
     if (!isLocked(tetriminoActive, direction)) {
       moveTetrimino(tetriminoActive, direction);
+      renderGame();
     }
   }
 }
