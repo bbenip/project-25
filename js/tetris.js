@@ -346,6 +346,7 @@ function getUserInput({ keyCode: code }) {
   };
 
   const codeForHold = 67;
+  const codeForHardDrop = 32;
 
   if (movementCodes.includes(code)) {
     const direction = codeToDirection[code];
@@ -374,6 +375,12 @@ function getUserInput({ keyCode: code }) {
     addTetriminoToMatrix(tetriminoActive);
     isTetriminoHeldRecent = true;
     renderGame();
+  } else if (code === codeForHardDrop) {
+    while (!isLocked(tetriminoActive, 'down')) {
+      moveTetrimino(tetriminoActive, 'down');
+    }
+
+    play();
   }
 }
 
