@@ -100,16 +100,23 @@ const DIRECTION_TO_OFFSET = {
 };
 
 const DEFAULT_LINES_CLEARED = 0;
+const DEFAULT_TETRIMINO_QUEUE = [];
+const DEFAULT_TETRIMINO = null;
+const DEFAULT_HOLD_STATE = false;
 
 let linesCleared = DEFAULT_LINES_CLEARED;
-let tetriminoQueue = [];
-let tetriminoActive = null;
-let tetriminoHeld = null;
-let isTetriminoHeldRecent = false;
+let tetriminoQueue = DEFAULT_TETRIMINO_QUEUE;
+let tetriminoActive = DEFAULT_TETRIMINO;
+let tetriminoHeld = DEFAULT_TETRIMINO;
+let isTetriminoHeldRecent = DEFAULT_HOLD_STATE;
 let matrix = [];
 
 function resetGame() {
   linesCleared = DEFAULT_LINES_CLEARED;
+  tetriminoQueue = DEFAULT_TETRIMINO_QUEUE
+  tetriminoActive = DEFAULT_TETRIMINO;
+  tetriminoHeld = DEFAULT_TETRIMINO
+  isTetriminoHeldRecent = DEFAULT_HOLD_STATE;
 
   matrix = Array(MATRIX_NUM_CELLS_Y)
     .fill(MINO.empty)
