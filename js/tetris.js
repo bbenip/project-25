@@ -226,12 +226,12 @@ function renderHoldQueue() {
 }
 
 function renderNextQueue() {
+  contextNextQueue.fillStyle = MATRIX_BACKGROUND_COLOR;
+  contextNextQueue.fillRect(0, 0, QUEUE_WIDTH, QUEUE_HEIGHT);
+
   if (tetriminoQueue.length === 0) {
     return;
   }
-
-  contextNextQueue.fillStyle = MATRIX_BACKGROUND_COLOR;
-  contextNextQueue.fillRect(0, 0, QUEUE_WIDTH, QUEUE_HEIGHT);
 
   for (let i = 0; i < NEXT_QUEUE_LENGTH; ++i) {
     const type = tetriminoQueue[i];
