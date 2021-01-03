@@ -94,6 +94,8 @@ const DIRECTION_TO_OFFSET = {
 
 let tetriminoQueue = [];
 let tetriminoActive = null;
+let tetriminoHeld = null;
+let isTetriminoHeldRecent = false;
 let matrix = [];
 
 function resetGame() {
@@ -201,6 +203,7 @@ function getTetrimino() {
   const tetrimino = {
     minoPositions: TETRIMINO_MINO_POSITIONS[tetriminoKey]
       .map(minoPosition => ({ ...minoPosition })),
+    type: tetriminoKey,
     value: MINO[tetriminoKey],
   };
 
@@ -287,7 +290,6 @@ function moveTetrimino(tetrimino, direction) {
   for (const minoPosition of tetrimino.minoPositions) {
     const x = minoPosition.x - offset.x;
     const y = minoPosition.y - offset.y;
-
     if (!isIntersectTetrimino(x, y, tetrimino)) {
       matrix[y][x] = MINO.empty;
     }
@@ -297,8 +299,11 @@ function moveTetrimino(tetrimino, direction) {
 function play() {
   if (isLocked(tetriminoActive, 'down')) {
     clearLines(tetriminoActive);
+
     tetriminoActive = getTetrimino();
     addTetriminoToMatrix(tetriminoActive);
+
+    isTetriminoHeldRecent = false;
   } else {
     moveTetrimino(tetriminoActive, 'down');
   }
@@ -313,6 +318,8 @@ function getUserInput({ keyCode: code }) {
     39: 'right',
   };
 
+  const codeForHold = 67;
+
   if (movementCodes.includes(code)) {
     const direction = codeToDirection[code];
 
@@ -320,6 +327,26 @@ function getUserInput({ keyCode: code }) {
       moveTetrimino(tetriminoActive, direction);
       renderGame();
     }
+  } else if (code === codeForHold && !isTetriminoHeldRecent) {
+    const tetriminoHeldOld = tetriminoHeld;
+    tetriminoHeld = tetriminoActive;
+
+    tetriminoActive.minoPositions.forEach(({ x, y }) => {
+      matrix[y][x] = MINO.empty;
+    });
+
+    if (tetriminoHeldOld !== null) {
+      tetriminoActive = tetriminoHeldOld;
+      tetriminoHeldOld.minoPositions =
+        TETRIMINO_MINO_POSITIONS[tetriminoHeldOld.type]
+          .map(minoPosition => ({ ...minoPosition }));
+    } else {
+      tetriminoActive = getTetrimino();
+    }
+
+    addTetriminoToMatrix(tetriminoActive);
+    isTetriminoHeldRecent = true;
+    renderGame();
   }
 }
 
