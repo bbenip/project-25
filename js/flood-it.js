@@ -88,7 +88,7 @@ function renderGrid() {
 
 function renderCounter() {
   const stepCounter = document.querySelector('#step-counter');
-  stepCounter.textContent = `Steps: ${game.steps}`;
+  stepCounter.textContent = `Steps Left: ${game.stepsLeft}`;
 }
 
 function resetGame() {
@@ -106,7 +106,7 @@ function resetGame() {
   game.captured = [[0, 0]];
   game.grid[0][0].isCaptured = true;
   game.color = game.grid[0][0].color;
-  game.steps = TOTAL_STEPS;
+  game.stepsLeft = TOTAL_STEPS;
 
   capture();
   renderCounter();
@@ -119,10 +119,10 @@ function setColor(event) {
 
   if (color === game.color) return;
 
-  --game.steps;
+  game.stepsLeft -= 1;
   renderCounter();
 
-  if (game.steps === 0) {
+  if (game.stepsLeft === 0) {
     alert('Game over!');
     resetGame();
     return;
@@ -138,7 +138,7 @@ function setColor(event) {
   renderGrid();
 
   if (game.captured.length === GRID_DIMENSION * GRID_DIMENSION) {
-    alert('You win with ' + game.steps + ' steps left!');
+    alert(`You win with ${game.stepsLeft} steps left!`);
     resetGame();
   }
 }
