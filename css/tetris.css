@@ -20,6 +20,7 @@ header {
 }
 
 header h1 {
+  margin-bottom: 0vh;
   padding-top: 5vh;
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
@@ -31,12 +32,13 @@ header h1 {
   flex-direction: column;
 
   margin: auto;
-  height: 73.5vh;
-  width: 60vh;
+  height: 67.5vh;
+  width: 54.5vh;
 }
 
-#length-counter {
+#line-counter {
   margin: auto;
+  margin-bottom: 0vh;
   height: 5vh;
 
   font-family: 'Roboto', sans-serif;
@@ -46,28 +48,28 @@ header h1 {
 #game {
   display: flex;
 
-  height: 66vh;
-  width: 60vh;
+  height: 60vh;
+  width: 54.5vh;
 }
 
 #hold-queue {
-  height: 66vh;
-  width: 15vh;
+  height: 60vh;
+  width: 13.625vh;
 }
 
 #playfield {
-  height: 66vh;
-  width: 30vh;
+  height: 60vh;
+  width: 27.25vh;
 }
 
 #next-queue {
-  height: 66vh;
-  width: 15vh;
+  height: 60vh;
+  width: 13.625vh;
 }
 
 #disclaimer {
   height: 2.5vh;
-  width: 60vh;
+  width: 54.5vh;
 
   font-family: 'Roboto', sans-serif;
   font-size: 2vh;

@@ -99,7 +99,9 @@ const DIRECTION_TO_OFFSET = {
   down:   { x: 0,   y: 1 },
 };
 
+const DEFAULT_LINES_CLEARED = 0;
 
+let linesCleared = DEFAULT_LINES_CLEARED;
 let tetriminoQueue = [];
 let tetriminoActive = null;
 let tetriminoHeld = null;
@@ -107,6 +109,8 @@ let isTetriminoHeldRecent = false;
 let matrix = [];
 
 function resetGame() {
+  linesCleared = DEFAULT_LINES_CLEARED;
+
   matrix = Array(MATRIX_NUM_CELLS_Y)
     .fill(MINO.empty)
     .map(() => Array(MATRIX_NUM_CELLS_X).fill(MINO.empty));
@@ -243,10 +247,16 @@ function renderNextQueue() {
   }
 }
 
+function renderLineCounter() {
+  const lineCounter = document.querySelector('#line-counter');
+  lineCounter.textContent = `Lines cleared: ${linesCleared}`;
+}
+
 function renderGame() {
   renderPlayfield();
   renderHoldQueue();
   renderNextQueue();
+  renderLineCounter();
 }
 
 function shuffle(array) {
@@ -354,6 +364,8 @@ function clearLines(tetrimino) {
     if (isLineFull) {
       matrix.splice(i, 1);
       matrix.unshift(Array(MATRIX_NUM_CELLS_X).fill(MINO.empty));
+
+      linesCleared += 1;
     }
   }
 }
