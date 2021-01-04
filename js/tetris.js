@@ -44,7 +44,7 @@ const MINO_COLORS = {
 
 const TETRIMINO_GHOST_OPACITY = 0.5;
 const TETRIMINO_TYPES = ['t', 'z', 's', 'j', 'l', 'i', 'o'];
-const TETRIMINO_MINO_POSITIONS = {
+const TETRIMINO_MINO_ORIENTATIONS = {
   t: {
     north:  [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }],
     east:   [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 1 }],
@@ -91,10 +91,11 @@ const TETRIMINO_MINO_POSITIONS = {
 
 const DEFAULT_ANCHOR = { x: 3, y: 0 };
 
-const ORIENTATIONS = ['north', 'east', 'south', 'west'];
-const DEFAULT_ORIENTATION = 'north';
+const DIRECTIONS = ['north', 'east', 'south', 'west'];
+const DEFAULT_DIRECTION = 'north';
 
-const DIRECTION_TO_OFFSET = {
+const DEFAULT_OFFSET = { x: 0, y: 0 };
+const MOVEMENT_TO_OFFSET = {
   left:   { x: -1,  y: 0 },
   right:  { x: 1,   y: 0 },
   down:   { x: 0,   y: 1 },
@@ -128,9 +129,16 @@ function getMino(tetrimino) {
   return TETRIMINO_TYPES.indexOf(tetrimino.type);
 }
 
-function getMinoPositions(tetrimino) {
-  const { type, orientation } = { ...tetrimino };
-  return TETRIMINO_MINO_POSITIONS[type][orientation]
+function getMinoPositions(tetrimino, offset = DEFAULT_OFFSET) {
+  const { anchor, type, direction } = { ...tetrimino };
+  const minoOrientations = TETRIMINO_MINO_ORIENTATIONS[type][direction];
+
+  const minoPositions = minoOrientations.map(({ x, y }) => ({
+    x: x + anchor.x + offset.x,
+    y: y + anchor.y + offset.y,
+  }));
+
+  return minoPositions;
 }
 
 function drawMinoStroke(x, y, context) {
@@ -179,10 +187,7 @@ function renderTetriminoGhost() {
   const mino = getMino(tetriminoGhost);
   const minoPositions = getMinoPositions(tetriminoGhost);
 
-  for (const minoPosition of minoPositions) {
-    const x = anchor.x + minoPosition.x;
-    const y = anchor.y + minoPosition.y;
-
+  for (const { x, y } of minoPositions) {
     drawMino(mino, x, y, contextPlayfield);
   }
 
@@ -216,17 +221,11 @@ function renderHoldQueue() {
   }
 
   const mino = getMino(tetriminoHeld);
-  const minoPositions = getMinoPositions(tetriminoHeld);
-
-  const yOffset = OFFSET_SKYLINE;
+  const offset = { x: -3, y: OFFSET_SKYLINE };
+  const minoPositions = getMinoPositions(tetriminoHeld, offset);
 
   for (const { x, y } of minoPositions) {
-    drawMino(
-      mino,
-      x,
-      y + yOffset,
-      contextHoldQueue
-    );
+    drawMino(mino, x, y, contextHoldQueue);
   }
 }
 
@@ -239,23 +238,17 @@ function renderNextQueue() {
   }
 
   for (let i = 0; i < NEXT_QUEUE_LENGTH; ++i) {
+    const anchor = { x: 1, y: OFFSET_SKYLINE };
     const type = tetriminoQueue[i];
-    const orientation = DEFAULT_ORIENTATION;
-    const minoPositions = getMinoPositions({ type, orientation });
+    const direction = DEFAULT_DIRECTION;
 
     const mino = MINO[type];
+    const minoPositions = getMinoPositions({ anchor, type, direction });
 
-    const xOffset = 1;
-    const yOffset = OFFSET_SKYLINE;
     const queueBlockHeight = 4;
 
     for (const { x, y } of minoPositions) {
-      drawMino(
-        mino,
-        x + xOffset,
-        y + yOffset + (queueBlockHeight * i),
-        contextNextQueue
-      );
+      drawMino(mino, x, y + (queueBlockHeight * i), contextNextQueue);
     }
   }
 }
@@ -296,7 +289,7 @@ function getTetrimino() {
   const tetriminoKey = tetriminoQueue.shift();
   const tetrimino = {
     anchor: { ...DEFAULT_ANCHOR },
-    orientation: DEFAULT_ORIENTATION,
+    direction: DEFAULT_DIRECTION,
     type: tetriminoKey,
   };
 
@@ -311,15 +304,8 @@ function isOutOfBounds(x, y) {
 }
 
 function isIntersectTetrimino(x, y, tetrimino) {
-  const anchor = tetrimino.anchor;
   const minoPositions = getMinoPositions(tetrimino);
-
-  return minoPositions.some((minoPosition) => {
-    const x1 = anchor.x + minoPosition.x;
-    const y1 = anchor.y + minoPosition.y;
-
-    return x === x1 && y === y1;
-  });
+  return minoPositions.some(({ x: x1, y: y1 }) => x === x1 && y === y1);
 }
 
 function isIntersectLockedMino(x, y, tetrimino) {
@@ -330,25 +316,17 @@ function isIntersectLockedMino(x, y, tetrimino) {
   return false;
 }
 
-function isLocked(tetrimino, direction) {
+function isLocked(tetrimino, movement) {
   if (tetrimino === null) {
     return true;
   }
 
-  const anchor = tetrimino.anchor;
-  const minoPositions = getMinoPositions(tetrimino);
-  const offset = DIRECTION_TO_OFFSET[direction];
+  const offset = MOVEMENT_TO_OFFSET[movement];
+  const minoPositions = getMinoPositions(tetrimino, offset);
 
-  for (const minoPosition of minoPositions) {
-    const x = anchor.x + minoPosition.x + offset.x;
-    const y = anchor.y + minoPosition.y + offset.y;
-
-    if (isOutOfBounds(x, y) || isIntersectLockedMino(x, y, tetrimino)) {
-      return true;
-    }
-  }
-
-  return false;
+  return minoPositions.some(({ x, y }) => {
+    return isOutOfBounds(x, y) || isIntersectLockedMino(x, y, tetrimino);
+  });
 }
 
 function clearLines(tetrimino) {
@@ -356,12 +334,8 @@ function clearLines(tetrimino) {
     return;
   }
 
-  const anchor = tetrimino.anchor;
   const minoPositions = getMinoPositions(tetrimino);
-
-  const yValues = minoPositions.map((minoPosition) => {
-    return anchor.y + minoPosition.y;
-  });
+  const yValues = minoPositions.map(({ y }) => y);
 
   let yMin = MATRIX_NUM_CELLS_Y;
   let yMax = -1;
@@ -372,7 +346,7 @@ function clearLines(tetrimino) {
   }
 
   for (let i = yMin; i <= yMax; ++i) {
-    const isLineFull = matrix[i].every(mino => mino !== MINO.empty);
+    const isLineFull = matrix[i].every((mino) => mino !== MINO.empty);
 
     if (isLineFull) {
       matrix.splice(i, 1);
@@ -388,59 +362,39 @@ function isLockOut(tetrimino) {
     return false;
   }
 
-  const anchor = tetrimino.anchor;
   const minoPositions = getMinoPositions(tetrimino);
-
-  return minoPositions.every((minoPosition) => {
-    const y = anchor.y + minoPosition.y;
-    return y < OFFSET_SKYLINE;
-  });
+  return minoPositions.every(({ y }) => y < OFFSET_SKYLINE);
 }
 
 function isBlockOut(tetrimino) {
-  const anchor = tetrimino.anchor;
   const minoPositions = getMinoPositions(tetrimino);
-
-  return minoPositions.some((minoPosition) => {
-    const x = anchor.x + minoPosition.x;
-    const y = anchor.y + minoPosition.y;
-
-    return matrix[y][x] !== MINO.empty;
-  });
+  return minoPositions.some(({ x, y }) => matrix[y][x] !== MINO.empty);
 }
 
 function addTetriminoToMatrix(tetrimino) {
-  const anchor = tetrimino.anchor;
   const mino = getMino(tetrimino);
   const minoPositions = getMinoPositions(tetrimino);
 
-  for (const minoPosition of minoPositions) {
-    const x = anchor.x + minoPosition.x;
-    const y = anchor.y + minoPosition.y;
-
+  for (const { x, y } of minoPositions) {
     matrix[y][x] = mino;
   }
 }
 
-function moveTetrimino(tetrimino, direction) {
-  const offset = DIRECTION_TO_OFFSET[direction];
-  const anchor = tetrimino.anchor;
+function moveTetrimino(tetrimino, movement) {
   const mino = getMino(tetrimino);
   const minoPositions = getMinoPositions(tetrimino);
 
-  anchor.x += offset.x;
-  anchor.y += offset.y;
-
-  for (const minoPosition of minoPositions) {
-    const x = anchor.x + minoPosition.x - offset.x;
-    const y = anchor.y + minoPosition.y - offset.y;
+  for (const { x, y } of minoPositions) {
     matrix[y][x] = MINO.empty;
   }
 
-  for (const minoPosition of minoPositions) {
-    const x = anchor.x + minoPosition.x;
-    const y = anchor.y + minoPosition.y;
+  const offset = MOVEMENT_TO_OFFSET[movement];
 
+  tetrimino.anchor.x += offset.x;
+  tetrimino.anchor.y += offset.y;
+
+  const newMinoPositions = getMinoPositions(tetrimino);
+  for (const { x, y } of newMinoPositions) {
     matrix[y][x] = mino;
   }
 }
@@ -466,18 +420,18 @@ function play() {
   renderGame();
 }
 
-function getNextOrientation(orientation, rotation) {
-  const orientationIndex = ORIENTATIONS.indexOf(orientation);
-  let newOrientationIndex = orientationIndex;
+function getNextDirection(direction, rotation) {
+  const directionIndex = DIRECTIONS.indexOf(direction);
+  let nextDirectionIndex = directionIndex;
 
   if (rotation === 'clockwise') {
-     newOrientationIndex += 1;
+     nextDirectionIndex += 1;
   } else if (rotation === 'counterClockwise') {
-    newOrientationIndex += ORIENTATIONS.length - 1;
+    nextDirectionIndex += DIRECTIONS.length - 1;
   }
 
-  newOrientationIndex %= ORIENTATIONS.length;
-  return ORIENTATIONS[newOrientationIndex];
+  nextDirectionIndex %= DIRECTIONS.length;
+  return DIRECTIONS[nextDirectionIndex];
 }
 
 
@@ -486,53 +440,39 @@ function isRotateLocked(tetrimino, rotation) {
     return true;
   }
 
-  const { anchor, orientation } = { ...tetrimino };
-  const nextOrientation = getNextOrientation(orientation, rotation);
+  const direction = tetrimino.direction;
+  const nextDirection = getNextDirection(direction, rotation);
   const minoPositions = getMinoPositions({
     ...tetrimino,
-    orientation: nextOrientation,
+    direction: nextDirection,
   });
 
-  for (const minoPosition of minoPositions) {
-    const x = anchor.x + minoPosition.x;
-    const y = anchor.y + minoPosition.y;
-
-    if (isOutOfBounds(x, y) || isIntersectLockedMino(x, y, tetrimino)) {
-      return true;
-    }
-  }
-
-  return false;
+  return minoPositions.some(({ x, y }) => {
+    return isOutOfBounds(x, y) || isIntersectLockedMino(x, y, tetrimino);
+  });
 }
 
 function rotateTetrimino(tetrimino, rotation) {
-  const { anchor, orientation } = { ...tetrimino };
   const oldMinoPositions = getMinoPositions(tetrimino);
 
-  for (const minoPosition of oldMinoPositions) {
-    const x = anchor.x + minoPosition.x;
-    const y = anchor.y + minoPosition.y;
-
+  for (const { x, y } of oldMinoPositions) {
     matrix[y][x] = MINO.empty;
   }
 
-  const nextOrientation = getNextOrientation(orientation, rotation);
-  tetrimino.orientation = nextOrientation;
+  const direction = tetrimino.direction;
+  tetrimino.direction = getNextDirection(direction, rotation);
 
   const mino = getMino(tetrimino);
   const newMinoPositions = getMinoPositions(tetrimino);
 
-  for (const minoPosition of newMinoPositions) {
-    const x = anchor.x + minoPosition.x;
-    const y = anchor.y + minoPosition.y;
-
+  for (const { x, y } of newMinoPositions) {
     matrix[y][x] = mino;
   }
 }
 
 function getUserInput({ keyCode: code }) {
   const movementCodes = [37, 39, 40];
-  const codeToDirection = {
+  const codeToMovement = {
     37: 'left',
     39: 'right',
     40: 'down',
@@ -548,10 +488,10 @@ function getUserInput({ keyCode: code }) {
   const codeForHardDrop = 32;
 
   if (movementCodes.includes(code)) {
-    const direction = codeToDirection[code];
+    const movement = codeToMovement[code];
 
-    if (!isLocked(tetriminoActive, direction)) {
-      moveTetrimino(tetriminoActive, direction);
+    if (!isLocked(tetriminoActive, movement)) {
+      moveTetrimino(tetriminoActive, movement);
       renderGame();
     }
   } else if (rotationCodes.includes(code)) {
@@ -561,17 +501,13 @@ function getUserInput({ keyCode: code }) {
       renderGame();
     }
   } else if (code === codeForHold && !isTetriminoHeldRecent) {
-    const anchor = tetriminoActive.anchor;
     const minoPositions = getMinoPositions(tetriminoActive);
 
-    minoPositions.forEach((minoPosition) => {
-      const x = anchor.x + minoPosition.x;
-      const y = anchor.y + minoPosition.y;
-
+    for (const { x, y } of minoPositions) {
       matrix[y][x] = MINO.empty;
-    });
+    };
 
-    tetriminoActive.orientation = DEFAULT_ORIENTATION;
+    tetriminoActive.direction = DEFAULT_DIRECTION;
     tetriminoActive.anchor = { ...DEFAULT_ANCHOR };
 
     const tetriminoHeldOld = tetriminoHeld;
