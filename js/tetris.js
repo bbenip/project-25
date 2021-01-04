@@ -558,9 +558,6 @@ function getUserInput({ keyCode: code }) {
       renderGame();
     }
   } else if (code === codeForHold && !isTetriminoHeldRecent) {
-    const tetriminoHeldOld = tetriminoHeld;
-    tetriminoHeld = tetriminoActive;
-
     const anchor = tetriminoActive.anchor;
     const minoPositions = getMinoPositions(tetriminoActive);
 
@@ -571,13 +568,12 @@ function getUserInput({ keyCode: code }) {
       matrix[y][x] = MINO.empty;
     });
 
-    if (tetriminoHeldOld !== null) {
-      tetriminoActive = tetriminoHeldOld;
-      tetriminoHeldOld.anchor = { ...DEFAULT_ANCHOR };
-      tetriminoHeldOld.orientation = DEFAULT_ORIENTATION;
-    } else {
-      tetriminoActive = getTetrimino();
-    }
+    tetriminoActive.orientation = DEFAULT_ORIENTATION;
+    tetriminoActive.anchor = { ...DEFAULT_ANCHOR };
+
+    const tetriminoHeldOld = tetriminoHeld;
+    tetriminoHeld = tetriminoActive;
+    tetriminoActive = tetriminoHeldOld || getTetrimino();
 
     addTetriminoToMatrix(tetriminoActive);
     isTetriminoHeldRecent = true;
