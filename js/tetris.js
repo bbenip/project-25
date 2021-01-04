@@ -487,8 +487,11 @@ function isRotateLocked(tetrimino, rotation) {
   }
 
   const { anchor, orientation } = { ...tetrimino };
-  const newOrientation = getNextOrientation(orientation, rotation);
-  const minoPositions = getMinoPositions(tetrimino);
+  const nextOrientation = getNextOrientation(orientation, rotation);
+  const minoPositions = getMinoPositions({
+    ...tetrimino,
+    orientation: nextOrientation,
+  });
 
   for (const minoPosition of minoPositions) {
     const x = anchor.x + minoPosition.x;
@@ -513,8 +516,8 @@ function rotateTetrimino(tetrimino, rotation) {
     matrix[y][x] = MINO.empty;
   }
 
-  const newOrientation = getNextOrientation(orientation, rotation);
-  tetrimino.orientation = newOrientation;
+  const nextOrientation = getNextOrientation(orientation, rotation);
+  tetrimino.orientation = nextOrientation;
 
   const mino = getMino(tetrimino);
   const newMinoPositions = getMinoPositions(tetrimino);
