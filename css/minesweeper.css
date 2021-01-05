@@ -31,3 +31,15 @@ header h1 {
   height: 60vh;
   width: 60vh;
 }
+
+#game table {
+  border-collapse: collapse;
+  height: 60vh;
+  width: 60vh;
+}
+
+#game td {
+  height: 5vh;
+  width: 5vh;
+  border: 0.5vh solid rgb(0, 0, 0);
+}
