@@ -10,14 +10,6 @@ const DEFAULT_CELL = CELL_UNEXPOSED;
 let totalFlags = DEFAULLT_TOTAL_FLAGS;
 let board = [];
 
-function resetGame() {
-  board = Array(BOARD_NUM_CELLS_Y)
-    .fill([])
-    .map(() => Array(BOARD_NUM_CELLS_X).fill(DEFAULT_CELL));
-
-  totalFlags = DEFAULLT_TOTAL_FLAGS;
-}
-
 function renderBoardDOM() {
   const board = document.createElement('table');
   board.setAttribute('id', 'board');
@@ -38,6 +30,31 @@ function renderBoardDOM() {
   document.querySelector('#game').appendChild(board);
 }
 
+function resetGame() {
+  board = Array(BOARD_NUM_CELLS_Y)
+    .fill([])
+    .map(() => Array(BOARD_NUM_CELLS_X).fill(DEFAULT_CELL));
+
+  totalFlags = DEFAULLT_TOTAL_FLAGS;
+}
+
+function renderGame() {
+  for (let i = 0; i < BOARD_NUM_CELLS_Y; ++i) {
+    for (let j = 0; j < BOARD_NUM_CELLS_X; ++j) {
+      const cell = document.querySelector(`#board`)
+        .childNodes[i]
+        .childNodes[j];
+
+      if (board[i][j] === CELL_UNEXPOSED) {
+        cell.setAttribute('class', 'unexposed');
+      } else if (board[i][j] === CELL_FLAGGED) {
+        cell.setAttribute('class', 'flagged');
+      }
+    }
+  }
+}
+
+
 function flagCell(event) {
   event.preventDefault();
 
@@ -56,9 +73,12 @@ function flagCell(event) {
       totalFlags -= 1;
     }
   }
+
+  renderGame();
 }
 
 window.onload = () => {
-  resetGame();
   renderBoardDOM();
+  resetGame();
+  renderGame();
 };

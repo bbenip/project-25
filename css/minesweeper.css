@@ -43,3 +43,11 @@ header h1 {
   border: 0.25vh solid rgb(0, 0, 0);
   border-radius: 0.5vh;
 }
+
+.unexposed {
+  background-color: rgb(115, 195, 255);
+}
+
+.flagged {
+  background-color: rgb(235, 200, 75);
+}
