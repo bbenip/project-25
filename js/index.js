@@ -10,6 +10,7 @@ const projects = [
   'Connect 4',
   'Tron',
   'Tetris',
+  'Minesweeper',
 ];
 
 function getFilename(project) {
