@@ -32,14 +32,14 @@ header h1 {
   width: 60vh;
 }
 
-#game table {
-  border-collapse: collapse;
+#board {
   height: 60vh;
   width: 60vh;
 }
 
-#game td {
+#board td {
   height: 5vh;
   width: 5vh;
-  border: 0.5vh solid rgb(0, 0, 0);
+  border: 0.25vh solid rgb(0, 0, 0);
+  border-radius: 0.5vh;
 }

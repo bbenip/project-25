@@ -20,6 +20,7 @@ function resetGame() {
 
 function renderBoardDOM() {
   const board = document.createElement('table');
+  board.setAttribute('id', 'board');
 
   for (let i = 0; i < BOARD_NUM_CELLS_Y; ++i) {
     const row = document.createElement('tr');
