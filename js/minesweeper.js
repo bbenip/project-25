@@ -1,6 +1,16 @@
 const BOARD_NUM_CELLS_X = 10;
 const BOARD_NUM_CELLS_Y = 10;
 
+const DEFAULT_CELL = -1;
+
+let board = [];
+
+function resetGame() {
+  board = Array(BOARD_NUM_CELLS_Y)
+    .fill([])
+    .map(() => Array(BOARD_NUM_CELLS_X).fill(DEFAULT_CELL));
+}
+
 function renderBoardDOM() {
   const board = document.createElement('table');
 
@@ -19,5 +29,6 @@ function renderBoardDOM() {
 }
 
 window.onload = () => {
+  resetGame();
   renderBoardDOM();
 };
