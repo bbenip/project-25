@@ -7,12 +7,12 @@ const CELL_FLAGGED_SAFE = -3;
 const CELL_FLAGGED_MINE = -4;
 
 const TOTAL_MINE_COUNT = 10;
+const TOTAL_CELLS = BOARD_NUM_CELLS_X * BOARD_NUM_CELLS_Y;
 
-const DEFAULLT_TOTAL_FLAGS = 10;
 const DEFAULT_CELL = CELL_UNEXPOSED_SAFE;
 
 let isNewGame = true;
-
+let numCellsExposed = 0;
 let mines = [];
 let board = [];
 
@@ -79,6 +79,7 @@ function resetGame() {
     .fill([])
     .map(() => Array(BOARD_NUM_CELLS_X).fill(DEFAULT_CELL));
 
+  numCellsExposed = 0;
   isNewGame = true;
 }
 
@@ -197,6 +198,10 @@ function exposeCell(event) {
       const coordinate = coordinatesToSearch.shift();
       const { x, y } = { ...coordinate };
 
+      if (board[y][x] !== CELL_UNEXPOSED_SAFE) {
+        continue;
+      }
+
       const neighboringCoordinates = getNeighboringCoordinates(x, y);
       const numNeighboringMines = countMines(neighboringCoordinates);
 
@@ -209,6 +214,7 @@ function exposeCell(event) {
       }
 
       board[y][x] = numNeighboringMines;
+      numCellsExposed += 1;
     }
 
     isNewGame = false;
@@ -216,7 +222,27 @@ function exposeCell(event) {
     endGame();
   }
 
+  checkWin();
+
   renderGame();
+}
+
+function checkWin() {
+  if (numCellsExposed === TOTAL_CELLS - TOTAL_MINE_COUNT) {
+    // Render to expose the last cell(s) before alert
+    renderGame();
+
+    for (const { x, y } of mines) {
+      const cell = document.querySelector('#board')
+        .childNodes[y]
+        .childNodes[x];
+
+      cell.setAttribute('class', 'unexposed-mine');
+    }
+
+    alert('You win! Congratulations on the victory.');
+    resetGame();
+  }
 }
 
 function endGame() {
