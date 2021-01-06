@@ -144,7 +144,7 @@ function isOutOfBounds(x, y) {
   );
 }
 
-function getSurroundingCells(x, y) {
+function getSurroundingCoordinates(x, y) {
   const surroundingCells = [];
 
   for (let i = -1; i <= 1; ++i) {
@@ -166,10 +166,10 @@ function getSurroundingCells(x, y) {
 }
 
 
-function countMines(cells) {
+function countMines(coordinates) {
   let numMines = 0;
 
-  for (const { x, y } of cells) {
+  for (const { x, y } of coordinates) {
     if (
       board[y][x] === CELL_UNEXPOSED_MINE
       || board[y][x] === CELL_FLAGGED_MINE
@@ -188,19 +188,19 @@ function exposeCell(event) {
 
   if (board[y][x] === CELL_UNEXPOSED_SAFE) {
     // cellsToSearch is treated like a queue
-    let cellsToSearch = [{ x, y }];
+    let coordinatesToSearch = [{ x, y }];
 
-    while (cellsToSearch.length > 0) {
-      const cell = cellsToSearch.shift();
-      const { x, y } = { ...cell };
+    while (coordinatesToSearch.length > 0) {
+      const coordinate = coordinatesToSearch.shift();
+      const { x, y } = { ...coordinate };
 
-      const surroundingCells = getSurroundingCells(x, y);
-      const numSurroundingMines = countMines(surroundingCells);
+      const surroundingCoordinates = getSurroundingCoordinates(x, y);
+      const numSurroundingMines = countMines(surroundingCoordinates);
 
       if (numSurroundingMines === 0) {
-        for (const { x: x1, y: y1 } of surroundingCells) {
+        for (const { x: x1, y: y1 } of surroundingCoordinates) {
           if (board[y1][x1] === CELL_UNEXPOSED_SAFE) {
-            cellsToSearch.push({ x: x1, y: y1 });
+            coordinatesToSearch.push({ x: x1, y: y1 });
           }
         }
       }
