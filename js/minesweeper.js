@@ -138,8 +138,8 @@ function isOutOfBounds(x, y) {
   );
 }
 
-function getSurroundingCoordinates(x, y) {
-  const surroundingCoordinates = [];
+function getNeighboringCoordinates(x, y) {
+  const neighboringCoordinates = [];
 
   for (let i = -1; i <= 1; ++i) {
     for (let j = -1; j <= 1; ++j) {
@@ -151,12 +151,12 @@ function getSurroundingCoordinates(x, y) {
       const y1 = y + i;
 
       if (!isOutOfBounds(x1, y1)) {
-        surroundingCoordinates.push({ x: x1, y: y1 });
+        neighboringCoordinates.push({ x: x1, y: y1 });
       }
     }
   }
 
-  return surroundingCoordinates;
+  return neighboringCoordinates;
 }
 
 
@@ -188,18 +188,18 @@ function exposeCell(event) {
       const coordinate = coordinatesToSearch.shift();
       const { x, y } = { ...coordinate };
 
-      const surroundingCoordinates = getSurroundingCoordinates(x, y);
-      const numSurroundingMines = countMines(surroundingCoordinates);
+      const neighboringCoordinates = getNeighboringCoordinates(x, y);
+      const numNeighboringMines = countMines(neighboringCoordinates);
 
-      if (numSurroundingMines === 0) {
-        for (const { x: x1, y: y1 } of surroundingCoordinates) {
+      if (numNeighboringMines === 0) {
+        for (const { x: x1, y: y1 } of neighboringCoordinates) {
           if (board[y1][x1] === CELL_UNEXPOSED_SAFE) {
             coordinatesToSearch.push({ x: x1, y: y1 });
           }
         }
       }
 
-      board[y][x] = numSurroundingMines;
+      board[y][x] = numNeighboringMines;
     }
   } else if (board[y][x] === CELL_UNEXPOSED_MINE) {
     endGame();
