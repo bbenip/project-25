@@ -207,9 +207,24 @@ function exposeCell(event) {
 
       board[y][x] = numSurroundingMines;
     }
+  } else if (board[y][x] === CELL_UNEXPOSED_MINE) {
+    endGame();
   }
 
   renderGame();
+}
+
+function endGame() {
+  for (const { x, y } of mines) {
+    const cell = document.querySelector('#board')
+      .childNodes[y]
+      .childNodes[x];
+
+    cell.setAttribute('class', 'exposed-mine');
+  }
+
+  alert('You lost! Better luck next time.');
+  resetGame();
 }
 
 window.onload = () => {

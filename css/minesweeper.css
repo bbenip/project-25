@@ -60,3 +60,7 @@ header h1 {
 .exposed-safe {
   background-color: white;
 }
+
+.exposed-mine {
+  background-color: red;
+}
