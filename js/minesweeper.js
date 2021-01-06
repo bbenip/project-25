@@ -1,14 +1,15 @@
 const BOARD_NUM_CELLS_X = 10;
 const BOARD_NUM_CELLS_Y = 10;
 
-const CELL_UNEXPOSED = -1;
-const CELL_FLAGGED = -2;
-const CELL_UNEXPOSED_MINE = -3;
+const CELL_UNEXPOSED_SAFE = -1;
+const CELL_UNEXPOSED_MINE = -2;
+const CELL_FLAGGED_SAFE = -3;
+const CELL_FLAGGED_MINE = -4;
 
 const MINE_COUNT = 10;
 
 const DEFAULLT_TOTAL_FLAGS = 10;
-const DEFAULT_CELL = CELL_UNEXPOSED;
+const DEFAULT_CELL = CELL_UNEXPOSED_SAFE;
 
 let totalFlags = DEFAULLT_TOTAL_FLAGS;
 let mines = [];
@@ -52,7 +53,7 @@ function shuffle(array) {
 
 function setMines() {
   const boardPositions = Array(BOARD_NUM_CELLS_X * BOARD_NUM_CELLS_Y)
-    .fill(CELL_UNEXPOSED)
+    .fill(CELL_UNEXPOSED_SAFE)
     .map((value, index) => index);
 
   const candidatePositions = shuffle(boardPositions).slice(0, MINE_COUNT);
@@ -84,11 +85,14 @@ function renderGame() {
         .childNodes[j];
 
       if (
-        board[i][j] === CELL_UNEXPOSED
+        board[i][j] === CELL_UNEXPOSED_SAFE
         || board[i][j] === CELL_UNEXPOSED_MINE
       ) {
         cell.setAttribute('class', 'unexposed');
-      } else if (board[i][j] === CELL_FLAGGED) {
+      } else if (
+        board[i][j] === CELL_FLAGGED_SAFE
+        || board[i][j] === CELL_FLAGGED_MINE
+      ) {
         cell.setAttribute('class', 'flagged');
       }
     }
@@ -106,11 +110,17 @@ function flagCell(event) {
     const x = cell.cellIndex;
     const y = cell.parentNode.rowIndex;
 
-    if (board[y][x] === CELL_FLAGGED) {
-      board[y][x] = CELL_UNEXPOSED;
+    if (board[y][x] === CELL_FLAGGED_SAFE) {
+      board[y][x] = CELL_UNEXPOSED_SAFE;
       totalFlags += 1;
-    } else if (board[y][x] === CELL_UNEXPOSED) {
-      board[y][x] = CELL_FLAGGED;
+    } else if (board[y][x] === CELL_UNEXPOSED_SAFE) {
+      board[y][x] = CELL_FLAGGED_SAFE;
+      totalFlags -= 1;
+    } else if (board[y][x] === CELL_FLAGGED_MINE) {
+      board[y][x] = CELL_UNEXPOSED_MINE;
+      totalFlags += 1;
+    } else if (board[y][x] === CELL_UNEXPOSED_MINE) {
+      board[y][x] = CELL_FLAGGED_MINE;
       totalFlags -= 1;
     }
   }
