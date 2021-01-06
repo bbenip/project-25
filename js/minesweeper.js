@@ -11,6 +11,8 @@ const TOTAL_MINE_COUNT = 10;
 const DEFAULLT_TOTAL_FLAGS = 10;
 const DEFAULT_CELL = CELL_UNEXPOSED_SAFE;
 
+let isNewGame = true;
+
 let mines = [];
 let board = [];
 
@@ -51,21 +53,24 @@ function shuffle(array) {
   return shuffledArray;
 }
 
-function setMines() {
+function setMines(x, y) {
   const boardPositions = Array(BOARD_NUM_CELLS_X * BOARD_NUM_CELLS_Y)
     .fill(CELL_UNEXPOSED_SAFE)
     .map((value, index) => index);
 
   const candidatePositions = shuffle(boardPositions)
+    .slice(0, TOTAL_MINE_COUNT + 1);
+
+  mines = candidatePositions
+    .map((position) => ({
+      x: position % BOARD_NUM_CELLS_X,
+      y: ~~(position / BOARD_NUM_CELLS_X),
+    }))
+    .filter(({ x: x1, y: y1 }) => x !== x1 || y !== y1)
     .slice(0, TOTAL_MINE_COUNT);
 
-  mines = candidatePositions.map((position) => ({
-    x: position % BOARD_NUM_CELLS_X,
-    y: ~~(position / BOARD_NUM_CELLS_X),
-  }));
-
-  for (const { x, y } of mines) {
-    board[y][x] = CELL_UNEXPOSED_MINE;
+  for (const { x: x2, y: y2 } of mines) {
+    board[y2][x2] = CELL_UNEXPOSED_MINE;
   }
 }
 
@@ -74,7 +79,7 @@ function resetGame() {
     .fill([])
     .map(() => Array(BOARD_NUM_CELLS_X).fill(DEFAULT_CELL));
 
-  setMines();
+  isNewGame = true;
 }
 
 function renderGame() {
@@ -180,6 +185,10 @@ function exposeCell(event) {
   const x = cell.cellIndex;
   const y = cell.parentNode.rowIndex;
 
+  if (isNewGame) {
+    setMines(x, y);
+  }
+
   if (board[y][x] === CELL_UNEXPOSED_SAFE) {
     // cellsToSearch is treated like a queue
     let coordinatesToSearch = [{ x, y }];
@@ -201,6 +210,8 @@ function exposeCell(event) {
 
       board[y][x] = numNeighboringMines;
     }
+
+    isNewGame = false;
   } else if (board[y][x] === CELL_UNEXPOSED_MINE) {
     endGame();
   }
