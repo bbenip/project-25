@@ -139,7 +139,7 @@ function isOutOfBounds(x, y) {
 }
 
 function getSurroundingCoordinates(x, y) {
-  const surroundingCells = [];
+  const surroundingCoordinates = [];
 
   for (let i = -1; i <= 1; ++i) {
     for (let j = -1; j <= 1; ++j) {
@@ -151,12 +151,12 @@ function getSurroundingCoordinates(x, y) {
       const y1 = y + i;
 
       if (!isOutOfBounds(x1, y1)) {
-        surroundingCells.push({ x: x1, y: y1 });
+        surroundingCoordinates.push({ x: x1, y: y1 });
       }
     }
   }
 
-  return surroundingCells;
+  return surroundingCoordinates;
 }
 
 
