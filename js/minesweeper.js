@@ -11,7 +11,6 @@ const TOTAL_MINE_COUNT = 10;
 const DEFAULLT_TOTAL_FLAGS = 10;
 const DEFAULT_CELL = CELL_UNEXPOSED_SAFE;
 
-let totalFlags = DEFAULLT_TOTAL_FLAGS;
 let mines = [];
 let board = [];
 
@@ -75,7 +74,6 @@ function resetGame() {
     .fill([])
     .map(() => Array(BOARD_NUM_CELLS_X).fill(DEFAULT_CELL));
 
-  totalFlags = DEFAULLT_TOTAL_FLAGS;
   setMines();
 }
 
@@ -121,16 +119,12 @@ function flagCell(event) {
 
     if (board[y][x] === CELL_FLAGGED_SAFE) {
       board[y][x] = CELL_UNEXPOSED_SAFE;
-      totalFlags += 1;
     } else if (board[y][x] === CELL_UNEXPOSED_SAFE) {
       board[y][x] = CELL_FLAGGED_SAFE;
-      totalFlags -= 1;
     } else if (board[y][x] === CELL_FLAGGED_MINE) {
       board[y][x] = CELL_UNEXPOSED_MINE;
-      totalFlags += 1;
     } else if (board[y][x] === CELL_UNEXPOSED_MINE) {
       board[y][x] = CELL_FLAGGED_MINE;
-      totalFlags -= 1;
     }
   }
 
