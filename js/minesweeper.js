@@ -6,7 +6,7 @@ const CELL_UNEXPOSED_MINE = -2;
 const CELL_FLAGGED_SAFE = -3;
 const CELL_FLAGGED_MINE = -4;
 
-const MINE_COUNT = 10;
+const TOTAL_MINE_COUNT = 10;
 
 const DEFAULLT_TOTAL_FLAGS = 10;
 const DEFAULT_CELL = CELL_UNEXPOSED_SAFE;
@@ -25,6 +25,7 @@ function renderBoardDOM() {
     for (let j = 0; j < BOARD_NUM_CELLS_X; ++j) {
       const cell = document.createElement('td');
       cell.addEventListener('contextmenu', flagCell);
+      cell.addEventListener('click', exposeCell);
 
       row.appendChild(cell);
     }
@@ -56,7 +57,8 @@ function setMines() {
     .fill(CELL_UNEXPOSED_SAFE)
     .map((value, index) => index);
 
-  const candidatePositions = shuffle(boardPositions).slice(0, MINE_COUNT);
+  const candidatePositions = shuffle(boardPositions)
+    .slice(0, TOTAL_MINE_COUNT);
 
   mines = candidatePositions.map((position) => ({
     x: position % BOARD_NUM_CELLS_X,
@@ -88,12 +90,19 @@ function renderGame() {
         board[i][j] === CELL_UNEXPOSED_SAFE
         || board[i][j] === CELL_UNEXPOSED_MINE
       ) {
+        cell.textContent = '';
         cell.setAttribute('class', 'unexposed');
       } else if (
         board[i][j] === CELL_FLAGGED_SAFE
         || board[i][j] === CELL_FLAGGED_MINE
       ) {
         cell.setAttribute('class', 'flagged');
+      } else {
+        cell.setAttribute('class', 'exposed-safe');
+
+        if (board[i][j] !== 0) {
+          cell.textContent = board[i][j];
+        }
       }
     }
   }
@@ -122,6 +131,81 @@ function flagCell(event) {
     } else if (board[y][x] === CELL_UNEXPOSED_MINE) {
       board[y][x] = CELL_FLAGGED_MINE;
       totalFlags -= 1;
+    }
+  }
+
+  renderGame();
+}
+
+function isOutOfBounds(x, y) {
+  return (
+    (x < 0 || x >= BOARD_NUM_CELLS_X)
+    || (y < 0 || y >= BOARD_NUM_CELLS_Y)
+  );
+}
+
+function getSurroundingCells(x, y) {
+  const surroundingCells = [];
+
+  for (let i = -1; i <= 1; ++i) {
+    for (let j = -1; j <= 1; ++j) {
+      if (i === 0 && j === 0) {
+        continue;
+      }
+
+      const x1 = x + j;
+      const y1 = y + i;
+
+      if (!isOutOfBounds(x1, y1)) {
+        surroundingCells.push({ x: x1, y: y1 });
+      }
+    }
+  }
+
+  return surroundingCells;
+}
+
+
+function countMines(cells) {
+  let numMines = 0;
+
+  for (const { x, y } of cells) {
+    if (
+      board[y][x] === CELL_UNEXPOSED_MINE
+      || board[y][x] === CELL_FLAGGED_MINE
+    ) {
+      numMines += 1;
+    }
+  }
+
+  return numMines;
+}
+
+function exposeCell(event) {
+  const cell = event.target;
+  const x = cell.cellIndex;
+  const y = cell.parentNode.rowIndex;
+
+  if (board[y][x] === CELL_UNEXPOSED_SAFE) {
+    // cellsToSearch is treated like a queue
+    let cellsToSearch = [{ x, y }];
+
+    while (cellsToSearch.length > 0) {
+      const cell = cellsToSearch.shift();
+      const { x, y } = { ...cell };
+
+      const surroundingCells = getSurroundingCells(x, y);
+      const numSurroundingMines = countMines(surroundingCells);
+
+      if (numSurroundingMines === 0) {
+        for (const { x: x1, y: y1 } of surroundingCells) {
+          if (board[y1][x1] === CELL_UNEXPOSED_SAFE) {
+            cellsToSearch.push({ x: x1, y: y1 });
+          }
+        }
+      }
+
+      board[y][x] = numSurroundingMines;
     }
   }
 
