@@ -40,7 +40,7 @@ header h1 {
   text-align: center;
 }
 
-#game-table {
+#board {
   margin: auto;
   height: 64vh;
   width: 64vh;
@@ -48,7 +48,7 @@ header h1 {
   border-collapse: collapse;
 }
 
-#game-table td {
+#board td {
   height: 7vh;
   width: 7vh;
 
