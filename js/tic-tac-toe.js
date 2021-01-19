@@ -14,6 +14,22 @@ const arrangements = [
   'd0', 'd1',
 ];
 
+function resetGame() {
+  turn = 0;
+  boardState = { x: '', o: '' };
+
+  const board = document.querySelector('#board');
+  const rows = board.rows;
+
+  for (const row of rows) {
+    const cells = row.cells;
+
+    for (const cell of cells) {
+      cell.textContent = '';
+    }
+  }
+}
+
 function checkWin() {
   const piece = (turn % NUM_PLAYERS === 0) ? 'o' : 'x';
 
@@ -33,12 +49,7 @@ function checkWin() {
     alert('The game ended in a draw!');
   }
 
-  turn = 0;
-  boardState = { x: '', o: '' };
-
-  for (let i = 0; i < NUM_CELLS; ++i) {
-    document.querySelector(`#cell${i}`).textContent = '';
-  }
+  resetGame();
 }
 
 function addPiece(event) {
@@ -94,4 +105,5 @@ function renderBoardDOM() {
 
 window.onload = () => {
   renderBoardDOM();
+  resetGame();
 };
