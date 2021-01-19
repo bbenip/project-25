@@ -9,8 +9,8 @@ let boardState = {
 };
 
 const arrangements = [
-  'v0', 'v1', 'v2',
-  'h0', 'h1', 'h2',
+  'r0', 'r1', 'r2',
+  'c0', 'c1', 'c2',
   'd0', 'd1',
 ];
 
@@ -62,18 +62,17 @@ function addPiece(event) {
   const piece = (turn % NUM_PLAYERS === 0) ? 'o' : 'x';
   cell.textContent = piece;
 
-  const cellNumber = Number(cell.id.match(/\d+/)[0]);
-  const v = cellNumber % BOARD_DIMENSION;
-  const h = ~~(cellNumber / BOARD_DIMENSION);
+  const row = cell.parentNode.rowIndex;
+  const column = cell.cellIndex;
 
-  boardState[piece] += `v${v}`;
-  boardState[piece] += `h${h}`;
+  boardState[piece] += `r${row}`;
+  boardState[piece] += `c${column}`;
 
-  if (v === h) {
+  if (row === column) {
     boardState[piece] += 'd0';
   }
 
-  if (v + h === BOARD_DIMENSION - 1) {
+  if (row + column === BOARD_DIMENSION - 1) {
     boardState[piece] += 'd1';
   }
 
@@ -91,7 +90,6 @@ function renderBoardDOM() {
     for (let j = 0; j < BOARD_DIMENSION; ++j) {
       const cell = document.createElement('td');
       cell.addEventListener('click', addPiece);
-      cell.setAttribute('id', `cell${i * BOARD_DIMENSION + j}`);
 
       row.appendChild(cell);
     }
