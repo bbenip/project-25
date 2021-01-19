@@ -6,14 +6,14 @@ const PIECE_BLACK = 1;
 const PIECE_WHITE = 2;
 
 const DIRECTIONS = [
-  [-1, -1],
-  [-1, 0],
-  [-1, 1],
-  [0, -1],
-  [0, 1],
-  [1, -1],
-  [1, 0],
-  [1, 1],
+  [-1,  -1],
+  [0,   -1],
+  [1,   -1],
+  [-1,  0],
+  [1,   0],
+  [-1,  1],
+  [0,   1],
+  [1,   1],
 ];
 
 const BOARD_INITIAL = [
@@ -40,26 +40,29 @@ let score = {};
 function getValidMoves() {
   const moves = [];
 
-  for (let i = 0; i < GRID_DIMENSION; ++i) {
-    for (let j = 0; j < GRID_DIMENSION; ++j) {
-      if (board[i][j] !== pieceCurrent) continue;
+  for (let y = 0; y < GRID_DIMENSION; ++y) {
+    for (let x = 0; x < GRID_DIMENSION; ++x) {
+      if (board[y][x] !== pieceCurrent) {
+        continue;
+      }
 
       for (const direction of DIRECTIONS) {
-        let i2 = i + direction[0];
-        let j2 = j + direction[1];
+        let x2 = x + direction[0];
+        let y2 = y + direction[1];
+
         let visitedOppositePieces = false;
 
-        while (isValidCoordinate(i2, j2)) {
-          if (board[i2][j2] !== getOppositePiece(board[i][j])) {
-            if (board[i2][j2] === PIECE_BLANK && visitedOppositePieces) {
-              moves.push([i2, j2]);
+        while (isValidCoordinate(x2, y2)) {
+          if (board[y2][x2] !== getOppositePiece(board[y][x])) {
+            if (board[y2][x2] === PIECE_BLANK && visitedOppositePieces) {
+              moves.push([x2, y2]);
             }
 
             break;
           }
 
-          i2 += direction[0];
-          j2 += direction[1];
+          x2 += direction[0];
+          y2 += direction[1];
           visitedOppositePieces = true;
         }
       }
@@ -76,21 +79,14 @@ function resetGame() {
   score = { ...SCORE_INITIAL };
 }
 
-function cellToCoordinate(cell) {
-  const i = ~~(cell / GRID_DIMENSION);
-  const j = cell % GRID_DIMENSION;
-
-  return { i, j };
+function isValidMove(x, y) {
+  return validMoves.some(([x2, y2]) => x2 === x && y2 === y);
 }
 
-function isValidMove(i, j) {
-  return validMoves.some(([i2, j2]) => i2 === i && j2 === j);
-}
-
-function isValidCoordinate(i, j) {
+function isValidCoordinate(x, y) {
   return (
-    i >= 0 && i < GRID_DIMENSION
-    && j >= 0 && j < GRID_DIMENSION
+    (x >= 0 && x < GRID_DIMENSION)
+    && (y >= 0 && y < GRID_DIMENSION)
   );
 }
 
@@ -98,36 +94,38 @@ function getOppositePiece(piece) {
   return (piece === PIECE_BLANK) ? piece : piece % 2 + 1;
 }
 
-function swapPieces(i, j, i2, j2) {
-  const length = Math.max(Math.abs(i2 - i), Math.abs(j2 - j));
-  const direction = [(i2 - i) / length, (j2 - j) / length];
+function swapPieces(x, y, x2, y2) {
+  const length = Math.max(Math.abs(x2 - x), Math.abs(y2 - y));
+  const direction = [(x2 - x) / length, (y2 - y) / length];
 
   for (let n = 0; n < length - 1; ++n) {
-    i += direction[0];
-    j += direction[1];
+    x += direction[0];
+    y += direction[1];
 
-    board[i][j] = getOppositePiece(board[i][j]);
+    board[y][x] = getOppositePiece(board[y][x]);
   }
 
   score[pieceCurrent] += length - 1;
   score[getOppositePiece(pieceCurrent)] -= length - 1;
 }
 
-function captureCells(i, j) {
+function captureCells(x, y) {
   for (const direction of DIRECTIONS) {
-    let i2 = i + direction[0];
-    let j2 = j + direction[1];
+    let x2 = x + direction[0];
+    let y2 = y + direction[1];
 
-    while (isValidCoordinate(i2, j2)) {
-      if (board[i2][j2] === PIECE_BLANK) break;
-
-      if (board[i2][j2] === pieceCurrent) {
-        swapPieces(i, j, i2, j2);
+    while (isValidCoordinate(x2, y2)) {
+      if (board[y2][x2] === PIECE_BLANK) {
         break;
       }
 
-      i2 += direction[0];
-      j2 += direction[1];
+      if (board[y2][x2] === pieceCurrent) {
+        swapPieces(x, y, x2, y2);
+        break;
+      }
+
+      x2 += direction[0];
+      y2 += direction[1];
     }
   }
 }
@@ -154,17 +152,19 @@ function endGame() {
 }
 
 function addPiece(event) {
-  const cell = event.target.id.match(/cell(.*)/)[1];
-  const { i, j } = cellToCoordinate(cell);
+  const cell = event.target;
 
-  if (!isValidMove(i, j)) {
+  const x = cell.cellIndex;
+  const y = cell.parentNode.rowIndex;
+
+  if (!isValidMove(x, y)) {
     return;
   }
 
-  board[i][j] = pieceCurrent;
-  captureCells(i, j);
+  board[y][x] = pieceCurrent;
+  captureCells(x, y);
 
-  ++score[pieceCurrent];
+  score[pieceCurrent] += 1;
 
   pieceCurrent = getOppositePiece(pieceCurrent);
   validMoves = getValidMoves();
@@ -185,24 +185,24 @@ function addPiece(event) {
 }
 
 function renderGame() {
-  for (let i = 0; i < GRID_DIMENSION; ++i) {
-    for (let j = 0; j < GRID_DIMENSION; ++j) {
-      const cellNumber = j + i * GRID_DIMENSION;
-      const piece = document.querySelector(`#piece${cellNumber}`);
+  for (let y = 0; y < GRID_DIMENSION; ++y) {
+    for (let x = 0; x < GRID_DIMENSION; ++x) {
+      const cell = document.querySelector('#board').rows[y].cells[x];
+      const piece = cell.querySelector('.piece');
 
-      if (board[i][j] === PIECE_BLANK) {
+      if (board[y][x] === PIECE_BLANK) {
         piece.className = 'piece blank';
-      } else if (board[i][j] === PIECE_BLACK) {
+      } else if (board[y][x] === PIECE_BLACK) {
         piece.className = 'piece black';
-      } else if (board[i][j] === PIECE_WHITE) {
-        piece.className += 'piece white';
+      } else if (board[y][x] === PIECE_WHITE) {
+        piece.className = 'piece white';
       }
     }
   }
 
-  for (const [i, j] of validMoves) {
-    const cellNumber = j + i * GRID_DIMENSION;
-    const piece = document.querySelector(`#piece${cellNumber}`);
+  for (const [x, y] of validMoves) {
+    const cell = document.querySelector('#board').rows[y].cells[x];
+    const piece = cell.querySelector('.piece');
 
     piece.className = 'piece preview';
   }
@@ -214,18 +214,15 @@ window.onload = () => {
   const table = document.createElement('table');
   table.setAttribute('id', 'board');
 
-  for (let i = 0; i < GRID_DIMENSION; ++i) {
+  for (let y = 0; y < GRID_DIMENSION; ++y) {
     const row = document.createElement('tr');
 
-    for (let j = 0; j < GRID_DIMENSION; ++j) {
+    for (let x = 0; x < GRID_DIMENSION; ++x) {
       const cell = document.createElement('td');
       const piece = document.createElement('div');
 
-      const cellNumber = j + i * GRID_DIMENSION;
-      cell.id = `cell${cellNumber}`;
-      piece.id = `piece${cellNumber}`;
-
       cell.addEventListener('click', addPiece);
+      piece.className = 'piece';
 
       cell.appendChild(piece);
       row.appendChild(cell);
