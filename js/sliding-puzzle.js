@@ -43,11 +43,15 @@ function shuffle(array) {
 }
 
 function isEqual(array1, array2) {
-  if (array1.length !== array2.length) return false;
+  if (array1.length !== array2.length) {
+    return false;
+  }
 
   const size = array1.length;
   for (let i = 0; i < size; ++i) {
-    if (array1[i] !== array2[i]) return false;
+    if (array1[i] !== array2[i]) {
+      return false;
+    }
   }
 
   return true;
@@ -55,7 +59,7 @@ function isEqual(array1, array2) {
 
 function resetGame() {
   const STANDARD_GRID = [...Array(TOTAL_CELLS).keys()];
-  let randomLayout = STANDARD_GRID.slice();
+  let randomLayout = shuffle(STANDARD_GRID);
 
   while (isEqual(randomLayout, STANDARD_GRID)) {
     randomLayout = shuffle(STANDARD_GRID);
@@ -63,9 +67,9 @@ function resetGame() {
 
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
-      game.grid[i][j] = randomLayout[j + i * GRID_DIMENSION] + 1;
+      game.grid[i][j] = randomLayout[i * GRID_DIMENSION + j] + 1;
       if (game.grid[i][j] === EMPTY_CELL) {
-        game.emptyCell = { y: i, x: j };
+        game.emptyCell = { x: j, y: i };
       }
     }
   }
@@ -103,7 +107,7 @@ function renderGame() {
 function playerWins() {
   for (let i = 0; i < GRID_DIMENSION; ++i) {
     for (let j = 0; j < GRID_DIMENSION; ++j) {
-      if (game.grid[i][j] !== j + i * GRID_DIMENSION + 1) {
+      if (game.grid[i][j] !== i * GRID_DIMENSION + j + 1) {
         return false;
       }
     }
@@ -122,75 +126,70 @@ function updateGrid() {
   }
 }
 
-function isValidCoordinate(coordinate) {
-  const { y, x } = coordinate;
-  
-  return y >= 0 && y < GRID_DIMENSION &&
-         x >= 0 && x < GRID_DIMENSION;
+function isValidCoordinate(x, y) {
+  return (
+    (y >= 0 && y < GRID_DIMENSION)
+    && (x >= 0 && x < GRID_DIMENSION)
+  );
 }
 
-function getNeighbours({ y, x }) {
+function getNeighbours(x, y) {
   return {
-    'LEFT':   { nY: y, nX: x - 1 },
-    'UP':     { nY: y - 1, nX: x },
-    'RIGHT':  { nY: y, nX: x + 1 },
-    'DOWN':   { nY: y + 1, nX: x },
+    'LEFT':   { nX: x - 1,  nY: y     },
+    'UP':     { nX: x,      nY: y - 1 },
+    'RIGHT':  { nX: x + 1,  nY: y     },
+    'DOWN':   { nX: x,      nY: y + 1 },
   };
 }
 
-function getPiece(cell, direction) {
-  const neighbours = getNeighbours(cell);
+function getPiece(x, y, direction) {
+  const neighbours = getNeighbours(x, y);
   return neighbours[direction];
 }
 
-function moveKey(event) {
+function moveByKey(event) {
   const direction = CODE_TO_DIRECTION[event.keyCode];
-  if (direction === undefined) return;
+  if (direction === undefined) {
+    return;
+  }
 
-  const pieceDirection = OPPOSITE_DIRECTION[direction];
+  const { x, y } = game.emptyCell;
+  const oppositeDirection = OPPOSITE_DIRECTION[direction];
 
-  const { nY, nX } = getPiece(game.emptyCell, pieceDirection);
-  if (!isValidCoordinate({ y: nY, x: nX })) return;
+  const { nX, nY } = getPiece(x, y, oppositeDirection);
+  if (!isValidCoordinate(nX, nY)) {
+    return;
+  }
 
-  const { y, x } = game.emptyCell;
   game.grid[y][x] = game.grid[nY][nX];
   game.grid[nY][nX] = EMPTY_CELL;
 
-  game.emptyCell.y = nY;
-  game.emptyCell.x = nX;
-
-  ++game.moves;
+  game.emptyCell = { x: nX, y: nY };
+  game.moves += 1;
 
   updateGrid();
 }
 
-function cellToCoordinate(cell) {
-  const y = ~~(cell / GRID_DIMENSION);
-  const x = cell % GRID_DIMENSION;
+function moveByClick(event) {
+  const cell = event.target;
 
-  return { y, x };
-}
+  const x = cell.cellIndex;
+  const y = cell.parentNode.rowIndex;
 
-function moveClick(event) {
-  const cell = event.target.id.match(/cell(.*)/);
-  if (cell === null) return;
-
-  const coordinate = cellToCoordinate(parseInt(cell[1]) - 1);
-  if (!isValidCoordinate(coordinate)) return;
-
-  const { y, x } = coordinate;
-  const neighbours = getNeighbours(coordinate);
+  const neighbours = getNeighbours(x, y);
 
   for (const neighbour of Object.values(neighbours)) {
-    const { nY, nX } = neighbour;
-    if (!isValidCoordinate({ y: nY, x: nX })) continue;
+    const { nX, nY } = neighbour;
+    if (!isValidCoordinate(nX, nY)) {
+      continue;
+    }
 
     if (game.grid[nY][nX] === EMPTY_CELL) {
       game.grid[nY][nX] = game.grid[y][x];
       game.grid[y][x] = EMPTY_CELL;
 
-      game.emptyCell = { y, x };
-      ++game.moves;
+      game.emptyCell = { x, y };
+      game.moves += 1;
       updateGrid();
 
       break;
@@ -208,8 +207,7 @@ window.onload = () => {
 
     for (let j = 0; j < GRID_DIMENSION; ++j) {
       const cell = document.createElement('td');
-      cell.id = `cell${i * GRID_DIMENSION + j + 1}`;
-      cell.addEventListener('click', moveClick);
+      cell.addEventListener('click', moveByClick);
       row.appendChild(cell);
     }
 
@@ -220,7 +218,7 @@ window.onload = () => {
   gameContainer.appendChild(table);
 
   resetGame();
-  renderGame();
+  updateGrid();
 
-  document.addEventListener('keydown', moveKey);
+  document.addEventListener('keydown', moveByKey);
 };
