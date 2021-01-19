@@ -1,6 +1,6 @@
-const DIMENSION = 3;
+const BOARD_DIMENSION = 3;
 const NUM_PLAYERS = 2;
-const NUM_CELLS = DIMENSION * DIMENSION;
+const NUM_CELLS = BOARD_DIMENSION * BOARD_DIMENSION;
 
 let turn = 1;
 let boardState = {
@@ -52,8 +52,8 @@ function addPiece(event) {
   cell.textContent = piece;
 
   const cellNumber = Number(cell.id.match(/\d+/)[0]);
-  const v = cellNumber % DIMENSION;
-  const h = ~~(cellNumber / DIMENSION);
+  const v = cellNumber % BOARD_DIMENSION;
+  const h = ~~(cellNumber / BOARD_DIMENSION);
 
   boardState[piece] += `v${v}`;
   boardState[piece] += `h${h}`;
@@ -62,7 +62,7 @@ function addPiece(event) {
     boardState[piece] += 'd0';
   }
 
-  if (v + h === DIMENSION - 1) {
+  if (v + h === BOARD_DIMENSION - 1) {
     boardState[piece] += 'd1';
   }
 
@@ -70,8 +70,28 @@ function addPiece(event) {
   turn += 1;
 }
 
-window.onload = () => {
-  for (let i = 0; i < NUM_CELLS; ++i) {
-    document.querySelector(`#cell${i}`).addEventListener('click', addPiece);
+function renderBoardDOM() {
+  const board = document.createElement('table');
+  board.setAttribute('id', 'board');
+
+  for (let i = 0; i < BOARD_DIMENSION; ++i) {
+    const row = document.createElement('tr')
+
+    for (let j = 0; j < BOARD_DIMENSION; ++j) {
+      const cell = document.createElement('td');
+      cell.addEventListener('click', addPiece);
+      cell.setAttribute('id', `cell${i * BOARD_DIMENSION + j}`);
+
+      row.appendChild(cell);
+    }
+
+    board.appendChild(row);
   }
+
+  const game = document.querySelector('#game');
+  game.appendChild(board);
+}
+
+window.onload = () => {
+  renderBoardDOM();
 };
