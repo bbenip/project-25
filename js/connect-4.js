@@ -4,37 +4,29 @@ const BOARD_WIDTH = 7;
 const COLORS = ['yellow', 'red'];
 
 let board = [];
-const columnHeights = [];
+let columnHeights = [];
 
-let playerID = 0;
+let playerId = 0;
 
 function resetGame() {
-  const emptyRow = [];
-  emptyRow.length = BOARD_WIDTH;
-  emptyRow.fill(-1);
+  board = Array(BOARD_HEIGHT).fill(-1).map(() => Array(BOARD_WIDTH).fill(-1));
+  columnHeights = Array(BOARD_WIDTH).fill(0);
 
-  board.length = BOARD_HEIGHT;
-  board.fill([]);
-  board = board.map((row) => [...emptyRow]);
-
-  columnHeights.length = BOARD_WIDTH;
-  columnHeights.fill(0);
-
-  playerID = 0;
+  playerId = 0;
 
   for (let row = 0; row < BOARD_HEIGHT; ++row) {
     for (let column = 0; column < BOARD_WIDTH; ++column) {
-      const piece = document.querySelector(`#piece${row * BOARD_WIDTH + column}`);
-      const cell = document.querySelector(`#cell${row * BOARD_WIDTH + column}`)
+      const cell = document.querySelector('#board').rows[row].cells[column];
+      const piece = cell.querySelector('.piece');
 
-      piece.className = 'piece blank';
       cell.className = '';
+      piece.className = 'piece blank';
     }
   }
 }
 
 function updatePlayer() {
-  playerID = (playerID + 1) % 2;
+  playerId = (playerId + 1) % 2;
 }
 
 function isColumnFull(column) {
@@ -43,7 +35,7 @@ function isColumnFull(column) {
 
 function highlightWinningPieces(winningPieces) {
   for (const [row, column] of winningPieces) {
-    const cell = document.querySelector(`#cell${row * BOARD_WIDTH + column}`);
+    const cell = document.querySelector('#board').rows[row].cells[column];
     cell.className = 'winner';
   }
 }
@@ -98,20 +90,21 @@ function getLongestSequence(row, column) {
 
 
 function addPiece(event) {
-  const cellID = event.target.id.match(/cell(.*)/)[1];
-  const column = cellID % BOARD_WIDTH;
+  const cell = event.target;
+  const column = cell.cellIndex;
 
   if (isColumnFull(column)) {
     return;
   }
 
   const row = columnHeights[column];
-  ++columnHeights[column];
+  columnHeights[column] += 1;
 
-  board[row][column] = playerID;
+  board[row][column] = playerId;
 
-  const piece = document.querySelector(`#piece${row * BOARD_WIDTH + column}`);
-  piece.className = `piece ${COLORS[playerID]}`;
+  const cellToUpdate = document.querySelector('#board').rows[row].cells[column];
+  const piece = cellToUpdate.querySelector('.piece');
+  piece.className = `piece ${COLORS[playerId]}`;
 
   const winningCandidate = getLongestSequence(row, column).slice(0, 4);
 
@@ -119,7 +112,7 @@ function addPiece(event) {
     highlightWinningPieces(winningCandidate);
     setTimeout(
       () => {
-        alert(`Player ${playerID + 1} wins!`)
+        alert(`Player ${playerId + 1} wins!`)
         resetGame();
       },
       500
@@ -131,6 +124,7 @@ function addPiece(event) {
 
 window.onload = () => {
   const table = document.createElement('table');
+  table.style.transform = 'rotateX(180deg)';
   table.id = 'board';
 
   for (let i = BOARD_HEIGHT - 1; i >= 0; --i) {
@@ -138,11 +132,9 @@ window.onload = () => {
 
     for (let j = 0; j < BOARD_WIDTH; ++j) {
       const cell = document.createElement('td');
-      const piece = document.createElement('div');
 
+      const piece = document.createElement('div');
       piece.className = 'piece blank';
-      piece.id = `piece${i * BOARD_WIDTH + j}`;
-      cell.id = `cell${i * BOARD_WIDTH + j}`;
 
       cell.addEventListener('click', addPiece);
 
