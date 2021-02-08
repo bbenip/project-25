@@ -265,6 +265,7 @@ function renderGame() {
   renderLineCounter();
 }
 
+// Fisher-Yates shuffle
 function shuffle(array) {
   const arrayShuffled = array.slice();
 
