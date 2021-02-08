@@ -191,6 +191,7 @@ function exposeCell(event) {
   }
 
   if (board[y][x] === CELL_UNEXPOSED_SAFE) {
+    // Flood-fill algorithm
     // cellsToSearch is treated like a queue
     let coordinatesToSearch = [{ x, y }];
 
