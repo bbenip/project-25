@@ -70,7 +70,11 @@ function setMines(x, y) {
     .slice(0, TOTAL_MINE_COUNT);
 
   for (const { x: x2, y: y2 } of mines) {
-    board[y2][x2] = CELL_UNEXPOSED_MINE;
+    if (board[y2][x2] === CELL_UNEXPOSED_SAFE) {
+      board[y2][x2] = CELL_UNEXPOSED_MINE;
+    } else if (board[y2][x2] === CELL_FLAGGED_SAFE) {
+      board[y2][x2] = CELL_FLAGGED_MINE;
+    }
   }
 }
 
