@@ -9,8 +9,6 @@ const CELL_FLAGGED_MINE = -4;
 const TOTAL_MINE_COUNT = 10;
 const TOTAL_CELLS = BOARD_NUM_CELLS_X * BOARD_NUM_CELLS_Y;
 
-const DEFAULT_CELL = CELL_UNEXPOSED_SAFE;
-
 let isNewGame = true;
 let numCellsExposed = 0;
 let mines = [];
@@ -81,7 +79,7 @@ function setMines(x, y) {
 function resetGame() {
   board = Array(BOARD_NUM_CELLS_Y)
     .fill([])
-    .map(() => Array(BOARD_NUM_CELLS_X).fill(DEFAULT_CELL));
+    .map(() => Array(BOARD_NUM_CELLS_X).fill(CELL_UNEXPOSED_SAFE));
 
   numCellsExposed = 0;
   isNewGame = true;
