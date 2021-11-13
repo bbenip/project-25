@@ -119,16 +119,9 @@ function setColor(event) {
 
   if (color === game.color) return;
 
+  game.color = color;
   game.stepsLeft -= 1;
   renderCounter();
-
-  if (game.stepsLeft === 0) {
-    alert('Game over!');
-    resetGame();
-    return;
-  }
-
-  game.color = color;
 
   for (const [x, y] of game.captured) {
     game.grid[x][y].color = color;
@@ -139,6 +132,11 @@ function setColor(event) {
 
   if (game.captured.length === GRID_DIMENSION * GRID_DIMENSION) {
     alert(`You win with ${game.stepsLeft} steps left!`);
+    resetGame();
+  }
+
+  if (game.stepsLeft === 0) {
+    alert('Game over!');
     resetGame();
   }
 }
