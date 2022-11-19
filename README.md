@@ -1,7 +1,7 @@
-# Project 100
+# Project 25
 
 ## Overview
-A collection of 100 games from my childhood that I built using vanilla JavaScript.
+A collection of 25 games from my childhood that I built using vanilla JavaScript.
 
 I like playing games and I hate black bloxes! So, I made some classic games that I grew up with on and off the screen from scratch.
 
@@ -23,8 +23,8 @@ I like playing games and I hate black bloxes! So, I made some classic games that
 ## Installation
 
 ```sh
-git clone https://github.com/benipalbaljinder/project-100.git
-cd project-100
+git clone https://github.com/bbenip/project-25.git
+cd project-25
 
 # Windows
 start index.html
