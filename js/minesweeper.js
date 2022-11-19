@@ -14,7 +14,7 @@ let numCellsExposed = 0;
 let mines = [];
 let board = [];
 
-function renderBoardDOM() {
+function renderBoardDom() {
   const board = document.createElement('table');
   board.setAttribute('id', 'board');
 
@@ -260,7 +260,7 @@ function endGame() {
 }
 
 window.onload = () => {
-  renderBoardDOM();
+  renderBoardDom();
   resetGame();
   renderGame();
 };

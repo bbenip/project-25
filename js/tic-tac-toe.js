@@ -80,7 +80,7 @@ function addPiece(event) {
   turn += 1;
 }
 
-function renderBoardDOM() {
+function renderBoardDom() {
   const board = document.createElement('table');
   board.setAttribute('id', 'board');
 
@@ -102,6 +102,6 @@ function renderBoardDOM() {
 }
 
 window.onload = () => {
-  renderBoardDOM();
+  renderBoardDom();
   resetGame();
 };
