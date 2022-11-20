@@ -25,3 +25,51 @@ header h1 {
   font-weight: bold;
   font-size: 5vh;
 }
+
+#game {
+  margin: auto;
+  height: 66.5vh;
+  width: 66.5vh;
+}
+
+#board {
+  height: 66.5vh;
+  width: 66.5vh;
+
+  border-collapse: collapse;
+}
+
+#board td {
+  height: 3.5vh;
+  width: 3.5vh;
+
+  padding: 0;
+}
+
+.line-horizontal {
+  position: absolute;
+  height: 3.5vh;
+  width: 3.5vh;
+  border-top: 0.25vh solid black;
+}
+
+tr td:first-child .line-horizontal {
+  margin-left: 1.5vh;
+  width: 2vh;
+}
+
+tr td:last-child .line-horizontal {
+  margin-right: 1.5vh;
+  width: 1.75vh;
+}
+
+.line-vertical {
+  position: absolute;
+  height: 3.5vh;
+  width: 1.5vh;
+  border-right: 0.25vh solid black;
+}
+
+tr:last-child .line-vertical {
+  display: none;
+}
