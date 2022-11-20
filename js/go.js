@@ -10,12 +10,15 @@ const setupBoardDom = () => {
     for (let j = 0; j < BOARD_DIMENSION; ++j) {
       const cell = document.createElement('td');
 
+      const piece = document.createElement('div');
       const lineHorizontal = document.createElement('div');
       const lineVertical = document.createElement('div');
 
+      piece.setAttribute('class', 'piece piece-blank');
       lineHorizontal.setAttribute('class', 'line-horizontal');
       lineVertical.setAttribute('class', 'line-vertical');
 
+      cell.appendChild(piece);
       cell.appendChild(lineHorizontal);
       cell.appendChild(lineVertical);
 

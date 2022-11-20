@@ -46,6 +46,34 @@ header h1 {
   padding: 0;
 }
 
+.piece {
+  position:absolute;
+  height: 3vh;
+  width: 3vh;
+
+  margin-top: -1.5vh;
+
+  pointer-events: none;
+
+  border-radius: 50%;
+  border-width: 0.2vh;
+  border-style: solid;
+  border-color: black;
+  z-index: 999;
+}
+
+.piece-blank {
+  display: none;
+}
+
+.piece-black {
+  background-color: black;
+}
+
+.piece-white {
+  background-color: white;
+}
+
 .line-horizontal {
   position: absolute;
   height: 3.5vh;
